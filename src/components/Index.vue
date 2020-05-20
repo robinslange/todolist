@@ -6,18 +6,22 @@
           <v-col cols="12" sm="8" md="4" class="addItemBox">
             <v-card class="elevation-12">
               <v-toolbar color="primary" dark flat>
-                <v-toolbar-title>Todo List</v-toolbar-title>
+                <v-toolbar-title>{{ todoName }}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon large target="_blank" v-on="on">
+                    <v-btn icon large @click="editNameFunc" v-on="on">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
                   </template>
                   <span>Edit Name</span>
                 </v-tooltip>
               </v-toolbar>
-
+              <EditName
+                :editName="editName"
+                @close="closeDialog"
+                @renameList="rename"
+              />
               <v-col>
                 <v-row class="px-4"
                   ><v-text-field
@@ -64,14 +68,18 @@
 </template>
 
 <script>
+import EditName from "@/components/EditName";
+
 export default {
   name: "Index",
-
+  components: { EditName },
   data() {
     return {
       newItem: "",
       todo: [],
       items: [],
+      todoName: "Todo List",
+      editName: false,
       day: this.todoDay(),
       date: new Date().getDate(),
       ord: this.nth(new Date().getDate()),
@@ -83,7 +91,12 @@ export default {
       if (!this.newItem) {
         return;
       }
-      this.items.push({ title: this.newItem, done: false });
+      this.items.push({
+        name: this.todoName,
+        title: this.newItem,
+        done: false,
+      });
+      localStorage.setItem("test", JSON.stringify(this.items));
       console.log(this.items);
       this.newItem = "";
     },
@@ -119,6 +132,18 @@ export default {
           return "th";
       }
     },
+    editNameFunc() {
+      console.log("editName = " + this.editName);
+      this.editName = true;
+      console.log("editName = " + this.editName);
+    },
+    closeDialog() {
+      this.editName = false;
+    },
+    rename(newName) {
+      console.log(newName);
+      this.todoName = newName;
+    },
   },
   filters: {
     capitalize: function(value) {
@@ -126,6 +151,19 @@ export default {
       value = value.toString();
       return value.charAt(0).toUpperCase() + value.slice(1);
     },
+  },
+  mounted() {
+    const db = this.$firebase.firestore();
+    //let ref = db.collection('todos').doc(this.$route.params.list_id);
+    //ref.get();
+    db.collection("todos")
+      .get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          console.log(doc.data);
+          this.items.push({ name: doc.name, text: doc.text });
+        });
+      });
   },
 };
 </script>
