@@ -1,7 +1,7 @@
 <template>
-  <v-app id="inspire">
+  <v-app>
     <v-content>
-      <v-container class="fill-height" fluid>
+      <v-container class="fill-height">
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4" class="addItemBox">
             <v-card class="elevation-12">
@@ -31,24 +31,29 @@
                   ></v-row
                 ></v-col
               >
-              <v-col class="mx-1" v-for="(item, i) in items" :key="item.text">
-                <v-list-tile avatar>
-                  <v-list-tile-action>
-                    <v-checkbox v-model="item.done"></v-checkbox>
-                  </v-list-tile-action>
-                  <v-list-tile-title class="title">{{
-                    item.title
-                  }}</v-list-tile-title>
-                  <v-btn
-                    icon
-                    ripple
-                    color="red"
-                    v-if="item.done"
-                    @click="removeTodo(i)"
-                  >
-                    <v-icon class="white--text">close</v-icon>
-                  </v-btn>
-                </v-list-tile>
+              <v-col class="mx-1">
+                <v-list>
+                  <v-list-item v-for="item in items" :key="item.title">
+                    <v-list-item-avatar>
+                      <v-checkbox v-model="item.done"></v-checkbox>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title> {{ item.title }}</v-list-item-title>
+                      <v-list-item-subtitle
+                        >Added on: {{ date }}{{ ord }} {{ day }} {{ year }}
+                      </v-list-item-subtitle></v-list-item-content
+                    >
+                    <v-btn
+                      icon
+                      ripple
+                      color="red"
+                      v-if="item.done"
+                      @click="removeTodo(i)"
+                    >
+                      <v-icon class="red--text">mdi-close</v-icon>
+                    </v-btn>
+                  </v-list-item>
+                </v-list>
               </v-col>
             </v-card>
           </v-col>
@@ -62,30 +67,25 @@
 export default {
   name: "Index",
 
-  data: () => ({
-    newItem: "",
-    todo: [],
-    items: [
-      {
-        title: "Test",
-        done: false,
-      },
-    ],
-    day: this.todoDay(),
-    date: new Date().getDate(),
-    ord: this.nth(new Date().getDate()),
-    year: new Date().getFullYear(),
-  }),
+  data() {
+    return {
+      newItem: "",
+      todo: [],
+      items: [],
+      day: this.todoDay(),
+      date: new Date().getDate(),
+      ord: this.nth(new Date().getDate()),
+      year: new Date().getFullYear(),
+    };
+  },
   methods: {
     addItem() {
-      var value = this.newItem && this.newItem.trim();
-      console.log("value = " + value);
-      if (!value) {
+      if (!this.newItem) {
         return;
       }
+      this.items.push({ title: this.newItem, done: false });
       console.log(this.items);
-      this.items.push(value);
-      this.newTodo = "";
+      this.newItem = "";
     },
     removeTodo(index) {
       this.items.splice(index, 1);
