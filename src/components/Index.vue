@@ -84,6 +84,7 @@ export default {
       date: new Date().getDate(),
       ord: this.nth(new Date().getDate()),
       year: new Date().getFullYear(),
+      linkString: new Uint16Array(5),
     };
   },
   methods: {
@@ -94,7 +95,7 @@ export default {
       this.todo.push({
         text: this.newItem,
         done: false,
-        
+        link: linkString,
       });
 
       this.newItem = "";
@@ -161,6 +162,9 @@ export default {
           let data = doc.data();
           let list = JSON.parse(data.todos);
           for (let i = 0; i < snapshot.size; i++) {
+            //TODO:
+            //check if /whatever is a match in database, if not create new entry if this.todo.length > 0
+            //if(list[i].link ==
             this.todo.push(list[i]);
           }
         });
