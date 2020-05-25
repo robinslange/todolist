@@ -77,13 +77,7 @@ export default {
   data() {
     return {
       newItem: "",
-      todo: [
-        {
-          text: "test",
-          done: false,
-        },
-      ],
-      items: [],
+      todo: [],
       todoName: "Todo List",
       editName: false,
       day: this.todoDay(),
@@ -97,13 +91,12 @@ export default {
       if (!this.newItem) {
         return;
       }
-      this.items.push({
-        name: this.todoName,
-        title: this.newItem,
+      this.todo.push({
+        text: this.newItem,
         done: false,
+        
       });
-      localStorage.setItem("test", JSON.stringify(this.items));
-      console.log(this.items);
+
       this.newItem = "";
     },
     removeTodo(index) {
@@ -166,15 +159,10 @@ export default {
         console.log(snapshot.size);
         snapshot.forEach((doc) => {
           let data = doc.data();
-          console.log("data");
-          console.log(data);
-          let temp = JSON.stringify(this.todo);
-          console.log("temp:");
-          console.log(temp);
-          let temp2 = JSON.parse(data.todos);
-          console.log("temp2:");
-          console.log(temp2);
-          console.log(this.todo);
+          let list = JSON.parse(data.todos);
+          for (let i = 0; i < snapshot.size; i++) {
+            this.todo.push(list[i]);
+          }
         });
       });
   },
