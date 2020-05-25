@@ -37,12 +37,12 @@
               >
               <v-col class="mx-1">
                 <v-list>
-                  <v-list-item v-for="item in items" :key="item.title">
+                  <v-list-item v-for="item in todo" :key="item.text">
                     <v-list-item-avatar>
                       <v-checkbox v-model="item.done"></v-checkbox>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title> {{ item.title }}</v-list-item-title>
+                      <v-list-item-title> {{ item.text }}</v-list-item-title>
                       <v-list-item-subtitle
                         >Added on: {{ date }}{{ ord }} {{ day }} {{ year }}
                       </v-list-item-subtitle></v-list-item-content
@@ -69,6 +69,7 @@
 
 <script>
 import EditName from "@/components/EditName";
+import db from "@/firebase/init";
 
 export default {
   name: "Index",
@@ -76,7 +77,12 @@ export default {
   data() {
     return {
       newItem: "",
-      todo: [],
+      todo: [
+        {
+          text: "test",
+          done: false,
+        },
+      ],
       items: [],
       todoName: "Todo List",
       editName: false,
@@ -152,16 +158,23 @@ export default {
       return value.charAt(0).toUpperCase() + value.slice(1);
     },
   },
-  mounted() {
-    const db = this.$firebase.firestore();
-    //let ref = db.collection('todos').doc(this.$route.params.list_id);
-    //ref.get();
+  created() {
+    //fetch from firestore
     db.collection("todos")
       .get()
-      .then(snapshot => {
-        snapshot.forEach(doc => {
-          console.log(doc.data);
-          this.items.push({ name: doc.name, text: doc.text });
+      .then((snapshot) => {
+        console.log(snapshot.size);
+        snapshot.forEach((doc) => {
+          let data = doc.data();
+          console.log("data");
+          console.log(data);
+          let temp = JSON.stringify(this.todo);
+          console.log("temp:");
+          console.log(temp);
+          let temp2 = JSON.parse(data.todos);
+          console.log("temp2:");
+          console.log(temp2);
+          console.log(this.todo);
         });
       });
   },
