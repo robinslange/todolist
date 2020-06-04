@@ -10,7 +10,7 @@
                 <v-spacer></v-spacer>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon large @click="editNameFunc" v-on="on">
+                    <v-btn icon large @click="saveList" v-on="on">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
                   </template>
@@ -36,17 +36,14 @@
                 ></v-col
               >
               <v-col class="mx-1">
-                <v-list>
-                  <v-list-item v-for="item in todo" :key="item.text">
+                <v-list v-if="todo">
+                  <v-list-item v-for="(item, index) in todo" :key="index">
                     <v-list-item-avatar>
                       <v-checkbox v-model="item.done"></v-checkbox>
                     </v-list-item-avatar>
                     <v-list-item-content>
                       <v-list-item-title> {{ item.text }}</v-list-item-title>
-                      <v-list-item-subtitle
-                        >Added on: {{ date }}{{ ord }} {{ day }} {{ year }}
-                      </v-list-item-subtitle></v-list-item-content
-                    >
+                    </v-list-item-content>
                     <v-btn
                       icon
                       ripple
@@ -80,11 +77,11 @@ export default {
       todo: [],
       todoName: "Todo List",
       editName: false,
+      todoListID: this.makeid(5),
       day: this.todoDay(),
       date: new Date().getDate(),
       ord: this.nth(new Date().getDate()),
       year: new Date().getFullYear(),
-      linkString: new Uint16Array(5),
     };
   },
   methods: {
@@ -95,16 +92,18 @@ export default {
       this.todo.push({
         text: this.newItem,
         done: false,
-        link: linkString,
       });
-
       this.newItem = "";
     },
     removeTodo(index) {
-      this.items.splice(index, 1);
+      this.todo.splice(index, 1);
     },
     itemDone() {
       console.log("Item Done");
+    },
+    saveList() {
+      let dataPack = JSON.stringify(this.todo);
+      console.log(dataPack);
     },
     todoDay() {
       var d = new Date();
@@ -144,6 +143,18 @@ export default {
       console.log(newName);
       this.todoName = newName;
     },
+    makeid(length) {
+      var result = "";
+      var characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      var charactersLength = characters.length;
+      for (var i = 0; i < length; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * charactersLength)
+        );
+      }
+      return result;
+    },
   },
   filters: {
     capitalize: function(value) {
@@ -153,22 +164,36 @@ export default {
     },
   },
   created() {
-    //fetch from firestore
-    db.collection("todos")
-      .get()
-      .then((snapshot) => {
-        console.log(snapshot.size);
-        snapshot.forEach((doc) => {
-          let data = doc.data();
-          let list = JSON.parse(data.todos);
-          for (let i = 0; i < snapshot.size; i++) {
-            //TODO:
-            //check if /whatever is a match in database, if not create new entry if this.todo.length > 0
-            //if(list[i].link ==
-            this.todo.push(list[i]);
-          }
-        });
+    let ref = db.collection("todos").where("ID", "==", this.$route.params.id);
+    ref.get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        let data = doc.data();
+        console.log(data);
+        let list = JSON.parse(data.todo);
+        for (let i = 0; i < snapshot.size; i++) {
+          this.todo = list;
+          this.todoName = data.name;
+        }
       });
+    });
+    //this.saveTimer = setInterval(this.saveList, 6000);
+    //fetch from firestore
+    // db.collection("todos")
+    //   .get()
+    //   .then((snapshot) => {
+    //     console.log(snapshot.size);
+    //     snapshot.forEach((doc) => {
+    //       let data = doc.data();
+    //       let list = JSON.parse(data.todos);
+    //       for (let i = 0; i < snapshot.size; i++) {
+    //         //TODO:
+    //         //check if /whatever is a match in database, if not create new entry if this.todo.length > 0
+    //         //if(list[i].link ==
+
+    //         this.todo.push(list[i]);
+    //       }
+    //     });
+    //   });
   },
 };
 </script>
