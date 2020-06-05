@@ -10,7 +10,7 @@
                 <v-spacer></v-spacer>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon large @click="saveList" v-on="on">
+                    <v-btn icon large @click="editNameFunc" v-on="on">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
                   </template>
@@ -19,8 +19,13 @@
               </v-toolbar>
               <EditName
                 :editName="editName"
-                @close="closeDialog"
+                @close="closeNameDialog"
                 @renameList="rename"
+              />
+              <UploadImage
+                :uploadImage="uploadImage"
+                @close="toggleUploadDialog"
+                @upload="uploadImage"
               />
               <v-col>
                 <v-row class="px-4"
@@ -47,6 +52,16 @@
                     <v-btn
                       icon
                       ripple
+                      color="primary"
+                      @click="toggleUploadDialog"
+                      @close="toggleUploadDialog"
+                      @sendImage="uploadImageFunc"
+                    >
+                      <v-icon>mdi-file-upload-outline</v-icon>
+                    </v-btn>
+                    <v-btn
+                      icon
+                      ripple
                       color="red"
                       v-if="item.done"
                       @click="removeTodo(i)"
@@ -66,17 +81,19 @@
 
 <script>
 import EditName from "@/components/EditName";
+import UploadImage from "@/components/UploadImage";
 import db from "@/firebase/init";
 
 export default {
   name: "Index",
-  components: { EditName },
+  components: { EditName, UploadImage },
   data() {
     return {
       newItem: "",
       todo: [],
       todoName: "Todo List",
       editName: false,
+      uploadImage: false,
       todoListID: this.makeid(5),
       day: this.todoDay(),
       date: new Date().getDate(),
@@ -132,16 +149,21 @@ export default {
       }
     },
     editNameFunc() {
-      console.log("editName = " + this.editName);
       this.editName = true;
-      console.log("editName = " + this.editName);
     },
-    closeDialog() {
+    toggleUploadDialog() {
+      this.uploadImage = !this.uploadImage;
+    },
+    uploadImageFunc(val) {
+      console.log(val);
+    },
+    closeNameDialog() {
       this.editName = false;
     },
     rename(newName) {
       console.log(newName);
       this.todoName = newName;
+      this.editName = false;
     },
     makeid(length) {
       var result = "";

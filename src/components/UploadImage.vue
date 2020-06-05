@@ -1,18 +1,14 @@
 <template>
   <div>
-    <v-dialog v-model="editName" width="400" @keyup.esc="close">
+    <v-dialog v-model="uploadImage" width="400" @keyup.esc="close">
       <v-card>
         <v-card-title>Edit Name</v-card-title>
         <v-card-text>
-          <v-text-field
-            label="List Name"
-            v-model="newName"
-            @keyup.enter="submitName"
-          ></v-text-field>
+          <v-file-input accept="image/*" label="Upload Image"></v-file-input>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="submitName">Confirm</v-btn>
+          <v-btn color="primary" text @click="upload">Upload</v-btn>
           <v-btn color="primary" text @click="close">Close</v-btn>
         </v-card-actions>
       </v-card>
@@ -22,16 +18,14 @@
 
 <script>
 export default {
-  name: "EditName",
-  props: ["editName"],
-  data() {
-    return {
-      newName: "",
-    };
-  },
+  name: "UploadImage",
+  props: ["uploadImage"],
+  data: () => ({
+    imageData: null,
+  }),
   methods: {
-    submitName() {
-      this.$emit("renameList", this.newName);
+    upload(val) {
+      this.$emit("upload", val);
     },
     close() {
       this.$emit("close");
