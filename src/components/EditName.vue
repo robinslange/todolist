@@ -1,6 +1,11 @@
 <template>
   <div>
-    <v-dialog v-model="editName" width="400" @keyup.esc="close">
+    <v-dialog
+      v-model="this.$store.state.editDialog"
+      width="400"
+      @keyup.esc="close"
+      persistent
+    >
       <v-card>
         <v-card-title>Edit Name</v-card-title>
         <v-card-text>
@@ -23,7 +28,6 @@
 <script>
 export default {
   name: "EditName",
-  props: ["editName"],
   data() {
     return {
       newName: "",
@@ -31,10 +35,10 @@ export default {
   },
   methods: {
     submitName() {
-      this.$emit("renameList", this.newName);
+      this.$store.commit("renameList", this.newName);
     },
     close() {
-      this.$emit("close");
+      this.$store.commit("toggleEditDialog");
     },
   },
 };
