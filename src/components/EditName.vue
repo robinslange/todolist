@@ -7,7 +7,7 @@
       persistent
     >
       <v-card>
-        <v-card-title>Edit Name</v-card-title>
+        <v-card-title>Edit List Name</v-card-title>
         <v-card-text>
           <v-text-field
             label="List Name"

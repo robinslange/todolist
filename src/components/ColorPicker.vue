@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="this.$store.state.colorPickerDialog" width="400">
     <v-card>
-      <v-card-title>Choose a color:</v-card-title>
+      <v-card-title>Pick a color</v-card-title>
       <v-col>
         <v-flex class="align-center">
           <v-color-picker
