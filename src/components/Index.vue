@@ -12,7 +12,7 @@
               ></v-progress-linear>
             </v-layout>
             <v-card v-if="!this.$store.state.loading" class="elevation-6">
-              <v-toolbar color="primary" dark flat>
+              <v-toolbar :color="this.$store.state.titleColor" dark flat>
                 <v-toolbar-title class="py-2">
                   {{ this.$store.state.todoName }}
                 </v-toolbar-title>
@@ -30,6 +30,7 @@
                 @close="toggleUploadDialog"
                 @upload="uploadImage"
               />
+              <ColorPicker />
               <v-col>
                 <v-row class="px-4"
                   ><v-text-field
@@ -86,6 +87,7 @@
       v-model="options"
       direction="top"
       transition="scale-transition"
+      open-on-hover
       absolute
       bottom
       right
@@ -103,8 +105,8 @@
       <v-btn @click="toggleEditNameDialog" fab dark small>
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
-      <v-btn fab dark small>
-        <v-icon></v-icon>
+      <v-btn @click="toggleColorPicker" fab dark small>
+        <v-icon>fa-paint-brush</v-icon>
       </v-btn>
     </v-speed-dial>
   </v-app>
@@ -116,8 +118,13 @@ import UploadImage from "@/components/UploadImage";
 import db from "@/firebase/init";
 
 export default {
+  title: "",
   name: "Index",
-  components: { EditName, UploadImage },
+  components: {
+    EditName,
+    UploadImage,
+    ColorPicker: () => import("@/components/ColorPicker"),
+  },
   data() {
     return {
       newItem: "",
@@ -140,9 +147,13 @@ export default {
     },
     toggleEditNameDialog() {
       this.$store.commit("toggleEditDialog");
+      this.title = this.$store.state.todoName;
     },
     toggleUploadDialog() {
       this.uploadImage = !this.uploadImage;
+    },
+    toggleColorPicker() {
+      this.$store.commit("toggleColorPicker");
     },
     uploadImageFunc(val) {
       console.log(val);
@@ -155,24 +166,37 @@ export default {
       this.$store.state.todoListID = this.$route.params.id;
       let ref = db.collection("todos");
       let queryRef = ref.where("ID", "==", this.$route.params.id);
-      queryRef
-        .get()
-        .then((snapshot) => {
-          this.$store.state.existingList = true;
-          snapshot.forEach((doc) => {
-            let data = doc.data();
-            let list = JSON.parse(data.todo);
-            for (let i = 0; i < snapshot.size; i++) {
-              this.$store.state.todo = list;
-              this.$store.state.todoName = data.name;
-              this.$store.state.todoListID = data.ID;
+      let exists = queryRef.rE;
+      console.log(exists);
+      if (exists != null) {
+        queryRef
+          .get()
+          .then((snapshot) => {
+            if (snapshot != null) {
+              this.$store.state.existingList = true;
+              snapshot.forEach((doc) => {
+                console.log(doc);
+                let data = doc.data();
+                console.log(data);
+                let list = JSON.parse(data.todo);
+                for (let i = 0; i < snapshot.size; i++) {
+                  this.$store.state.todo = list;
+                  this.$store.state.todoName = data.name;
+                  this.$store.state.todoListID = data.ID;
+                  this.$store.state.titleColor = data.titleColor;
+                  this.$store.state.loading = false;
+                }
+              });
+            } else {
               this.$store.state.loading = false;
             }
+          })
+          .catch((err) => {
+            console.log(err);
           });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      } else {
+        this.$store.state.loading = false;
+      }
     } else {
       this.$store.state.loading = false;
     }
@@ -180,8 +204,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.save {
-  padding-right: 5px !important;
-}
-</style>
+<style scoped></style>

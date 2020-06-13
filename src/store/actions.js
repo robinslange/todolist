@@ -6,4 +6,8 @@ export default {
     console.log("id created" + state.tempID);
     context.commit("saveList");
   },
+  changeTitleColor(context, newColor) {
+    context.commit("changeTitleColor", newColor);
+    context.commit("toggleColorPicker");
+  },
 };

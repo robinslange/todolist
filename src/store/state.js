@@ -4,10 +4,13 @@ export default {
   todoName: "Todo List",
   todoListID: "",
   tempID: "",
+  title: "",
+  titleColor: "#E65100",
+  newTitleColor: "",
   editDialog: false,
   uploadImage: false,
   existingList: false,
   loading: false,
   saving: false,
-  
+  colorPickerDialog: false,
 };

@@ -35,6 +35,7 @@ export default {
         .update({
           name: state.todoName,
           todo: JSON.stringify(state.todo),
+          titleColor: state.titleColor,
         })
         .then(() => {
           state.saving = false;
@@ -49,6 +50,7 @@ export default {
           ID: listID,
           name: state.todoName,
           todo: JSON.stringify(state.todo),
+          titleColor: state.titleColor,
         })
         .then(() => {
           state.saving = false;
@@ -67,5 +69,11 @@ export default {
     state.editDialog = false;
     state.todoName = newName;
     console.log("renamed to: " + state.todoName);
+  },
+  toggleColorPicker(state) {
+    state.colorPickerDialog = !state.colorPickerDialog;
+  },
+  changeTitleColor(state, newColor) {
+    state.titleColor = newColor;
   },
 };
