@@ -86,7 +86,7 @@
                       ripple
                       color="red"
                       v-if="item.done"
-                      @click="removeTodo(i)"
+                      @click="removeTodo(index)"
                     >
                       <v-icon class="red--text">mdi-close</v-icon>
                     </v-btn>
