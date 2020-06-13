@@ -161,15 +161,14 @@ export default {
   created() {
     this.$store.state.loading = true;
     if (this.$route.params.id != null) {
-      this.$store.state.todoListID = this.$route.params.id;
-
       let queryRef = db
         .collection("todos")
         .where("ID", "==", this.$route.params.id);
-
       queryRef
         .get()
         .then((snapshot) => {
+          // found solutiont to forever loading if non-existtant query here under (readonly) query :Query:
+          // https://googleapis.dev/nodejs/firestore/latest/QuerySnapshot.html
           if (!snapshot.empty) {
             this.$store.state.existingList = true;
             snapshot.forEach((doc) => {
@@ -185,7 +184,11 @@ export default {
                 this.$store.state.loading = false;
               }
             });
+            //if router params doesn't exist
           } else {
+            //send to default route
+            this.$router.go("/");
+            //stop loading
             this.$store.state.loading = false;
           }
         })
