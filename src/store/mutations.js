@@ -25,7 +25,6 @@ export default {
     state.tempID = result;
   },
   saveList(state) {
-    console.log("saving");
     let ref = db.collection("todos");
     let listID = state.tempID;
     state.saving = true;
@@ -56,8 +55,7 @@ export default {
           state.existingList = true;
           this.$router.push("/" + listID);
         });
-      console.log(listID);
-      console.log("new list!");
+
       state.saving = false;
     }
   },

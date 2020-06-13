@@ -4,9 +4,16 @@
       <v-container class="fill-height">
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4" class="addItemBox">
-            <v-card class="elevation-12">
+            <v-layout v-if="this.$store.state.loading" justify-center>
+              <v-progress-linear
+                color="primary"
+                class="align-center justify-center"
+                indeterminate
+              ></v-progress-linear>
+            </v-layout>
+            <v-card v-if="!this.$store.state.loading" class="elevation-6">
               <v-toolbar color="primary" dark flat>
-                <v-toolbar-title class="px-2 py-2 text-center">
+                <v-toolbar-title class="px-2 py-2">
                   {{ this.$store.state.todoName }}
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -53,14 +60,7 @@
                   ></v-row
                 ></v-col
               >
-              <v-col class="mx-1">
-                <v-layout v-if="this.$store.state.loading" justify-center>
-                  <v-progress-linear
-                    color="primary"
-                    class="align-center justify-center"
-                    indeterminate
-                  ></v-progress-linear>
-                </v-layout>
+              <v-col>
                 <v-list v-if="this.$store.state.todo">
                   <v-list-item
                     v-for="(item, index) in this.$store.state.todo"
@@ -146,20 +146,24 @@ export default {
       this.$store.state.todoListID = this.$route.params.id;
       let ref = db.collection("todos");
       let queryRef = ref.where("ID", "==", this.$store.state.todoListID);
-      queryRef.get().then((snapshot) => {
-        console.log("exists");
-        this.$store.state.existingList = true;
-        snapshot.forEach((doc) => {
-          let data = doc.data();
-          let list = JSON.parse(data.todo);
-          for (let i = 0; i < snapshot.size; i++) {
-            this.$store.state.todo = list;
-            this.$store.state.todoName = data.name;
-            this.$store.state.todoListID = data.ID;
-            this.$store.state.loading = false;
-          }
+      queryRef
+        .get()
+        .then((snapshot) => {
+          this.$store.state.existingList = true;
+          snapshot.forEach((doc) => {
+            let data = doc.data();
+            let list = JSON.parse(data.todo);
+            for (let i = 0; i < snapshot.size; i++) {
+              this.$store.state.todo = list;
+              this.$store.state.todoName = data.name;
+              this.$store.state.todoListID = data.ID;
+              this.$store.state.loading = false;
+            }
+          });
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      });
     } else {
       this.$state.store.loading = false;
     }
