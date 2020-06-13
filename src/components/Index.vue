@@ -13,7 +13,7 @@
             </v-layout>
             <v-card v-if="!this.$store.state.loading" class="elevation-6">
               <v-toolbar color="primary" dark flat>
-                <v-toolbar-title class="px-2 py-2">
+                <v-toolbar-title class="py-2">
                   {{ this.$store.state.todoName }}
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -23,23 +23,6 @@
                   class="save"
                   indeterminate
                 ></v-progress-circular>
-                <v-tooltip v-if="!this.$store.state.saving" bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn icon large @click="saveList" v-on="on">
-                      <v-icon>fa-save</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Save List</span>
-                </v-tooltip>
-
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn icon large @click="toggleEditNameDialog" v-on="on">
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Edit Name</span>
-                </v-tooltip>
               </v-toolbar>
               <EditName />
               <UploadImage
@@ -99,6 +82,31 @@
         </v-row>
       </v-container>
     </v-content>
+    <v-speed-dial
+      v-model="options"
+      direction="top"
+      transition="scale-transition"
+      absolute
+      bottom
+      right
+    >
+      <template v-slot:activator>
+        <v-btn v-model="options" dark fab>
+          <v-icon v-if="options">fa-times</v-icon>
+          <v-icon v-else>fa-cog</v-icon>
+        </v-btn>
+      </template>
+
+      <v-btn @click="saveList" fab dark small>
+        <v-icon>fa-save</v-icon>
+      </v-btn>
+      <v-btn @click="toggleEditNameDialog" fab dark small>
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn>
+      <v-btn fab dark small>
+        <v-icon></v-icon>
+      </v-btn>
+    </v-speed-dial>
   </v-app>
 </template>
 
@@ -115,6 +123,7 @@ export default {
       newItem: "",
       uploadImage: false,
       existingList: false,
+      options: false,
     };
   },
   methods: {
