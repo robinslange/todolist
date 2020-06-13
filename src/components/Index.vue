@@ -6,7 +6,22 @@
           <v-col cols="12" sm="8" md="4" class="addItemBox">
             <v-card class="elevation-12">
               <v-toolbar color="primary" dark flat>
-                <v-toolbar-title>{{ todoName }}</v-toolbar-title>
+                <v-progress-circular
+                  v-if="saving"
+                  class="save"
+                  indeterminate
+                ></v-progress-circular>
+                <v-tooltip v-if="!saving" bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn icon large @click="saveList" v-on="on">
+                      <v-icon>fa-save</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Save List</span>
+                </v-tooltip>
+                <v-toolbar-title class="px-2 py-2">{{
+                  todoName
+                }}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
@@ -41,6 +56,13 @@
                 ></v-col
               >
               <v-col class="mx-1">
+                <v-layout v-if="loading" justify-center>
+                  <v-progress-linear
+                    color="primary"
+                    class="align-center justify-center"
+                    indeterminate
+                  ></v-progress-linear>
+                </v-layout>
                 <v-list v-if="todo">
                   <v-list-item v-for="(item, index) in todo" :key="index">
                     <v-list-item-avatar>
@@ -94,7 +116,10 @@ export default {
       todoName: "Todo List",
       editName: false,
       uploadImage: false,
-      todoListID: this.makeid(5),
+      existingList: false,
+      todoListID: "",
+      loading: false,
+      saving: false,
       day: this.todoDay(),
       date: new Date().getDate(),
       ord: this.nth(new Date().getDate()),
@@ -119,8 +144,40 @@ export default {
       console.log("Item Done");
     },
     saveList() {
-      let dataPack = JSON.stringify(this.todo);
-      console.log(dataPack);
+      let ref = db.collection("todos");
+      let listID = this.makeid(6);
+      if (this.existingList) {
+        this.saving = true;
+        ref
+          .doc(this.todoListID)
+          .update({
+            name: this.todoName,
+            todo: JSON.stringify(this.todo),
+          })
+          .then(() => {
+            this.saving = false;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        this.saving = true;
+        ref
+          .doc(listID)
+          .set({
+            ID: listID,
+            name: this.todoName,
+            todo: JSON.stringify(this.todo),
+          })
+          .then(() => {
+            this.saving = false;
+            this.todoListID = listID;
+            this.existingList = true;
+            this.$router.push("/" + listID);
+          });
+        console.log(listID);
+        console.log("new list!");
+      }
     },
     todoDay() {
       var d = new Date();
@@ -179,45 +236,44 @@ export default {
     },
   },
   filters: {
-    capitalize: function(value) {
+    capitalize(value) {
       if (!value) return "";
       value = value.toString();
       return value.charAt(0).toUpperCase() + value.slice(1);
     },
   },
   created() {
-    let ref = db.collection("todos").where("ID", "==", this.$route.params.id);
-    ref.get().then((snapshot) => {
-      snapshot.forEach((doc) => {
-        let data = doc.data();
-        console.log(data);
-        let list = JSON.parse(data.todo);
-        for (let i = 0; i < snapshot.size; i++) {
-          this.todo = list;
-          this.todoName = data.name;
-        }
+    this.loading = true;
+    if (this.$route.params.id != null) {
+      this.todoListID = this.$route.params.id;
+      let listID = this.todoListID.toString();
+      console.log(listID);
+      let ref = db.collection("todos");
+      let queryRef = ref.where("ID", "==", listID);
+      queryRef.get().then((snapshot) => {
+        console.log("exists");
+        this.existingList = true;
+        snapshot.forEach((doc) => {
+          let data = doc.data();
+          console.log(data);
+          let list = JSON.parse(data.todo);
+          for (let i = 0; i < snapshot.size; i++) {
+            this.todo = list;
+            this.todoName = data.name;
+            this.todoListID = data.ID;
+            this.loading = false;
+          }
+        });
       });
-    });
-    //this.saveTimer = setInterval(this.saveList, 6000);
-    //fetch from firestore
-    // db.collection("todos")
-    //   .get()
-    //   .then((snapshot) => {
-    //     console.log(snapshot.size);
-    //     snapshot.forEach((doc) => {
-    //       let data = doc.data();
-    //       let list = JSON.parse(data.todos);
-    //       for (let i = 0; i < snapshot.size; i++) {
-    //         //TODO:
-    //         //check if /whatever is a match in database, if not create new entry if this.todo.length > 0
-    //         //if(list[i].link ==
-
-    //         this.todo.push(list[i]);
-    //       }
-    //     });
-    //   });
+    } else {
+      this.loading = false;
+    }
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.save {
+  padding-right: 5px !important;
+}
+</style>
