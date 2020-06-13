@@ -113,16 +113,14 @@
 </template>
 
 <script>
-import EditName from "@/components/EditName";
-import UploadImage from "@/components/UploadImage";
 import db from "@/firebase/init";
 
 export default {
   title: "",
   name: "Index",
   components: {
-    EditName,
-    UploadImage,
+    EditName: () => import("@/components/EditName"),
+    UploadImage: () => import("@/components/UploadImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
   },
   data() {

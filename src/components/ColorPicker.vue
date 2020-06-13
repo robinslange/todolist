@@ -26,7 +26,6 @@ export default {
   name: "ColorPicker",
   data: () => ({
     newColor: "",
-    type: "hex",
   }),
   methods: {
     saveColor() {
