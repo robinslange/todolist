@@ -174,7 +174,7 @@ export default {
           console.log(err);
         });
     } else {
-      this.$state.store.loading = false;
+      this.$store.state.loading = false;
     }
   },
 };
