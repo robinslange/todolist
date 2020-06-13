@@ -154,7 +154,7 @@ export default {
     if (this.$route.params.id != null) {
       this.$store.state.todoListID = this.$route.params.id;
       let ref = db.collection("todos");
-      let queryRef = ref.where("ID", "==", this.$store.state.todoListID);
+      let queryRef = ref.where("ID", "==", this.$route.params.id);
       queryRef
         .get()
         .then((snapshot) => {

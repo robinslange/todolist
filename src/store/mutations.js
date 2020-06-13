@@ -1,4 +1,5 @@
 import db from "@/firebase/init";
+import router from "../router";
 
 export default {
   addItem(state) {
@@ -53,7 +54,7 @@ export default {
           state.saving = false;
           state.todoListID = listID;
           state.existingList = true;
-          this.$router.push("/" + listID);
+          router.push("/" + listID);
         });
 
       state.saving = false;
