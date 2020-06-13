@@ -162,39 +162,36 @@ export default {
     this.$store.state.loading = true;
     if (this.$route.params.id != null) {
       this.$store.state.todoListID = this.$route.params.id;
-      let ref = db.collection("todos");
-      let queryRef = ref.where("ID", "==", this.$route.params.id);
-      let exists = queryRef.rE;
-      console.log(exists);
-      if (exists != null) {
-        queryRef
-          .get()
-          .then((snapshot) => {
-            if (snapshot != null) {
-              this.$store.state.existingList = true;
-              snapshot.forEach((doc) => {
-                console.log(doc);
-                let data = doc.data();
-                console.log(data);
-                let list = JSON.parse(data.todo);
-                for (let i = 0; i < snapshot.size; i++) {
-                  this.$store.state.todo = list;
-                  this.$store.state.todoName = data.name;
-                  this.$store.state.todoListID = data.ID;
-                  this.$store.state.titleColor = data.titleColor;
-                  this.$store.state.loading = false;
-                }
-              });
-            } else {
-              this.$store.state.loading = false;
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else {
-        this.$store.state.loading = false;
-      }
+
+      let queryRef = db
+        .collection("todos")
+        .where("ID", "==", this.$route.params.id);
+
+      queryRef
+        .get()
+        .then((snapshot) => {
+          if (!snapshot.empty) {
+            this.$store.state.existingList = true;
+            snapshot.forEach((doc) => {
+              console.log(doc);
+              let data = doc.data();
+              console.log(data);
+              let list = JSON.parse(data.todo);
+              for (let i = 0; i < snapshot.size; i++) {
+                this.$store.state.todo = list;
+                this.$store.state.todoName = data.name;
+                this.$store.state.todoListID = data.ID;
+                this.$store.state.titleColor = data.titleColor;
+                this.$store.state.loading = false;
+              }
+            });
+          } else {
+            this.$store.state.loading = false;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       this.$store.state.loading = false;
     }
