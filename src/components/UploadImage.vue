@@ -2,7 +2,7 @@
   <div>
     <v-dialog v-model="uploadImage" width="400" @keyup.esc="close">
       <v-card>
-        <v-card-title class="mainHeading">Edit Name</v-card-title>
+        <v-card-title class="mainHeading">Attach Image</v-card-title>
         <v-card-subtitle class="subHeading">
           Feature Coming Soon
         </v-card-subtitle>

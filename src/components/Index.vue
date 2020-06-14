@@ -13,14 +13,27 @@
             </v-layout>
             <v-card v-if="!this.$store.state.loading" class="elevation-6">
               <v-toolbar :color="this.$store.state.titleColor" dark flat>
-                <v-toolbar-title
-                  v-if="this.$store.state.notEditing"
-                  class="py-2"
-                >
-                  {{ this.$store.state.todoName }}
+                <v-toolbar-title v-if="this.$store.state.notEditing">
+                  <span class="py-2">
+                    {{ this.$store.state.todoName }}
+                  </span>
                 </v-toolbar-title>
-                <v-text-field v-else v-model="newTodoName" clearable>
-                </v-text-field>
+                <v-form v-else ref="editName" dark>
+                  <v-text-field
+                    v-model="newTodoName"
+                    class="py-2 editNameBox"
+                    :value="this.$store.state.todoName"
+                    :rules="[
+                      this.$store.state.rules.counterMax25,
+                      this.$store.state.rules.counterMin3,
+                    ]"
+                    persistent-hint
+                    dark
+                    clearable
+                    autofocus
+                  >
+                  </v-text-field>
+                </v-form>
 
                 <v-btn
                   @click="toggleEditName"
@@ -43,7 +56,7 @@
                   <v-icon>fa-save</v-icon>
                 </v-btn>
               </v-toolbar>
-              <EditName />
+
               <UploadImage
                 :uploadImage="uploadImage"
                 @close="toggleUploadDialog"
@@ -132,7 +145,7 @@ export default {
   title: "",
   name: "Index",
   components: {
-    EditName: () => import("@/components/EditName"),
+    //EditName: () => import("@/components/EditName"),
     UploadImage: () => import("@/components/UploadImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
   },
@@ -143,6 +156,7 @@ export default {
       uploadImage: false,
       existingList: false,
       options: false,
+      valid: false,
     };
   },
   methods: {
@@ -158,12 +172,12 @@ export default {
       this.$store.dispatch("saveList");
     },
     saveName() {
-      this.$store.commit("saveNewName", this.newTodoName);
+      this.valid = this.$refs.editName.validate();
+      if (this.valid) {
+        this.$store.commit("saveNewName", this.newTodoName);
+      }
     },
-    toggleEditNameDialog() {
-      this.$store.commit("toggleEditDialog");
-      this.title = this.$store.state.todoName;
-    },
+
     toggleEditName() {
       this.$store.commit("toggleNameEdit");
     },
@@ -199,6 +213,7 @@ export default {
               for (let i = 0; i < snapshot.size; i++) {
                 this.$store.state.todo = list;
                 this.$store.state.todoName = data.name;
+                this.newTodoName = data.name;
                 this.$store.state.todoListID = data.ID;
                 this.$store.state.titleColor = data.titleColor;
                 this.$store.state.loading = false;

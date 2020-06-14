@@ -68,7 +68,6 @@ export default {
   renameList(state, newName) {
     state.editDialog = false;
     state.todoName = newName;
-    console.log("renamed to: " + state.todoName);
   },
   toggleColorPicker(state) {
     state.colorPickerDialog = !state.colorPickerDialog;
@@ -77,7 +76,6 @@ export default {
     state.titleColor = newColor;
   },
   toggleNameEdit(state) {
-    
     state.notEditing = !state.notEditing;
   },
   saveNewName(state, newName) {
