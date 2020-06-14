@@ -44,6 +44,13 @@
                     {{ this.$store.state.todoName }}
                   </span>
                 </v-toolbar-title>
+                <v-progress-linear
+                  :active="this.$store.state.todo.length > 0"
+                  :value="progress"
+                  color="success"
+                  absolute
+                  bottom
+                ></v-progress-linear>
 
                 <v-btn
                   @click="toggleEditName"
@@ -67,12 +74,6 @@
                 </v-btn>
               </v-toolbar>
 
-              <UploadImage
-                :uploadImage="uploadImage"
-                @close="toggleUploadDialog"
-                @upload="uploadImage"
-              />
-              <ColorPicker />
               <v-col>
                 <v-row class="px-4">
                   <v-text-field
@@ -98,16 +99,17 @@
                     <v-list-item-content>
                       <v-list-item-title> {{ item.text }}</v-list-item-title>
                     </v-list-item-content>
-
-                    <v-btn
-                      icon
-                      ripple
-                      color="red"
-                      v-if="item.done"
-                      @click="removeTodo(index)"
-                    >
-                      <v-icon class="red--text">mdi-close</v-icon>
-                    </v-btn>
+                    <v-scroll-x-transition>
+                      <v-btn
+                        icon
+                        ripple
+                        color="red"
+                        v-if="item.done"
+                        @click="removeTodo(index)"
+                      >
+                        <v-icon class="red--text">mdi-close</v-icon>
+                      </v-btn>
+                    </v-scroll-x-transition>
                     <!-- 
                       //TODO: implement image attach 
                     -->
@@ -156,6 +158,12 @@
       </v-btn>
     </v-speed-dial>
     <Footer />
+    <UploadImage
+      :uploadImage="uploadImage"
+      @close="toggleUploadDialog"
+      @upload="uploadImage"
+    />
+    <ColorPicker />
   </v-app>
 </template>
 
@@ -220,6 +228,17 @@ export default {
     turnOffDarkMode() {
       this.$vuetify.theme.dark = false;
       this.darkMode = true;
+    },
+  },
+  computed: {
+    completedTasks() {
+      return this.$store.state.todo.filter((todo) => todo.done).length;
+    },
+    progress() {
+      return (this.completedTasks / this.$store.state.todo.length) * 100;
+    },
+    remainingTasks() {
+      return this.$store.state.todo.length - this.completedTasks;
     },
   },
 
