@@ -9,8 +9,10 @@ export default {
     state.todo.push({
       text: state.newItem,
       done: false,
+      dateAdded: state.currentTime,
     });
     state.newItem = "";
+    console.log(state.todo);
   },
   removeItem(state, index) {
     state.todo.splice(index, 1);
@@ -93,5 +95,19 @@ export default {
       state.infoPanel = true;
       localStorage.setItem("firstTimeToken", "Not your first visit!");
     }
+  },
+  getNow(state) {
+    const today = new Date();
+
+    const date =
+      today.getDate() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getFullYear();
+    //const time =
+    //today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    //const dateTime = date + " " + time;
+    state.currentTime = date;
   },
 };

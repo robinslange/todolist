@@ -7,4 +7,8 @@ export default {
     context.commit("changeTitleColor", newColor);
     context.commit("toggleColorPicker");
   },
+  addToList(context) {
+    context.commit("getNow");
+    context.commit("addItem");
+  },
 };

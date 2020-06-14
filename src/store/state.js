@@ -7,6 +7,7 @@ export default {
   title: "",
   titleColor: "#313639",
   newTitleColor: "",
+  currentTime: "",
   editDialog: false,
   uploadImage: false,
   existingList: false,

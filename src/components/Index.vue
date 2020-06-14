@@ -105,8 +105,9 @@
               </v-col>
               <v-card flat class="scroll" max-height="300">
                 <v-col>
-                  <v-list v-if="this.$store.state.todo" class="scroll">
+                  <v-list v-if="this.$store.state.todo">
                     <v-list-item
+                      two-line
                       v-for="(item, index) in this.$store.state.todo"
                       :key="index"
                     >
@@ -115,6 +116,9 @@
                       </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title> {{ item.text }}</v-list-item-title>
+                        <v-list-item-subtitle>
+                          Date Added: {{ item.dateAdded }}
+                        </v-list-item-subtitle>
                       </v-list-item-content>
                       <v-scroll-x-transition>
                         <v-btn
@@ -216,7 +220,7 @@ export default {
     addItem() {
       if (this.totalTasks < 30) {
         this.$store.state.newItem = this.newItem;
-        this.$store.commit("addItem");
+        this.$store.dispatch("addToList");
         this.newItem = "";
       }
     },
