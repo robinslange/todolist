@@ -218,11 +218,9 @@ export default {
   },
   methods: {
     addItem() {
-      if (this.totalTasks < 50) {
-        this.$store.state.newItem = this.newItem;
-        this.$store.dispatch("addToList");
-        this.newItem = "";
-      }
+      this.$store.state.newItem = this.newItem;
+      this.$store.dispatch("addToList");
+      this.newItem = "";
     },
     removeTodo(index) {
       this.$store.commit("removeItem", index);
@@ -259,6 +257,52 @@ export default {
     toggleInfoPanel() {
       this.$store.commit("toggleInfoPanel");
     },
+    async pullDataAsync() {
+      return new Promise(() => {
+        setTimeout(() => {
+          if (this.$route.params.id != null) {
+            let queryRef = db
+              .collection("todos")
+              .where("ID", "==", this.$route.params.id);
+            queryRef
+              .get()
+              .then((snapshot) => {
+                // found solutiont to forever loading if non-existtant query here under (readonly) query :Query:
+                // https://googleapis.dev/nodejs/firestore/latest/QuerySnapshot.html
+                if (!snapshot.empty) {
+                  this.$store.state.existingList = true;
+                  snapshot.forEach((doc) => {
+                    console.log(doc);
+                    let data = doc.data();
+                    console.log(data);
+
+                    let list = JSON.parse(data.todo);
+                    for (let i = 0; i < snapshot.size; i++) {
+                      this.$store.state.todo = list;
+                      this.$store.state.todoName = data.name;
+                      this.newTodoName = data.name;
+                      this.$store.state.todoListID = data.ID;
+                      this.$store.state.titleColor = data.titleColor;
+                      this.$store.state.loading = false;
+                    }
+                  });
+                  //if router params doesn't exist
+                } else {
+                  //send to default route
+                  this.$router.push("/");
+                  //stop loading
+                  this.$store.state.loading = false;
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else {
+            this.$store.state.loading = false;
+          }
+        });
+      });
+    },
   },
   computed: {
     completedTasks() {
@@ -285,45 +329,7 @@ export default {
   created() {
     this.$store.commit("checkIfFirstTime");
     this.$store.state.loading = true;
-    if (this.$route.params.id != null) {
-      let queryRef = db
-        .collection("todos")
-        .where("ID", "==", this.$route.params.id);
-      queryRef
-        .get()
-        .then((snapshot) => {
-          // found solutiont to forever loading if non-existtant query here under (readonly) query :Query:
-          // https://googleapis.dev/nodejs/firestore/latest/QuerySnapshot.html
-          if (!snapshot.empty) {
-            this.$store.state.existingList = true;
-            snapshot.forEach((doc) => {
-              console.log(doc);
-              let data = doc.data();
-              console.log(data);
-              let list = JSON.parse(data.todo);
-              for (let i = 0; i < snapshot.size; i++) {
-                this.$store.state.todo = list;
-                this.$store.state.todoName = data.name;
-                this.newTodoName = data.name;
-                this.$store.state.todoListID = data.ID;
-                this.$store.state.titleColor = data.titleColor;
-                this.$store.state.loading = false;
-              }
-            });
-            //if router params doesn't exist
-          } else {
-            //send to default route
-            this.$router.push("/");
-            //stop loading
-            this.$store.state.loading = false;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      this.$store.state.loading = false;
-    }
+    this.pullDataAsync().then();
   },
 };
 </script>

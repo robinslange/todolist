@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
+    "fastjson": "^1.0.2",
     "firebase": "^7.14.4",
     "vue": "^2.6.11",
     "vue-clipboard2": "^0.3.1",
