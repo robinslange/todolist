@@ -58,7 +58,7 @@ export default {
   }),
   methods: {
     copy() {
-      let url = "todol.ink/" + this.$store.state.todoListID;
+      let url = "https:/" + "/todol.ink/" + this.$store.state.todoListID;
       this.copied = true;
       this.$copyText(url).then(
         function(e) {
