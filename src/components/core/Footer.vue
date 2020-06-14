@@ -7,7 +7,7 @@
             <v-list-item-title>Your shareable link: </v-list-item-title>
             <v-list-item-subtitle>
               <span class="fullSelect">
-                todol.ink/{{ this.$store.state.todoListID }}
+                https://todol.ink/{{ this.$store.state.todoListID }}
               </span>
               <v-btn @click="copy" tile small icon>
                 <v-icon>mdi-content-copy</v-icon>
