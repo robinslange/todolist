@@ -1,22 +1,17 @@
 <template>
-  <v-dialog v-model="this.$store.state.colorPickerDialog" width="400">
+  <v-dialog v-model="this.$store.state.colorPickerDialog" max-width="300">
     <v-card>
-      <v-card-title>Pick a color</v-card-title>
-      <v-container class="fill-width">
-        <v-col>
-          <v-row class="align-center">
-            <v-spacer></v-spacer>
-            <v-color-picker
-              v-model="newColor"
-              mode="hexa"
-              align-center
-              hide-inputs
-              hide-canvas
-              show-swatches
-            ></v-color-picker>
-          </v-row>
-        </v-col>
-      </v-container>
+      <v-card-title>Pick a color:</v-card-title>
+
+      <v-color-picker
+        v-model="newColor"
+        mode="hexa"
+        align-center
+        hide-inputs
+        hide-canvas
+        show-swatches
+      ></v-color-picker>
+
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn @click="saveColor" text>Confirm</v-btn>
