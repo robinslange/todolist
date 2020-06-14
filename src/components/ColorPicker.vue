@@ -4,7 +4,8 @@
       <v-card-title>Pick a color</v-card-title>
       <v-container class="fill-width">
         <v-col>
-          <v-flex class="align-center">
+          <v-row class="align-center">
+            <v-spacer></v-spacer>
             <v-color-picker
               v-model="newColor"
               mode="hexa"
@@ -13,7 +14,7 @@
               hide-canvas
               show-swatches
             ></v-color-picker>
-          </v-flex>
+          </v-row>
         </v-col>
       </v-container>
       <v-card-actions>
