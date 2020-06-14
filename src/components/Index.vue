@@ -21,7 +21,14 @@
         </v-btn>
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="5">
-            <v-card class="elevation-6" max-height="500">
+            <v-layout v-if="this.$store.state.loading" justify-center>
+              <v-progress-linear
+                color="primary"
+                class="align-center justify-center"
+                indeterminate
+              ></v-progress-linear>
+            </v-layout>
+            <v-card v-else class="elevation-6" max-height="500">
               <v-toolbar :color="this.$store.state.titleColor" dark flat>
                 <v-form
                   v-if="!this.$store.state.notEditing"
@@ -139,13 +146,6 @@
                 </v-col>
               </v-card>
             </v-card>
-            <v-layout v-if="this.$store.state.loading" justify-center>
-              <v-progress-linear
-                color="primary"
-                class="align-center justify-center"
-                indeterminate
-              ></v-progress-linear>
-            </v-layout>
           </v-col>
         </v-row>
       </v-container>
