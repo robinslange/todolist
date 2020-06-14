@@ -88,16 +88,7 @@
                     <v-list-item-content>
                       <v-list-item-title> {{ item.text }}</v-list-item-title>
                     </v-list-item-content>
-                    <v-btn
-                      icon
-                      ripple
-                      color="primary"
-                      @click="toggleUploadDialog"
-                      @close="toggleUploadDialog"
-                      @sendImage="uploadImageFunc"
-                    >
-                      <v-icon>mdi-file-upload-outline</v-icon>
-                    </v-btn>
+
                     <v-btn
                       icon
                       ripple
@@ -107,6 +98,16 @@
                     >
                       <v-icon class="red--text">mdi-close</v-icon>
                     </v-btn>
+                    <!-- <v-btn
+                      icon
+                      ripple
+                      color="primary"
+                      @click="toggleUploadDialog"
+                      @close="toggleUploadDialog"
+                      @sendImage="uploadImageFunc"
+                    >
+                      <v-icon>mdi-file-upload-outline</v-icon>
+                    </v-btn> -->
                   </v-list-item>
                 </v-list>
               </v-col>
