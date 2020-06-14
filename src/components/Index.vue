@@ -1,5 +1,5 @@
 <template>
-  <v-app :dark="setTheme">
+  <v-app>
     <v-switch
       v-model="autoSave"
       label="Toggle Auto Save"
