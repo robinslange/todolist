@@ -218,7 +218,7 @@ export default {
   },
   methods: {
     addItem() {
-      if (this.totalTasks < 30) {
+      if (this.totalTasks < 50) {
         this.$store.state.newItem = this.newItem;
         this.$store.dispatch("addToList");
         this.newItem = "";
