@@ -16,7 +16,7 @@
         </v-btn>
         <v-btn icon>
           <a class="footerButton" href="https://robinlange.me">
-            <v-icon>fa-globe</v-icon>
+            <v-icon>mdi-web</v-icon>
           </a>
         </v-btn>
       </v-card-text>
@@ -33,6 +33,6 @@ export default {
 <style scoped>
 .footerButton {
   text-decoration: none;
-  color: rgba(0, 0, 0, 0.54);
+  color: inherit;
 }
 </style>

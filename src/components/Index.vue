@@ -1,9 +1,14 @@
 <template>
-  <v-app>
+  <v-app :dark="setTheme">
+    <v-switch
+      v-model="autoSave"
+      label="Toggle Auto Save"
+      class="autoSaveSwitch"
+    ></v-switch>
     <v-content>
-      <v-container class="fill-height">
+      <v-container fill-height>
         <v-row align="center" justify="center">
-          <v-col cols="12" sm="8" md="4" class="addItemBox">
+          <v-col cols="12" sm="8" md="5">
             <v-layout v-if="this.$store.state.loading" justify-center>
               <v-progress-linear
                 color="primary"
@@ -133,14 +138,20 @@
       right
     >
       <template v-slot:activator>
-        <v-btn v-model="options" dark fab>
+        <v-btn v-model="options" fab>
           <v-icon v-if="options">fa-times</v-icon>
           <v-icon v-else>fa-cog</v-icon>
         </v-btn>
       </template>
 
-      <v-btn @click="toggleColorPicker" fab dark small>
+      <v-btn @click="toggleColorPicker" fab small>
         <v-icon>fa-paint-brush</v-icon>
+      </v-btn>
+      <v-btn v-if="darkMode" @click="turnOnDarkMode" fab small>
+        <v-icon>fa-moon</v-icon>
+      </v-btn>
+      <v-btn v-if="!darkMode" @click="turnOffDarkMode" fab small>
+        <v-icon>fa-sun</v-icon>
       </v-btn>
     </v-speed-dial>
     <Footer />
@@ -167,6 +178,8 @@ export default {
       existingList: false,
       options: false,
       valid: false,
+      autoSave: false,
+      darkMode: true,
     };
   },
   methods: {
@@ -187,7 +200,6 @@ export default {
         this.$store.commit("saveNewName", this.newTodoName);
       }
     },
-
     toggleEditName() {
       this.$store.commit("toggleNameEdit");
     },
@@ -200,8 +212,23 @@ export default {
     uploadImageFunc(val) {
       console.log(val);
     },
+    turnOnDarkMode() {
+      this.$vuetify.theme.dark = true;
+      this.darkMode = false;
+    },
+    turnOffDarkMode() {
+      this.$vuetify.theme.dark = false;
+      this.darkMode = true;
+    },
   },
 
+  mounted() {
+    window.setInterval(() => {
+      if (this.autoSave) {
+        this.saveList();
+      }
+    }, 30000);
+  },
   created() {
     this.$store.state.loading = true;
     if (this.$route.params.id != null) {
@@ -247,4 +274,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.autoSaveSwitch {
+  position: absolute;
+  padding-left: 2%;
+}
+</style>
