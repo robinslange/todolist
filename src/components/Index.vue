@@ -28,7 +28,11 @@
                 indeterminate
               ></v-progress-linear>
             </v-layout>
-            <v-card v-if="!this.$store.state.loading" class="elevation-6">
+            <v-card
+              v-if="!this.$store.state.loading"
+              class="elevation-6"
+              max-height="500"
+            >
               <v-toolbar :color="this.$store.state.titleColor" dark flat>
                 <v-form
                   v-if="!this.$store.state.notEditing"
@@ -47,7 +51,7 @@
                     dark
                     clearable
                     autofocus
-                    @keypress.enter.prevent
+                    @keypress.enter.prevent="saveName"
                   >
                   </v-text-field>
                 </v-form>
@@ -99,33 +103,34 @@
                   </v-text-field>
                 </v-row>
               </v-col>
-              <v-col>
-                <v-list v-if="this.$store.state.todo">
-                  <v-list-item
-                    v-for="(item, index) in this.$store.state.todo"
-                    :key="index"
-                  >
-                    <v-list-item-avatar>
-                      <v-checkbox v-model="item.done"></v-checkbox>
-                    </v-list-item-avatar>
-                    <v-list-item-content>
-                      <v-list-item-title> {{ item.text }}</v-list-item-title>
-                    </v-list-item-content>
-                    <v-scroll-x-transition>
-                      <v-btn
-                        icon
-                        ripple
-                        color="red"
-                        v-if="item.done"
-                        @click="removeTodo(index)"
-                      >
-                        <v-icon class="red--text">mdi-close</v-icon>
-                      </v-btn>
-                    </v-scroll-x-transition>
-                    <!-- 
+              <v-card flat class="scroll" max-height="300">
+                <v-col>
+                  <v-list v-if="this.$store.state.todo" class="scroll">
+                    <v-list-item
+                      v-for="(item, index) in this.$store.state.todo"
+                      :key="index"
+                    >
+                      <v-list-item-avatar>
+                        <v-checkbox v-model="item.done"></v-checkbox>
+                      </v-list-item-avatar>
+                      <v-list-item-content>
+                        <v-list-item-title> {{ item.text }}</v-list-item-title>
+                      </v-list-item-content>
+                      <v-scroll-x-transition>
+                        <v-btn
+                          icon
+                          ripple
+                          color="red"
+                          v-if="item.done"
+                          @click="removeTodo(index)"
+                        >
+                          <v-icon class="red--text">mdi-close</v-icon>
+                        </v-btn>
+                      </v-scroll-x-transition>
+                      <!-- 
                       //TODO: implement image attach 
                     -->
-                    <!-- <v-btn
+                      <!-- <v-btn
                       icon
                       ripple
                       color="primary"
@@ -135,9 +140,10 @@
                     >
                       <v-icon>mdi-file-upload-outline</v-icon>
                     </v-btn> -->
-                  </v-list-item>
-                </v-list>
-              </v-col>
+                    </v-list-item>
+                  </v-list>
+                </v-col>
+              </v-card>
             </v-card>
           </v-col>
         </v-row>
@@ -208,9 +214,11 @@ export default {
   },
   methods: {
     addItem() {
-      this.$store.state.newItem = this.newItem;
-      this.$store.commit("addItem");
-      this.newItem = "";
+      if (this.totalTasks < 30) {
+        this.$store.state.newItem = this.newItem;
+        this.$store.commit("addItem");
+        this.newItem = "";
+      }
     },
     removeTodo(index) {
       this.$store.commit("removeItem", index);
@@ -257,6 +265,9 @@ export default {
     },
     remainingTasks() {
       return this.$store.state.todo.length - this.completedTasks;
+    },
+    totalTasks() {
+      return this.$store.state.todo.length;
     },
   },
 
@@ -317,5 +328,8 @@ export default {
 .autoSaveSwitch {
   position: absolute;
   padding-left: 2%;
+}
+.scroll {
+  overflow-y: auto;
 }
 </style>
