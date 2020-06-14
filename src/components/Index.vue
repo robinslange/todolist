@@ -35,6 +35,7 @@
                     dark
                     clearable
                     autofocus
+                    @keypress.enter.prevent
                   >
                   </v-text-field>
                 </v-form>
