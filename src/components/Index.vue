@@ -147,7 +147,7 @@
       v-model="options"
       direction="top"
       transition="scale-transition"
-      class="my-5 mx-2"
+      class="my-12 mx-2"
       open-on-hover
       fixed
       bottom

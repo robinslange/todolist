@@ -6,7 +6,7 @@ import vuetify from "./plugins/vuetify";
 import "@fortawesome/fontawesome-free/css/all.css"; // Ensure you are using css-loader
 import titleMixin from "@/mixins/titleMixins";
 
-Vue.config.productionTip = true;
+Vue.config.productionTip = false;
 
 Vue.mixin(titleMixin);
 
