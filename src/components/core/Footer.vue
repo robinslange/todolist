@@ -1,5 +1,5 @@
 <template>
-  <v-footer absolute padless tile color="white">
+  <v-footer fixed padless tile color="white">
     <v-card class="flex" flat>
       <v-card-text class="text-center">
         made with &nbsp; <v-icon>fa-heart</v-icon> &nbsp; by Robin Lange
