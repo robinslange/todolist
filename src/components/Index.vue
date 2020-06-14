@@ -143,24 +143,7 @@
         <v-icon>fa-paint-brush</v-icon>
       </v-btn>
     </v-speed-dial>
-    <v-footer absolute padless tile color="white">
-      <v-card class="flex" flat>
-        <v-card-text class="text-center">
-          made with &nbsp; <v-icon>fa-heart</v-icon> &nbsp; by Robin Lange
-
-          <v-btn icon>
-            <a class="footerButton" href="https://github.com/robinslange">
-              <v-icon>mdi-github</v-icon>
-            </a>
-          </v-btn>
-          <v-btn icon>
-            <a class="footerButton" href="https://twitter.com/_schwarte_">
-              <v-icon>mdi-twitter</v-icon>
-            </a>
-          </v-btn>
-        </v-card-text>
-      </v-card>
-    </v-footer>
+    <Footer />
   </v-app>
 </template>
 
@@ -172,6 +155,7 @@ export default {
   name: "Index",
   components: {
     //EditName: () => import("@/components/EditName"),
+    Footer: () => import("@/components/core/Footer"),
     UploadImage: () => import("@/components/UploadImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
   },
@@ -263,9 +247,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.footerButton {
-  text-decoration: none !important;
-  color: rgba(0, 0, 0, 0.54);
-}
-</style>
+<style scoped></style>
