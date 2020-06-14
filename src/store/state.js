@@ -5,7 +5,7 @@ export default {
   todoListID: "",
   tempID: "",
   title: "",
-  titleColor: "#E65100",
+  titleColor: "#313639",
   newTitleColor: "",
   editDialog: false,
   uploadImage: false,
