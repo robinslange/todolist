@@ -13,12 +13,11 @@
             </v-layout>
             <v-card v-if="!this.$store.state.loading" class="elevation-6">
               <v-toolbar :color="this.$store.state.titleColor" dark flat>
-                <v-toolbar-title v-if="this.$store.state.notEditing">
-                  <span class="py-2">
-                    {{ this.$store.state.todoName }}
-                  </span>
-                </v-toolbar-title>
-                <v-form v-else ref="editName" dark>
+                <v-form
+                  v-if="!this.$store.state.notEditing"
+                  ref="editName"
+                  dark
+                >
                   <v-text-field
                     v-model="newTodoName"
                     class="py-2 editNameBox"
@@ -34,6 +33,11 @@
                   >
                   </v-text-field>
                 </v-form>
+                <v-toolbar-title v-if="this.$store.state.notEditing">
+                  <span class="py-2">
+                    {{ this.$store.state.todoName }}
+                  </span>
+                </v-toolbar-title>
 
                 <v-btn
                   @click="toggleEditName"
@@ -64,18 +68,18 @@
               />
               <ColorPicker />
               <v-col>
-                <v-row class="px-4"
-                  ><v-text-field
+                <v-row class="px-4">
+                  <v-text-field
                     label="Add an item"
                     v-model="newItem"
                     @keyup.enter="addItem"
                   >
-                    <v-icon slot="append" color="primary" @click="addItem"
-                      >mdi-plus</v-icon
-                    ></v-text-field
-                  ></v-row
-                ></v-col
-              >
+                    <v-icon slot="append" color="primary" @click="addItem">
+                      mdi-plus
+                    </v-icon>
+                  </v-text-field>
+                </v-row>
+              </v-col>
               <v-col>
                 <v-list v-if="this.$store.state.todo">
                   <v-list-item
@@ -98,6 +102,9 @@
                     >
                       <v-icon class="red--text">mdi-close</v-icon>
                     </v-btn>
+                    <!-- 
+                      //TODO: implement image attach 
+                    -->
                     <!-- <v-btn
                       icon
                       ripple
@@ -136,6 +143,24 @@
         <v-icon>fa-paint-brush</v-icon>
       </v-btn>
     </v-speed-dial>
+    <v-footer absolute padless tile color="white">
+      <v-card class="flex" flat>
+        <v-card-text class="text-center">
+          made with &nbsp; <v-icon>fa-heart</v-icon> &nbsp; by Robin Lange
+
+          <v-btn icon>
+            <a class="footerButton" href="https://github.com/robinslange">
+              <v-icon>mdi-github</v-icon>
+            </a>
+          </v-btn>
+          <v-btn icon>
+            <a class="footerButton" href="https://twitter.com/_schwarte_">
+              <v-icon>mdi-twitter</v-icon>
+            </a>
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </v-footer>
   </v-app>
 </template>
 
@@ -238,4 +263,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.footerButton {
+  text-decoration: none !important;
+  color: rgba(0, 0, 0, 0.54);
+}
+</style>
