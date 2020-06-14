@@ -76,4 +76,12 @@ export default {
   changeTitleColor(state, newColor) {
     state.titleColor = newColor;
   },
+  toggleNameEdit(state) {
+    
+    state.notEditing = !state.notEditing;
+  },
+  saveNewName(state, newName) {
+    state.todoName = newName;
+    state.notEditing = true;
+  },
 };

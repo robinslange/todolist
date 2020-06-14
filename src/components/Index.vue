@@ -13,9 +13,25 @@
             </v-layout>
             <v-card v-if="!this.$store.state.loading" class="elevation-6">
               <v-toolbar :color="this.$store.state.titleColor" dark flat>
-                <v-toolbar-title class="py-2">
+                <v-toolbar-title
+                  v-if="this.$store.state.notEditing"
+                  class="py-2"
+                >
                   {{ this.$store.state.todoName }}
                 </v-toolbar-title>
+                <v-text-field v-else v-model="newTodoName" clearable>
+                </v-text-field>
+
+                <v-btn
+                  @click="toggleEditName"
+                  v-if="this.$store.state.notEditing"
+                  icon
+                >
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn @click="saveName" v-else icon>
+                  <v-icon>fa-check</v-icon>
+                </v-btn>
                 <v-spacer></v-spacer>
 
                 <v-progress-circular
@@ -23,6 +39,9 @@
                   class="save"
                   indeterminate
                 ></v-progress-circular>
+                <v-btn @click="saveList" v-else icon>
+                  <v-icon>fa-save</v-icon>
+                </v-btn>
               </v-toolbar>
               <EditName />
               <UploadImage
@@ -99,12 +118,6 @@
         </v-btn>
       </template>
 
-      <v-btn @click="saveList" fab dark small>
-        <v-icon>fa-save</v-icon>
-      </v-btn>
-      <v-btn @click="toggleEditNameDialog" fab dark small>
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn>
       <v-btn @click="toggleColorPicker" fab dark small>
         <v-icon>fa-paint-brush</v-icon>
       </v-btn>
@@ -126,6 +139,7 @@ export default {
   data() {
     return {
       newItem: "",
+      newTodoName: this.$store.state.todoName,
       uploadImage: false,
       existingList: false,
       options: false,
@@ -143,9 +157,15 @@ export default {
     saveList() {
       this.$store.dispatch("saveList");
     },
+    saveName() {
+      this.$store.commit("saveNewName", this.newTodoName);
+    },
     toggleEditNameDialog() {
       this.$store.commit("toggleEditDialog");
       this.title = this.$store.state.todoName;
+    },
+    toggleEditName() {
+      this.$store.commit("toggleNameEdit");
     },
     toggleUploadDialog() {
       this.uploadImage = !this.uploadImage;
