@@ -7,6 +7,18 @@
     ></v-switch>
     <v-content>
       <v-container fill-height>
+        <v-btn
+          class="mx-5 my-12"
+          @click="toggleInfoPanel"
+          small
+          fab
+          top
+          right
+          absolute
+          icon
+        >
+          <v-icon>fa-question</v-icon>
+        </v-btn>
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="5">
             <v-layout v-if="this.$store.state.loading" justify-center>
@@ -165,6 +177,7 @@
       @upload="uploadImage"
     />
     <ColorPicker />
+    <InfoPanel />
   </v-app>
 </template>
 
@@ -179,6 +192,7 @@ export default {
     Footer: () => import("@/components/core/Footer"),
     UploadImage: () => import("@/components/UploadImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
+    InfoPanel: () => import("@/components/InfoPanel"),
   },
   data() {
     return {
@@ -230,6 +244,9 @@ export default {
       this.$vuetify.theme.dark = false;
       this.darkMode = true;
     },
+    toggleInfoPanel() {
+      this.$store.commit("toggleInfoPanel");
+    },
   },
   computed: {
     completedTasks() {
@@ -251,6 +268,7 @@ export default {
     }, 30000);
   },
   created() {
+    this.$store.commit("checkIfFirstTime");
     this.$store.state.loading = true;
     if (this.$route.params.id != null) {
       let queryRef = db

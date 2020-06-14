@@ -14,6 +14,7 @@ export default {
   saving: false,
   colorPickerDialog: false,
   notEditing: true,
+  infoPanel: true,
   rules: {
     required: (value) => !!value || "Required.",
     counterMin3: (value) =>

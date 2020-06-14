@@ -82,4 +82,16 @@ export default {
     state.todoName = newName;
     state.notEditing = true;
   },
+  toggleInfoPanel(state) {
+    state.infoPanel = !state.infoPanel;
+  },
+  checkIfFirstTime(state) {
+    var token = localStorage.getItem("firstTimeToken");
+    if (token != null) {
+      state.infoPanel = false;
+    } else {
+      state.infoPanel = true;
+      localStorage.setItem("firstTimeToken", "Not your first visit!");
+    }
+  },
 };
