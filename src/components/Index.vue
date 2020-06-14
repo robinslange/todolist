@@ -313,7 +313,7 @@ export default {
             //if router params doesn't exist
           } else {
             //send to default route
-            this.$router.go("/");
+            this.$router.push("/");
             //stop loading
             this.$store.state.loading = false;
           }
