@@ -5,7 +5,7 @@
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title>Your shareable link: </v-list-item-title>
-            <v-list-item-subtitle>
+            <v-list-item-subtitle class="fullySelect">
               todol.ink/{{ this.$store.state.todoListID }}
             </v-list-item-subtitle>
           </v-list-item-content>
@@ -42,5 +42,11 @@ export default {
 .footerButton {
   text-decoration: none;
   color: inherit;
+}
+.fullySelect {
+  -webkit-user-select: all; /* Chrome 49+ */
+  -moz-user-select: all; /* Firefox 43+ */
+  -ms-user-select: all; /* No support yet */
+  user-select: all; /* Likely future */
 }
 </style>
