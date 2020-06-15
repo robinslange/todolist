@@ -338,8 +338,8 @@ export default {
   },
   created() {
     this.$store.commit("checkIfFirstTime");
-    let savedLinks = localStorage.getItem("savedLinks");
-    savedLinks.forEach((item) => this.$store.state.savedLinks.push(item));
+    let savedLinks = JSON.parse(localStorage.getItem("savedLinks"));
+    this.$store.state.savedLinks = savedLinks;
     this.$store.state.loading = true;
     this.pullDataAsync()
       .then()

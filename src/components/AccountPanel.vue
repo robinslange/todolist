@@ -39,9 +39,9 @@ export default {
     toggleAutoSave() {
       this.$store.commit("toggleAutoSave", this.autoSave);
     },
-    saveListLink(i) {
+    saveListLink() {
       if (this.$store.state.savedLinks.length < 6) {
-        this.$store.commit("saveListLink", i);
+        this.$store.commit("saveListLink");
       }
     },
   },
