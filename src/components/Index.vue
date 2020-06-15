@@ -112,7 +112,9 @@
                         <v-checkbox v-model="item.done"></v-checkbox>
                       </v-list-item-avatar>
                       <v-list-item-content>
-                        <v-list-item-title> {{ item.text }}</v-list-item-title>
+                        <v-list-item-title class="wrap-text">
+                          {{ item.text }}</v-list-item-title
+                        >
                         <v-list-item-subtitle>
                           Date Added: {{ item.dateAdded }}
                         </v-list-item-subtitle>
@@ -338,5 +340,9 @@ export default {
 }
 .scroll {
   overflow-y: auto;
+}
+.wrap-text {
+  -webkit-line-clamp: unset !important;
+  white-space: normal;
 }
 </style>
