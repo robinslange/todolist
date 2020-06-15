@@ -16,6 +16,11 @@ export default {
   colorPickerDialog: false,
   notEditing: true,
   infoPanel: true,
+  editItem: false,
+  accountPanel: true,
+  autoSave: false,
+  savedLinks: [],
+
   rules: {
     required: (value) => !!value || "Required.",
     counterMin3: (value) =>

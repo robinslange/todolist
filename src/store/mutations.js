@@ -110,4 +110,18 @@ export default {
     //const dateTime = date + " " + time;
     state.currentTime = date;
   },
+  toggleAccountPanel(state) {
+    state.accountPanel = !state.accountPanel;
+  },
+  toggleAutoSave(state, val) {
+    state.autoSave = val;
+  },
+  saveListLink(state) {
+    let link = "https:/" + "/todol.ink/" + state.todoListID;
+    console.log(link);
+    state.savedLinks.push(link);
+    console.log();
+    let dataPack = JSON.stringify(state.savedLinks);
+    localStorage.setItem("savedLinks", dataPack);
+  },
 };

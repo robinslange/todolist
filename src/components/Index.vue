@@ -1,12 +1,19 @@
 <template>
   <v-app>
-    <v-switch
-      v-model="autoSave"
-      label="Toggle Auto Save"
-      class="autoSaveSwitch"
-    ></v-switch>
     <v-content>
       <v-container fill-height>
+        <v-btn
+          class="mx-5 my-12"
+          @click="toggleAccountPanel"
+          small
+          fab
+          top
+          left
+          absolute
+          icon
+        >
+          <v-icon>fa-user</v-icon>
+        </v-btn>
         <v-btn
           class="mx-5 my-12"
           @click="toggleInfoPanel"
@@ -113,12 +120,15 @@
                       </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title class="wrap-text">
-                          {{ item.text }}</v-list-item-title
-                        >
+                          {{ item.text }}
+                        </v-list-item-title>
                         <v-list-item-subtitle>
                           Date Added: {{ item.dateAdded }}
                         </v-list-item-subtitle>
                       </v-list-item-content>
+                      <!-- <v-btn icon>
+                        <v-icon>mdi-pencil</v-icon>
+                      </v-btn> -->
                       <v-scroll-x-transition>
                         <v-btn
                           icon
@@ -187,6 +197,7 @@
     />
     <ColorPicker />
     <InfoPanel />
+    <AccountPanel />
   </v-app>
 </template>
 
@@ -197,11 +208,11 @@ export default {
   title: "",
   name: "Index",
   components: {
-    //EditName: () => import("@/components/EditName"),
     Footer: () => import("@/components/core/Footer"),
     UploadImage: () => import("@/components/UploadImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
     InfoPanel: () => import("@/components/InfoPanel"),
+    AccountPanel: () => import("@/components/AccountPanel"),
   },
   data() {
     return {
@@ -256,6 +267,9 @@ export default {
     toggleInfoPanel() {
       this.$store.commit("toggleInfoPanel");
     },
+    toggleAccountPanel() {
+      this.$store.commit("toggleAccountPanel");
+    },
     async pullDataAsync() {
       return new Promise(() => {
         setTimeout(() => {
@@ -266,15 +280,12 @@ export default {
             queryRef
               .get()
               .then((snapshot) => {
-                // found solutiont to forever loading if non-existtant query here under (readonly) query :Query:
+                // found solution to forever loading if non-existtant query here under (readonly) query :Query:
                 // https://googleapis.dev/nodejs/firestore/latest/QuerySnapshot.html
                 if (!snapshot.empty) {
                   this.$store.state.existingList = true;
                   snapshot.forEach((doc) => {
-                    console.log(doc);
                     let data = doc.data();
-                    console.log(data);
-
                     let list = JSON.parse(data.todo);
                     for (let i = 0; i < snapshot.size; i++) {
                       this.$store.state.todo = list;
@@ -320,15 +331,21 @@ export default {
 
   mounted() {
     window.setInterval(() => {
-      if (this.autoSave) {
+      if (this.$store.state.autoSave) {
         this.saveList();
       }
     }, 30000);
   },
   created() {
     this.$store.commit("checkIfFirstTime");
+    let savedLinks = localStorage.getItem("savedLinks");
+    savedLinks.forEach((item) => this.$store.state.savedLinks.push(item));
     this.$store.state.loading = true;
-    this.pullDataAsync().then();
+    this.pullDataAsync()
+      .then()
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>
