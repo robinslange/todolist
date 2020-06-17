@@ -5,7 +5,13 @@
     max-height="350"
   >
     <v-card>
-      <v-card-title>Account</v-card-title>
+      <v-card-title
+        >Account
+        <v-spacer></v-spacer>
+        <v-btn @click="close" icon>
+          <v-icon>fa-times</v-icon>
+        </v-btn>
+      </v-card-title>
       <v-card-actions class="mx-3 my-3">
         <v-switch
           label="Toggle Auto Save"
@@ -58,6 +64,9 @@ export default {
     },
     deleteSavedLink(i) {
       this.$store.commit("deleteListLink", i);
+    },
+    close() {
+      this.$store.commit("toggleAccountPanel");
     },
   },
   computed: {},
