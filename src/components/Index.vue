@@ -14,6 +14,7 @@
         >
           <v-icon>fa-user</v-icon>
         </v-btn>
+
         <v-btn
           class="mx-5 my-12"
           @click="toggleInfoPanel"

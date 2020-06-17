@@ -2,7 +2,7 @@
   <v-footer fixed padless tile color="white">
     <v-card class="flex" flat>
       <v-card-text class="text-center">
-        <v-list-item two-line v-if="this.$store.state.todoListID">
+        <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-title>Your shareable link: </v-list-item-title>
             <v-list-item-subtitle>
@@ -14,9 +14,6 @@
               </v-btn>
             </v-list-item-subtitle>
           </v-list-item-content>
-          <v-list-item v-if="!this.$store.state.todoListID" two-line
-            >Share Us!</v-list-item
-          >
         </v-list-item>
 
         <v-snackbar
@@ -55,9 +52,13 @@
 <script>
 export default {
   name: "Footer",
+  components: {},
   data: () => ({
+    defaultURL: "https:/" + "/todol.ink",
+    defaultScale: 2,
     copied: false,
     timeout: 500,
+    url: this.currentURL,
   }),
   methods: {
     copy() {
@@ -74,6 +75,23 @@ export default {
           console.log(e);
         }
       );
+    },
+  },
+  computed: {
+    currentURL() {
+      let url = "https:/" + "/todol.ink";
+      if (!this.$store.state.todoListID) {
+        return url;
+      } else {
+        return url + "/" + this.$store.state.todolistID;
+      }
+    },
+    currentTitle() {
+      if (this.$store.state.todo.length > 0) {
+        return "Check out my todo list!";
+      } else {
+        return "Check out this simple todo list app that creates easily shareable links!";
+      }
     },
   },
 };
