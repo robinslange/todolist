@@ -117,11 +117,20 @@ export default {
     state.autoSave = val;
   },
   saveListLink(state) {
+    //ensures array exists before saving
+    state.savedLinks = state.savedLinks || [];
     let link = "https:/" + "/todol.ink/" + state.todoListID;
     console.log(link);
     state.savedLinks.push(link);
-    console.log();
+    console.log(state.savedLinks);
     let dataPack = JSON.stringify(state.savedLinks);
     localStorage.setItem("savedLinks", dataPack);
   },
+  deleteListLink(state, i) {
+    state.savedLinks.splice(i, 1);
+    let dataPack = JSON.stringify(state.savedLinks);
+    localStorage.setItem("savedLinks", dataPack);
+  },
+  
+  
 };

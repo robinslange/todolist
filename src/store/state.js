@@ -17,7 +17,7 @@ export default {
   notEditing: true,
   infoPanel: true,
   editItem: false,
-  accountPanel: true,
+  accountPanel: false,
   autoSave: false,
   savedLinks: [],
 

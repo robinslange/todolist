@@ -1,5 +1,9 @@
 <template>
-  <v-dialog v-model="this.$store.state.accountPanel" max-width="450">
+  <v-dialog
+    v-model="this.$store.state.accountPanel"
+    max-width="450"
+    max-height="350"
+  >
     <v-card>
       <v-card-title>Account</v-card-title>
       <v-card-actions class="mx-3 my-3">
@@ -8,23 +12,33 @@
           v-model="autoSave"
           @change="toggleAutoSave"
         ></v-switch>
-        <v-btn style="margin-left: 5% !important;" @click="saveListLink" text
-          >Save Current list</v-btn
-        >
       </v-card-actions>
-
-      <v-flex class="d-inline-flex nowarp">
-        <v-col>
-          <v-row v-for="(item, i) in itemsHead" :key="i" class="px-6">
-            <span>{{ item }} </span>
-          </v-row>
-        </v-col>
-        <v-col>
-          <v-row v-for="(item, i) in itemsTail" :key="i" class="px-6">
-            <span>{{ item }}</span>
-          </v-row>
-        </v-col>
-      </v-flex>
+      <v-card>
+        <v-card-title>
+          Your Saved Lists
+          <v-spacer></v-spacer>
+          <v-btn @click="saveListLink">Save current list</v-btn>
+        </v-card-title>
+        <v-card-actions> </v-card-actions>
+        <v-card max-height="150px" class="scroll" flat>
+          <v-list>
+            <v-list-item
+              v-for="(item, i) in this.$store.state.savedLinks"
+              :key="i"
+              style="align-items: center;"
+            >
+              <v-list-item-subtitle>
+                <span class="fullSelect">{{ item }}</span>
+              </v-list-item-subtitle>
+              <v-list-item-action>
+                <v-btn @click="deleteSavedLink(i)" icon>
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-card>
     </v-card>
   </v-dialog>
 </template>
@@ -40,24 +54,27 @@ export default {
       this.$store.commit("toggleAutoSave", this.autoSave);
     },
     saveListLink() {
-      if (this.$store.state.savedLinks.length < 6) {
-        this.$store.commit("saveListLink");
-      }
+      this.$store.commit("saveListLink");
+    },
+    deleteSavedLink(i) {
+      this.$store.commit("deleteListLink", i);
     },
   },
-  computed: {
-    itemsHead() {
-      return this.$store.state.savedLinks.slice(-3);
-    },
-    itemsTail() {
-      return this.$store.state.savedLinks.slice(3);
-    },
-  },
+  computed: {},
 };
 </script>
 
-<style>
+<style scoped>
 .nowrap {
   white-space: nowrap;
+}
+.scroll {
+  overflow-y: auto;
+}
+.fullSelect {
+  -webkit-user-select: all; /* Chrome 49+ */
+  -moz-user-select: all; /* Firefox 43+ */
+  -ms-user-select: all; /* No support yet */
+  user-select: all; /* Likely future */
 }
 </style>

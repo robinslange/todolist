@@ -58,13 +58,16 @@ export default {
   }),
   methods: {
     copy() {
-      let url = "https:/" + "/todol.ink/" + this.$store.state.todoListID;
+      let item = "https:/" + "/todol.ink/" + this.$store.state.todoListID;
       this.copied = true;
-      this.$copyText(url).then(
+
+      this.$copyText(item).then(
         function(e) {
+          console.log("copied");
           console.log(e);
         },
         function(e) {
+          console.log("not copied");
           console.log(e);
         }
       );
