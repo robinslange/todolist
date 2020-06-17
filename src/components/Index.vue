@@ -82,21 +82,22 @@
                   <v-icon>fa-check</v-icon>
                 </v-btn>
                 <v-spacer></v-spacer>
-
-                <v-progress-circular
-                  v-if="this.$store.state.saving"
-                  class="save"
-                  indeterminate
-                ></v-progress-circular>
-                <v-btn @click="saveList" v-else icon>
-                  <v-icon>fa-save</v-icon>
-                </v-btn>
+                <span v-if="this.$store.state.todo.length > 0">
+                  <v-progress-circular
+                    v-if="this.$store.state.saving"
+                    class="save"
+                    indeterminate
+                  ></v-progress-circular>
+                  <v-btn @click="saveList" v-else icon>
+                    <v-icon>fa-save</v-icon>
+                  </v-btn>
+                </span>
               </v-toolbar>
 
               <v-col>
                 <v-row class="px-4">
                   <v-text-field
-                    label="Add an item"
+                    label="What do you need to get done?"
                     v-model="newItem"
                     @keyup.enter="addItem"
                   >

@@ -2,7 +2,7 @@
   <v-footer fixed padless tile color="white">
     <v-card class="flex" flat>
       <v-card-text class="text-center">
-        <v-list-item two-line>
+        <v-list-item two-line v-if="this.$store.state.todoListID">
           <v-list-item-content>
             <v-list-item-title>Your shareable link: </v-list-item-title>
             <v-list-item-subtitle>
@@ -14,6 +14,9 @@
               </v-btn>
             </v-list-item-subtitle>
           </v-list-item-content>
+          <v-list-item v-if="!this.$store.state.todoListID" two-line
+            >Share Us!</v-list-item
+          >
         </v-list-item>
 
         <v-snackbar
