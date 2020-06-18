@@ -12,6 +12,7 @@
           <v-icon>fa-times</v-icon>
         </v-btn>
       </v-card-title>
+      <v-card-subtitle class="px-6 py-4">Coming Soon!</v-card-subtitle>
 
       <v-divider></v-divider>
       <v-card flat>

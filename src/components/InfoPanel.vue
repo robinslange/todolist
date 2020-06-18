@@ -7,7 +7,6 @@
         here's all that you need to know:
         <ol>
           <li>Write your todo list</li>
-          <li>Save it with this button <v-icon>fa-save</v-icon></li>
           <li>
             At the bottom of the page is now your unique URL that you can share
             with anyone
