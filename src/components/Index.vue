@@ -138,7 +138,7 @@
         fab
         bottom
         left
-        absolute
+        fixed
         icon
         class="mx-5 my-12"
       >
@@ -151,7 +151,7 @@
         fab
         bottom
         left
-        absolute
+        fixed
         icon
         class="mx-5 my-12"
       >
@@ -176,14 +176,15 @@
             fab
             bottom
             right
-            absolute
+            fixed
             icon
           >
-            <v-icon>fa-paint-brush</v-icon>
+            <v-icon>fa-palette</v-icon>
           </v-btn>
         </template>
         <ColorPicker />
       </v-menu>
+      <v-divider></v-divider>
     </v-content>
 
     <Footer />
