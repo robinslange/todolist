@@ -27,8 +27,9 @@
           Copied!
         </v-snackbar>
 
-        made with &nbsp; <v-icon color="error">fa-heart</v-icon> &nbsp; by Robin
-        Lange
+        made with &nbsp;
+        <v-icon :color="this.$store.state.titleColor">fa-heart</v-icon> &nbsp;
+        by Robin Lange
 
         <v-btn icon>
           <a class="footerButton" href="https://github.com/robinslange">
