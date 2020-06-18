@@ -14,12 +14,13 @@
           </li>
         </ol>
         <br />
-        You can either save manually whenever you're ready to share changes or
-        turn on auto-save.
+        <span style="color: green; font-style: oblique;">NEW:</span> The list
+        will now save after every entry, so you don't need to toggle auto-save
+        anymore :)
         <br />
         <br />
         Just remember that changes will save from whoever saves to the list last
-        (In future it will auto-sync new changes between viewers)
+        (In future it will auto-sync new changes between users)
         <br />
         <br />
         Ready to go? Press the button below to get started!

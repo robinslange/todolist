@@ -36,168 +36,166 @@
                 indeterminate
               ></v-progress-linear>
             </v-layout>
-            <v-card v-else class="elevation-6" max-height="500">
-              <v-toolbar :color="this.$store.state.titleColor" dark flat>
-                <v-form
-                  v-if="!this.$store.state.notEditing"
-                  ref="editName"
-                  dark
-                >
-                  <v-text-field
-                    v-model="newTodoName"
-                    class="py-2 editNameBox"
-                    :value="this.$store.state.todoName"
-                    :rules="[
-                      this.$store.state.rules.counterMax25,
-                      this.$store.state.rules.counterMin3,
-                    ]"
-                    persistent-hint
-                    dark
-                    clearable
-                    autofocus
-                    @keypress.enter.prevent="saveName"
-                  >
-                  </v-text-field>
-                </v-form>
-                <v-toolbar-title v-if="this.$store.state.notEditing">
-                  <span class="py-2">
-                    {{ this.$store.state.todoName }}
-                  </span>
-                </v-toolbar-title>
-                <v-progress-linear
-                  :active="this.$store.state.todo.length > 0"
-                  :value="progress"
-                  color="success"
-                  absolute
-                  bottom
-                ></v-progress-linear>
-
-                <v-btn
-                  @click="toggleEditName"
-                  v-if="this.$store.state.notEditing"
-                  icon
-                >
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn @click="saveName" v-else icon>
-                  <v-icon>fa-check</v-icon>
-                </v-btn>
-                <v-spacer></v-spacer>
-                <span v-if="this.$store.state.todo.length > 0">
-                  <v-progress-circular
-                    v-if="this.$store.state.saving"
-                    class="save"
-                    indeterminate
-                  ></v-progress-circular>
-                  <v-btn @click="saveList" v-else icon>
-                    <v-icon>fa-save</v-icon>
-                  </v-btn>
-                </span>
-              </v-toolbar>
-
-              <v-col>
-                <v-row class="px-4">
-                  <v-text-field
-                    label="What do you need to get done?"
-                    v-model="newItem"
-                    @keyup.enter="addItem"
-                  >
-                    <v-icon slot="append" color="primary" @click="addItem">
-                      mdi-plus
+            <div v-if="!this.$store.state.loading">
+              <v-card shaped class="px-3 py-3">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <h2 v-if="this.$store.state.notEditing">
+                        {{ this.$store.state.todoName }}
+                      </h2>
+                    </v-list-item-title>
+                    <v-text-field
+                      v-if="!this.$store.state.notEditing"
+                      v-model="newTodoName"
+                      @keypress.enter.prevent="saveName"
+                      autofocus
+                      clearable
+                    ></v-text-field>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-icon
+                      v-if="this.$store.state.notEditing"
+                      @click="toggleEditName"
+                    >
+                      fa-pencil-alt
                     </v-icon>
-                  </v-text-field>
-                </v-row>
-              </v-col>
+                    <v-icon @click="saveName" v-else>fa-check</v-icon>
+                  </v-list-item-action>
+                </v-list-item>
 
-              <v-card flat class="scroll" max-height="300">
+                <v-progress-linear
+                  v-if="completedTasks > 0"
+                  :value="progress"
+                  :color="this.$store.state.titleColor"
+                ></v-progress-linear>
+                <v-progress-linear
+                  v-else
+                  value="100"
+                  :color="this.$store.state.titleColor"
+                ></v-progress-linear>
+                <v-divider></v-divider>
                 <v-col>
-                  <v-list v-if="this.$store.state.todo">
-                    <v-list-item
-                      two-line
-                      v-for="(item, index) in this.$store.state.todo"
-                      :key="index"
+                  <v-row class="px-4">
+                    <v-text-field
+                      label="What do you need to get done?"
+                      v-model="newItem"
+                      @keyup.enter="addItem"
                     >
-                      <v-list-item-avatar>
-                        <v-checkbox v-model="item.done"></v-checkbox>
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title class="wrap-text">
-                          {{ item.text }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          Date Added: {{ item.dateAdded }}
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                      <!-- <v-btn icon>
-                        <v-icon>mdi-pencil</v-icon>
-                      </v-btn> -->
-                      <v-scroll-x-transition>
-                        <v-btn
-                          icon
-                          ripple
-                          color="red"
-                          v-if="item.done"
-                          @click="removeTodo(index)"
-                        >
-                          <v-icon class="red--text">mdi-close</v-icon>
-                        </v-btn>
-                      </v-scroll-x-transition>
-                      <!-- 
-                      //TODO: implement image attach 
-                    -->
-                      <!-- <v-btn
-                      icon
-                      ripple
-                      color="primary"
-                      @click="toggleUploadDialog"
-                      @close="toggleUploadDialog"
-                      @sendImage="uploadImageFunc"
-                    >
-                      <v-icon>mdi-file-upload-outline</v-icon>
-                    </v-btn> -->
-                    </v-list-item>
-                  </v-list>
+                      <v-icon slot="append" @click="addItem" size="20">
+                        fa-plus
+                      </v-icon>
+                    </v-text-field>
+                  </v-row>
                 </v-col>
+                <v-card flat class="scroll" max-height="200">
+                  <v-col>
+                    <v-list v-if="this.$store.state.todo">
+                      <v-list-item
+                        two-line
+                        v-for="(item, index) in this.$store.state.todo"
+                        :key="index"
+                      >
+                        <v-list-item-avatar>
+                          <v-checkbox
+                            v-model="item.done"
+                            :color="themeColor"
+                          ></v-checkbox>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title class="wrap-text">
+                            {{ item.text }}
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            Date Added: {{ item.dateAdded }}
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+
+                        <v-scroll-x-transition>
+                          <v-btn
+                            icon
+                            ripple
+                            color="red"
+                            v-if="item.done"
+                            @click="removeTodo(index)"
+                          >
+                            <v-icon class="red--text">mdi-close</v-icon>
+                          </v-btn>
+                        </v-scroll-x-transition>
+                      </v-list-item>
+                    </v-list>
+                  </v-col>
+                </v-card>
               </v-card>
-            </v-card>
+            </div>
           </v-col>
         </v-row>
       </v-container>
-    </v-content>
-    <v-speed-dial
-      v-model="options"
-      direction="top"
-      transition="scale-transition"
-      class="my-12 mx-2"
-      open-on-hover
-      fixed
-      bottom
-      right
-    >
-      <template v-slot:activator>
-        <v-btn v-model="options" fab>
-          <v-icon v-if="options">fa-times</v-icon>
-          <v-icon v-else>fa-cog</v-icon>
-        </v-btn>
-      </template>
-
-      <v-btn @click="toggleColorPicker" fab small>
-        <v-icon>fa-paint-brush</v-icon>
-      </v-btn>
-      <v-btn v-if="darkMode" @click="turnOnDarkMode" fab small>
+      <v-btn
+        v-if="darkMode"
+        @click="turnOnDarkMode"
+        small
+        fab
+        bottom
+        left
+        fixed
+        icon
+        class="mx-5 my-12"
+      >
         <v-icon>fa-moon</v-icon>
       </v-btn>
-      <v-btn v-if="!darkMode" @click="turnOffDarkMode" fab small>
+      <v-btn
+        v-if="!darkMode"
+        @click="turnOffDarkMode"
+        small
+        fab
+        bottom
+        left
+        fixed
+        icon
+        class="mx-5 my-12"
+      >
         <v-icon>fa-sun</v-icon>
       </v-btn>
-    </v-speed-dial>
+      <v-menu
+        transition="scale-transition"
+        origin="bottom right"
+        v-model="this.$store.state.colorPickerDialog"
+        :close-on-content-click="false"
+        class="mx-5 my-12"
+        offset-overflow
+        offset-y
+        offset-x
+        :nudge-left="300"
+        absolute
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            @click="toggleColorPicker"
+            class="mx-5 my-12"
+            v-bind="attrs"
+            v-on="on"
+            small
+            fab
+            bottom
+            right
+            fixed
+            icon
+          >
+            <v-icon>fa-palette</v-icon>
+          </v-btn>
+        </template>
+        <ColorPicker />
+      </v-menu>
+      <v-divider></v-divider>
+    </v-content>
+
     <Footer />
     <UploadImage
       :uploadImage="uploadImage"
       @close="toggleUploadDialog"
       @upload="uploadImage"
     />
-    <ColorPicker />
     <InfoPanel />
     <AccountPanel />
   </v-app>
@@ -232,19 +230,18 @@ export default {
     addItem() {
       this.$store.state.newItem = this.newItem;
       this.$store.dispatch("addToList");
+      this.$store.dispatch("saveList");
       this.newItem = "";
     },
     removeTodo(index) {
       this.$store.commit("removeItem", index);
+      this.$store.dispatch("saveList");
     },
     saveList() {
       this.$store.dispatch("saveList");
     },
     saveName() {
-      this.valid = this.$refs.editName.validate();
-      if (this.valid) {
-        this.$store.commit("saveNewName", this.newTodoName);
-      }
+      this.$store.commit("saveNewName", this.newTodoName);
     },
     toggleEditName() {
       this.$store.commit("toggleNameEdit");
@@ -320,6 +317,16 @@ export default {
     completedTasks() {
       return this.$store.state.todo.filter((todo) => todo.done).length;
     },
+    completedList() {
+      return this.$store.state.todo.filter((todo) => todo.done);
+    },
+    incompleteList() {
+      return this.$store.state.todo.filter((todo) => !todo.done);
+    },
+    reverseList() {
+      let list = this.$store.state.todo;
+      return list.reverse();
+    },
     progress() {
       return (this.completedTasks / this.$store.state.todo.length) * 100;
     },
@@ -329,14 +336,9 @@ export default {
     totalTasks() {
       return this.$store.state.todo.length;
     },
-  },
-
-  mounted() {
-    window.setInterval(() => {
-      if (this.$store.state.autoSave) {
-        this.saveList();
-      }
-    }, 30000);
+    themeColor() {
+      return this.$store.state.titleColor;
+    },
   },
   created() {
     this.$store.commit("checkIfFirstTime");
@@ -353,6 +355,9 @@ export default {
 </script>
 
 <style scoped>
+html {
+  overflow: hidden;
+}
 .autoSaveSwitch {
   position: absolute;
   padding-left: 2%;
