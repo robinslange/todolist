@@ -37,7 +37,7 @@
               ></v-progress-linear>
             </v-layout>
             <div v-if="!this.$store.state.loading">
-              <v-card shaped class="px-3 py-3">
+              <v-card class="px-3 py-3" elevation="3" shaped>
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>
