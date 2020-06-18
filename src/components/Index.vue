@@ -58,7 +58,7 @@
                       v-if="this.$store.state.notEditing"
                       @click="toggleEditName"
                     >
-                      mdi-pencil
+                      fa-pencil-alt
                     </v-icon>
                     <v-icon @click="saveName" v-else>fa-check</v-icon>
                   </v-list-item-action>
@@ -82,8 +82,8 @@
                       v-model="newItem"
                       @keyup.enter="addItem"
                     >
-                      <v-icon slot="append" @click="addItem">
-                        mdi-plus
+                      <v-icon slot="append" @click="addItem" size="20">
+                        fa-plus
                       </v-icon>
                     </v-text-field>
                   </v-row>
