@@ -12,7 +12,6 @@ export default {
       dateAdded: state.currentTime,
     });
     state.newItem = "";
-    console.log(state.todo);
   },
   removeItem(state, index) {
     state.todo.splice(index, 1);
@@ -120,9 +119,7 @@ export default {
     //ensures array exists before saving
     state.savedLinks = state.savedLinks || [];
     let link = "https:/" + "/todol.ink/" + state.todoListID;
-    console.log(link);
     state.savedLinks.push(link);
-    console.log(state.savedLinks);
     let dataPack = JSON.stringify(state.savedLinks);
     localStorage.setItem("savedLinks", dataPack);
   },
@@ -131,6 +128,4 @@ export default {
     let dataPack = JSON.stringify(state.savedLinks);
     localStorage.setItem("savedLinks", dataPack);
   },
-  
-  
 };
