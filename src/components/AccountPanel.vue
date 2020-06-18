@@ -28,9 +28,14 @@
               :key="i"
               style="align-items: center;"
             >
-              <v-list-item-subtitle>
+              <a :href="item">
+                <v-btn icon>
+                  <v-icon size="16">fa-external-link-alt</v-icon>
+                </v-btn>
+              </a>
+              <v-list-item-title>
                 <span class="fullSelect">{{ item }}</span>
-              </v-list-item-subtitle>
+              </v-list-item-title>
               <v-list-item-action>
                 <v-btn @click="deleteSavedLink(i)" icon>
                   <v-icon>mdi-delete</v-icon>

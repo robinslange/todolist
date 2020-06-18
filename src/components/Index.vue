@@ -37,7 +37,7 @@
               ></v-progress-linear>
             </v-layout>
             <div v-if="!this.$store.state.loading">
-              <v-card shaped class="px-3">
+              <v-card shaped class="px-3 py-3">
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title>
@@ -63,8 +63,15 @@
                     <v-icon @click="saveName" v-else>fa-check</v-icon>
                   </v-list-item-action>
                 </v-list-item>
+
                 <v-progress-linear
+                  v-if="completedTasks > 0"
                   :value="progress"
+                  :color="this.$store.state.titleColor"
+                ></v-progress-linear>
+                <v-progress-linear
+                  v-else
+                  value="100"
                   :color="this.$store.state.titleColor"
                 ></v-progress-linear>
                 <v-divider></v-divider>
@@ -81,7 +88,7 @@
                     </v-text-field>
                   </v-row>
                 </v-col>
-                <v-card flat class="scroll" max-height="300">
+                <v-card flat class="scroll" max-height="200">
                   <v-col>
                     <v-list v-if="this.$store.state.todo">
                       <v-list-item
@@ -124,41 +131,67 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-content>
-    <v-speed-dial
-      v-model="options"
-      direction="top"
-      transition="scale-transition"
-      class="my-12 mx-2"
-      open-on-hover
-      fixed
-      bottom
-      right
-    >
-      <template v-slot:activator>
-        <v-btn v-model="options" fab>
-          <v-icon v-if="options">fa-times</v-icon>
-          <v-icon v-else>fa-cog</v-icon>
-        </v-btn>
-      </template>
-
-      <v-btn @click="toggleColorPicker" fab small>
-        <v-icon>fa-paint-brush</v-icon>
-      </v-btn>
-      <v-btn v-if="darkMode" @click="turnOnDarkMode" fab small>
+      <v-btn
+        v-if="darkMode"
+        @click="turnOnDarkMode"
+        small
+        fab
+        bottom
+        left
+        absolute
+        icon
+        class="mx-5 my-12"
+      >
         <v-icon>fa-moon</v-icon>
       </v-btn>
-      <v-btn v-if="!darkMode" @click="turnOffDarkMode" fab small>
+      <v-btn
+        v-if="!darkMode"
+        @click="turnOffDarkMode"
+        small
+        fab
+        bottom
+        left
+        absolute
+        icon
+        class="mx-5 my-12"
+      >
         <v-icon>fa-sun</v-icon>
       </v-btn>
-    </v-speed-dial>
+      <v-menu
+        transition="scale-transition"
+        origin="bottom right"
+        v-model="this.$store.state.colorPickerDialog"
+        offset-y
+        offset-x
+        :close-on-click="false"
+        :close-on-content-click="false"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            @click="toggleColorPicker"
+            class="mx-5 my-12"
+            v-bind="attrs"
+            v-on="on"
+            small
+            fab
+            bottom
+            right
+            absolute
+            icon
+          >
+            <v-icon>fa-paint-brush</v-icon>
+          </v-btn>
+        </template>
+        <ColorPicker />
+      </v-menu>
+    </v-content>
+
     <Footer />
     <UploadImage
       :uploadImage="uploadImage"
       @close="toggleUploadDialog"
       @upload="uploadImage"
     />
-    <ColorPicker />
     <InfoPanel />
     <AccountPanel />
   </v-app>
@@ -198,6 +231,7 @@ export default {
     },
     removeTodo(index) {
       this.$store.commit("removeItem", index);
+      this.$store.dispatch("saveList");
     },
     saveList() {
       this.$store.dispatch("saveList");
@@ -279,6 +313,16 @@ export default {
     completedTasks() {
       return this.$store.state.todo.filter((todo) => todo.done).length;
     },
+    completedList() {
+      return this.$store.state.todo.filter((todo) => todo.done);
+    },
+    incompleteList() {
+      return this.$store.state.todo.filter((todo) => !todo.done);
+    },
+    reverseList() {
+      let list = this.$store.state.todo;
+      return list.reverse();
+    },
     progress() {
       return (this.completedTasks / this.$store.state.todo.length) * 100;
     },
@@ -307,6 +351,9 @@ export default {
 </script>
 
 <style scoped>
+html {
+  overflow: hidden;
+}
 .autoSaveSwitch {
   position: absolute;
   padding-left: 2%;
