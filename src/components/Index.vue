@@ -161,10 +161,13 @@
         transition="scale-transition"
         origin="bottom right"
         v-model="this.$store.state.colorPickerDialog"
+        :close-on-content-click="false"
+        class="mx-5 my-12"
+        offset-overflow
         offset-y
         offset-x
-        :close-on-click="false"
-        :close-on-content-click="false"
+        :nudge-left="300"
+        absolute
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
