@@ -14,6 +14,17 @@
       </v-card-title>
       <v-card-subtitle class="px-6 py-4">Coming Soon!</v-card-subtitle>
 
+      <v-tabs>
+        <v-tab>Login</v-tab>
+        <v-tab-item>
+          <Login />
+        </v-tab-item>
+        <v-tab>Register</v-tab>
+        <v-tab-item>
+          <Register />
+        </v-tab-item>
+      </v-tabs>
+
       <v-divider></v-divider>
       <v-card flat>
         <v-card-title>
@@ -53,6 +64,10 @@
 <script>
 export default {
   name: "AccountPanel",
+  components: {
+    Login: () => import("@/components/account/Login"),
+    Register: () => import("@/components/account/Register"),
+  },
   data: () => ({
     autoSave: false,
   }),

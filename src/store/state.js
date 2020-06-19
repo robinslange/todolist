@@ -18,6 +18,7 @@ export default {
   infoPanel: true,
   editItem: false,
   accountPanel: false,
+  loggingIn: true,
   savedLinks: [],
   rules: {
     required: (value) => !!value || "Required.",
