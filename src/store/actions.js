@@ -1,6 +1,6 @@
 export default {
   saveList(context) {
-    context.commit("makeid", 6);
+    if (!this.$store.state.existingList) context.commit("makeid", 6);
     context.commit("saveList");
   },
   changeTitleColor(context, newColor) {
