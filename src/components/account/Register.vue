@@ -5,12 +5,14 @@
         <v-col>
           <v-row>
             <v-text-field
+              v-model="username"
               label="Username"
               prepend-icon="mdi-account"
             ></v-text-field>
           </v-row>
           <v-row>
             <v-text-field
+              v-model="email"
               label="Email"
               prepend-icon="mdi-email-outline"
             ></v-text-field>
@@ -39,21 +41,49 @@
           </v-col>
         </v-row>
       </v-flex>
+	  <p v-if="error" color="error">{{ error }}</p>
     </v-form>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn text>Register</v-btn>
+      <v-btn @click="register" text>Register</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import firebase from "firebase";
+
 export default {
   name: "Register",
   data: () => ({
     show: false,
     show2: false,
+    username: "",
+    email: "",
+    password: "",
   }),
+  methods: {
+    register() {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.email, this.password)
+        .then((data) => {
+          data.user
+            .updateProfile({
+              displayName: this.username,
+            })
+            .then(() => {
+				//clear register form
+				//hide register tab
+				//close register form and change state to loggedIn
+				//working from: https://blog.logrocket.com/vue-firebase-authentication/
+			});
+        })
+        .catch((err) => {
+          this.error = err.message;
+        });
+    },
+  },
 };
 </script>
 
