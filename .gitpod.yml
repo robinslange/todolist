@@ -1,0 +1,6 @@
+tasks:
+  - init: npm install && npm run build
+
+vscode:
+  extensions:
+    - HookyQR.beautify@1.4.11:n9DJEUFbYD/YHaBXxm+pYw==

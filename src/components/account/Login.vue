@@ -27,6 +27,11 @@ export default {
   data: () => ({
     show: false,
   }),
+  methods: {
+      login() {
+          this.$store.commit("doLogin");
+      }
+  }
 };
 </script>
 
