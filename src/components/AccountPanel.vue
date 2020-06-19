@@ -5,21 +5,17 @@
     max-height="350"
   >
     <v-card>
-      <v-card-title
-        >Account
+      <v-card-title>
+        Account
         <v-spacer></v-spacer>
         <v-btn @click="close" icon>
           <v-icon>fa-times</v-icon>
         </v-btn>
       </v-card-title>
-      <v-card-actions class="mx-3 my-3">
-        <v-switch
-          label="Toggle Auto Save"
-          v-model="autoSave"
-          @change="toggleAutoSave"
-        ></v-switch>
-      </v-card-actions>
-      <v-card>
+      <v-card-subtitle class="px-6 py-4">Coming Soon!</v-card-subtitle>
+
+      <v-divider></v-divider>
+      <v-card flat>
         <v-card-title>
           Your Saved Lists
           <v-spacer></v-spacer>
@@ -33,9 +29,14 @@
               :key="i"
               style="align-items: center;"
             >
-              <v-list-item-subtitle>
+              <a :href="item">
+                <v-btn icon>
+                  <v-icon size="16">fa-external-link-alt</v-icon>
+                </v-btn>
+              </a>
+              <v-list-item-title>
                 <span class="fullSelect">{{ item }}</span>
-              </v-list-item-subtitle>
+              </v-list-item-title>
               <v-list-item-action>
                 <v-btn @click="deleteSavedLink(i)" icon>
                   <v-icon>mdi-delete</v-icon>

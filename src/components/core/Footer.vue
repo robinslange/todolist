@@ -1,5 +1,5 @@
 <template>
-  <v-footer fixed padless tile color="white">
+  <v-footer fixed padless tile>
     <v-card class="flex" flat>
       <v-card-text class="text-center">
         <v-list-item two-line>
@@ -18,7 +18,7 @@
 
         <v-snackbar
           v-model="copied"
-          :timeout="timeout"
+          :timeout="500"
           align="center"
           justify="center"
           transition="fade-transition"
@@ -27,7 +27,9 @@
           Copied!
         </v-snackbar>
 
-        made with &nbsp; <v-icon>fa-heart</v-icon> &nbsp; by Robin Lange
+        made with &nbsp;
+        <v-icon :color="this.$store.state.titleColor">fa-heart</v-icon> &nbsp;
+        by Robin Lange
 
         <v-btn icon>
           <a class="footerButton" href="https://github.com/robinslange">

@@ -88,11 +88,11 @@ export default {
   },
   checkIfFirstTime(state) {
     var token = localStorage.getItem("firstTimeToken");
-    if (token != null) {
+    if (token == "You've been here before") {
       state.infoPanel = false;
     } else {
       state.infoPanel = true;
-      localStorage.setItem("firstTimeToken", "Not your first visit!");
+      localStorage.setItem("firstTimeToken", "You've been here before");
     }
   },
   getNow(state) {
@@ -111,9 +111,6 @@ export default {
   },
   toggleAccountPanel(state) {
     state.accountPanel = !state.accountPanel;
-  },
-  toggleAutoSave(state, val) {
-    state.autoSave = val;
   },
   saveListLink(state) {
     //ensures array exists before saving

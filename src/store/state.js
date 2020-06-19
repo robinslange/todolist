@@ -18,9 +18,7 @@ export default {
   infoPanel: true,
   editItem: false,
   accountPanel: false,
-  autoSave: false,
   savedLinks: [],
-
   rules: {
     required: (value) => !!value || "Required.",
     counterMin3: (value) =>
