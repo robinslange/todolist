@@ -4,19 +4,38 @@
       <v-flex>
         <v-col>
           <v-row>
-            <v-text-field label="Username"></v-text-field>
+            <v-text-field
+              label="Username"
+              prepend-icon="mdi-account"
+            ></v-text-field>
           </v-row>
           <v-row>
-            <v-text-field label="Email"></v-text-field>
+            <v-text-field
+              label="Email"
+              prepend-icon="mdi-email-outline"
+            ></v-text-field>
           </v-row>
         </v-col>
 
         <v-row>
           <v-col>
-            <v-text-field label="Password"></v-text-field>
+            <v-text-field
+              label="Password"
+              v-model="password"
+              prepend-icon="mdi-lock"
+              :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show ? 'text' : 'password'"
+              @click:append="show = !show"
+            ></v-text-field>
           </v-col>
           <v-col>
-            <v-text-field label="Repeat Password"></v-text-field>
+            <v-text-field
+              label="Repeat Password"
+              v-model="rePassword"
+              :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show2 ? 'text' : 'password'"
+              @click:append="show2 = !show2"
+            ></v-text-field>
           </v-col>
         </v-row>
       </v-flex>
@@ -31,7 +50,10 @@
 <script>
 export default {
   name: "Register",
-  data: () => ({}),
+  data: () => ({
+    show: false,
+    show2: false,
+  }),
 };
 </script>
 
