@@ -93,7 +93,11 @@ export default {
     state.infoPanel = !state.infoPanel;
   },
   toggleForgotPassword(state) {
-    state.forgotDialog = !state.forgotDialog;
+    if (state.forgotDialog) {
+      state.forgotDialog = false;
+    } else {
+      state.forgotDialog = true;
+    }
   },
   toggleSentDialog(state) {
     state.sentDialog = !state.sentDialog;

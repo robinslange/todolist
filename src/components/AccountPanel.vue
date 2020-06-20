@@ -3,6 +3,7 @@
     v-model="this.$store.state.accountPanel"
     max-width="450"
     max-height="350"
+    persistent
   >
     <v-card>
       <v-card-title>

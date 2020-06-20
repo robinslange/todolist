@@ -1,7 +1,13 @@
 <template>
-  <v-dialog v-model="forgot" width="400">
+  <v-dialog v-model="forgot" width="400" persistent>
     <v-card class="px-1 py-2">
-      <v-card-title>Reset Password</v-card-title>
+      <v-card-title>
+        Reset Password
+        <v-spacer></v-spacer>
+        <v-btn @click="close" icon>
+          <v-icon>fa-times</v-icon>
+        </v-btn>
+      </v-card-title>
       <v-card-subtitle class="px-6 py-3">
         Enter your email address below to get sent a password reset link:
       </v-card-subtitle>
@@ -41,7 +47,6 @@ export default {
       this.sending = true;
       var auth = firebase.auth();
       var email = this.email;
-
       auth
         .sendPasswordResetEmail(email)
         .then(() => {
@@ -55,6 +60,9 @@ export default {
           this.errMsg = err.message;
           this.sending = false;
         });
+    },
+    close() {
+      this.$store.commit("toggleForgotPassword");
     },
   },
   computed: {
