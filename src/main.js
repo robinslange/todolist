@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
+import * as firebase from 'firebase';
 import "@fortawesome/fontawesome-free/css/all.css"; // Ensure you are using css-loader
 import VueClipboard from "vue-clipboard2";
 import VueSocialSharing from "vue-social-sharing";
@@ -10,6 +11,12 @@ import VueSocialSharing from "vue-social-sharing";
 Vue.config.productionTip = false;
 Vue.use(VueClipboard);
 Vue.use(VueSocialSharing);
+
+
+
+firebase.auth().onAuthStateChanged(user => {
+  store.dispatch("fetchUser", user);
+});
 
 new Vue({
   router,

@@ -14,7 +14,7 @@
       </v-card-title>
       <v-card-subtitle class="px-6 py-4">Coming Soon!</v-card-subtitle>
 
-      <v-tabs>
+      <v-tabs v-if="!loggedIn">
         <v-tab>Login</v-tab>
         <v-tab-item>
           <Login />
@@ -23,6 +23,12 @@
         <v-tab-item>
           <Register />
         </v-tab-item>
+      </v-tabs>
+      <v-tabs v-if="loggedIn">
+        <v-tab>Overview</v-tab>
+        <v-tab-item>Overview</v-tab-item>
+        <v-tab>Settings</v-tab>
+        <v-tab-item>Settings</v-tab-item>
       </v-tabs>
 
       <v-divider></v-divider>
@@ -85,7 +91,11 @@ export default {
       this.$store.commit("toggleAccountPanel");
     },
   },
-  computed: {},
+  computed: {
+    loggedIn() {
+      return this.$store.state.user.loggedIn;
+    },
+  },
 };
 </script>
 
