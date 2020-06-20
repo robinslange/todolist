@@ -7,7 +7,7 @@
             <v-list-item-title>Your shareable link: </v-list-item-title>
             <v-list-item-subtitle>
               <span class="fullSelect">
-                https://todol.ink/{{ this.$store.state.todoListID }}
+                {{ currentURL }}
               </span>
               <v-btn @click="copy" tile small icon>
                 <v-icon>mdi-content-copy</v-icon>
@@ -65,10 +65,10 @@ export default {
   methods: {
     copy() {
       let item = "https:/" + "/todol.ink/" + this.$store.state.todoListID;
-      this.copied = true;
 
       this.$copyText(item).then(
         function(e) {
+          this.copied = true;
           console.log("copied");
           console.log(e);
         },
@@ -85,7 +85,8 @@ export default {
       if (!this.$store.state.todoListID) {
         return url;
       } else {
-        return url + "/" + this.$store.state.todolistID;
+        url += "/" + this.$store.state.todoListID;
+        return url;
       }
     },
     currentTitle() {
