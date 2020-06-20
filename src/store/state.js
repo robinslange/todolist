@@ -24,6 +24,7 @@ export default {
   accountPanel: false,
   forgotDialog: false,
   sentDialog: false,
+  paymentDialog: false,
   savedLinks: [],
   rules: {
     required: (value) => !!value || "Required.",

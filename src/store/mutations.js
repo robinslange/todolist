@@ -102,6 +102,9 @@ export default {
   toggleSentDialog(state) {
     state.sentDialog = !state.sentDialog;
   },
+  togglePaymentDialog(state) {
+    state.paymentDialog = !state.paymentDialog;
+  },
   checkIfFirstTime(state) {
     var token = localStorage.getItem("firstTimeToken");
     if (token == "You've been here before") {

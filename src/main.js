@@ -10,7 +10,7 @@ import VueClipboard from "vue-clipboard2";
 import VueSocialSharing from "vue-social-sharing";
 
 Vue.config.productionTip = false;
-Vue.config.performance = true;
+//Vue.config.performance = true;
 Vue.use(VueClipboard);
 Vue.use(VueSocialSharing);
 

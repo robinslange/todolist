@@ -57,6 +57,7 @@
 
 <script>
 import firebase from "firebase";
+import db from "@/firebase/init";
 
 export default {
   name: "Register",
@@ -75,9 +76,20 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then((data) => {
-          data.user
-            .updateProfile({
-              displayName: this.username.toString(),
+          data.user.updateProfile({
+            displayName: this.username.toString(),
+          });
+          db.collection("users")
+            .doc(data.user.uid)
+            .set({
+              premium: false,
+              admin: false,
+              savedLists: "",
+            })
+            .then(() => {})
+            .catch((err) => {
+              console.log(err);
+              this.error = err.message;
             })
             .then(() => {
               this.loggingIn = false;

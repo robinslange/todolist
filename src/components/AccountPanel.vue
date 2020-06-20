@@ -37,6 +37,10 @@
         <v-tab-item>
           <Settings />
         </v-tab-item>
+        <v-tab>Premium</v-tab>
+        <v-tab-item>
+          <Premium />
+        </v-tab-item>
       </v-tabs>
 
       <v-divider></v-divider>
@@ -85,6 +89,7 @@ export default {
     Register: () => import("@/components/account/Register"),
     Overview: () => import("@/components/account/Overview"),
     Settings: () => import("@/components/account/Settings"),
+    Premium: () => import("@/components/account/Premium"),
   },
   data: () => ({
     autoSave: false,
