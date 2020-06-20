@@ -30,7 +30,9 @@
         <v-tab>Settings</v-tab>
         <v-tab-item>Settings</v-tab-item>
       </v-tabs>
-
+      <v-card-actions v-if="loggedIn">
+        <v-btn @click="logOut" text>Log Out</v-btn>
+      </v-card-actions>
       <v-divider></v-divider>
       <v-card flat>
         <v-card-title>
@@ -38,7 +40,7 @@
           <v-spacer></v-spacer>
           <v-btn @click="saveListLink">Save current list</v-btn>
         </v-card-title>
-        <v-card-actions> </v-card-actions>
+
         <v-card max-height="150px" class="scroll" flat>
           <v-list>
             <v-list-item
@@ -68,6 +70,8 @@
 </template>
 
 <script>
+import firebase from "firebase";
+
 export default {
   name: "AccountPanel",
   components: {
@@ -89,6 +93,14 @@ export default {
     },
     close() {
       this.$store.commit("toggleAccountPanel");
+    },
+    logOut() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          console.log("logged out");
+        });
     },
   },
   computed: {

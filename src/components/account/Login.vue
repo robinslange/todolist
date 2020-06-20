@@ -18,7 +18,7 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="login" text>Login</v-btn>
+      <v-btn @click="login" :loading="loggingIn" text>Login</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -32,17 +32,20 @@ export default {
     show: false,
     email: "",
     password: "",
+    loggingIn: false,
   }),
   methods: {
     login() {
+      this.loggingIn = true;
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
-        .then(() => {
-            //can put (data) above
-          this.$state.store.loggedIn = true;
+        .then((data) => {
+          console.log(data);
+          this.loggingIn = false;
         })
         .catch((err) => {
+          this.loggingIn = false;
           this.error = err.message;
         });
     },
