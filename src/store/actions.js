@@ -1,6 +1,8 @@
+import state from "./state";
+
 export default {
   saveList(context) {
-    if (!this.$store.state.existingList) context.commit("makeid", 6);
+    if (!state.existingList) context.commit("makeid", 6);
     context.commit("saveList");
   },
   changeTitleColor(context, newColor) {
@@ -18,10 +20,8 @@ export default {
         displayName: user.displayName,
         email: user.email,
       });
-      console.log(user);
     } else {
       commit("SET_USER", null);
-      console.log(user);
     }
   },
 };

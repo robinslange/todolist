@@ -28,6 +28,7 @@
 
 <script>
 import firebase from "firebase";
+import db from "@/firebase/init";
 
 export default {
   components: {
@@ -48,7 +49,19 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then((data) => {
-          console.log(data);
+          let userRef = db.collection("users").doc(data.user.uid);
+          userRef
+            .get()
+            .then((doc) => {
+              if (!doc.exists) {
+                console.log("no such document");
+              } else {
+                console.log("document data: " + doc.data());
+              }
+            })
+            .catch((err) => {
+              this.error = err.message;
+            });
           this.loggingIn = false;
         })
         .catch((err) => {

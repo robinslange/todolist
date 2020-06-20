@@ -43,21 +43,28 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn tile outlined color="success">
-        <v-icon left>fa-coins</v-icon>
+        <v-icon @click="togglePaymentDialog" left>fa-coins</v-icon>
         Get Premium
       </v-btn>
       <v-spacer></v-spacer>
     </v-card-actions>
+    <PaymentDialog />
   </v-card>
 </template>
 
 <script>
 export default {
+  components: {
+    PaymentDialog: () => import("@/components/account/premium/PaymentDialog"),
+  },
   name: "Premium",
   data: () => ({}),
   methods: {
     //TODO: implement payments
     //https://softauthor.com/stripe-payments-with-custom-stripe-elements-vue-cloud-functions/
+    togglePaymentDialog() {
+      this.$store.commit("togglePaymentDialog");
+    },
   },
 };
 </script>
