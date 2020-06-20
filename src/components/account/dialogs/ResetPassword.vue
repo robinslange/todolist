@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="this.$store.state.forgotDialog" width="400">
+  <v-dialog v-model="forgot" width="400">
     <v-card class="px-1 py-2">
       <v-card-title>Reset Password</v-card-title>
       <v-card-subtitle class="px-6 py-3">
@@ -64,6 +64,9 @@ export default {
       } else {
         return false;
       }
+    },
+    forgot() {
+      return this.$store.state.forgotDialog;
     },
   },
 };
