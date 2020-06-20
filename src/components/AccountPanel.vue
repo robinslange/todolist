@@ -8,11 +8,14 @@
       <v-card-title>
         Account
         <v-spacer></v-spacer>
+        <v-card-actions v-if="loggedIn">
+          <v-spacer></v-spacer>
+          <v-btn @click="logOut" text>Log Out</v-btn>
+        </v-card-actions>
         <v-btn @click="close" icon>
           <v-icon>fa-times</v-icon>
         </v-btn>
       </v-card-title>
-      <v-card-subtitle class="px-6 py-4">Coming Soon!</v-card-subtitle>
 
       <v-tabs v-if="!loggedIn">
         <v-tab>Login</v-tab>
@@ -26,13 +29,15 @@
       </v-tabs>
       <v-tabs v-if="loggedIn">
         <v-tab>Overview</v-tab>
-        <v-tab-item>Overview</v-tab-item>
+        <v-tab-item>
+          <Overview />
+        </v-tab-item>
         <v-tab>Settings</v-tab>
-        <v-tab-item>Settings</v-tab-item>
+        <v-tab-item>
+          <Settings />
+        </v-tab-item>
       </v-tabs>
-      <v-card-actions v-if="loggedIn">
-        <v-btn @click="logOut" text>Log Out</v-btn>
-      </v-card-actions>
+
       <v-divider></v-divider>
       <v-card flat>
         <v-card-title>
@@ -77,6 +82,8 @@ export default {
   components: {
     Login: () => import("@/components/account/Login"),
     Register: () => import("@/components/account/Register"),
+    Overview: () => import("@/components/account/Overview"),
+    Settings: () => import("@/components/account/Settings"),
   },
   data: () => ({
     autoSave: false,

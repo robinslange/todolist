@@ -17,6 +17,9 @@
     </v-form>
 
     <v-card-actions>
+      <v-btn @click="toggleResetDialog" text>Forgot Password</v-btn>
+      <ForgotDialog />
+      <SentDialog />
       <v-spacer></v-spacer>
       <v-btn @click="login" :loading="loggingIn" text>Login</v-btn>
     </v-card-actions>
@@ -27,6 +30,10 @@
 import firebase from "firebase";
 
 export default {
+  components: {
+    ForgotDialog: () => import("@/components/account/dialogs/ResetPassword"),
+    SentDialog: () => import("@/components/account/dialogs/SentDialog"),
+  },
   name: "Login",
   data: () => ({
     show: false,
@@ -48,6 +55,14 @@ export default {
           this.loggingIn = false;
           this.error = err.message;
         });
+    },
+    toggleResetDialog() {
+      this.$store.commit("toggleForgotPassword");
+    },
+  },
+  computed: {
+    userCurrent() {
+      return this.$store.state.user.data;
     },
   },
 };

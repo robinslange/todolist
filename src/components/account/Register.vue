@@ -32,6 +32,9 @@
               ></v-text-field>
             </v-col>
             <v-col>
+              <!-- 
+                //TODO: check if passwords match and other validation
+              -->
               <v-text-field
                 label="Repeat Password"
                 v-model="rePassword"
@@ -74,7 +77,7 @@ export default {
         .then((data) => {
           data.user
             .updateProfile({
-              displayName: this.username,
+              displayName: this.username.toString(),
             })
             .then(() => {
               this.loggingIn = false;
