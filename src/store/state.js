@@ -2,6 +2,8 @@ export default {
   user: {
     loggedIn: false,
     data: null,
+    premium: false,
+    admin: false,
   },
   newItem: "",
   todo: [],

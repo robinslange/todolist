@@ -42,20 +42,22 @@
     </v-list-item>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn tile outlined color="success">
-        <v-icon @click="togglePaymentDialog" left>fa-coins</v-icon>
+      <v-btn @click="togglePaymentDialog" tile outlined color="success">
+        <v-icon left>fa-coins</v-icon>
         Get Premium
       </v-btn>
       <v-spacer></v-spacer>
+      <PaymentDialog />
     </v-card-actions>
-    <PaymentDialog />
   </v-card>
 </template>
 
 <script>
+import PaymentDialog from "@/components/account/premium/PaymentDialog";
+
 export default {
   components: {
-    PaymentDialog: () => import("@/components/account/premium/PaymentDialog"),
+    PaymentDialog,
   },
   name: "Premium",
   data: () => ({}),

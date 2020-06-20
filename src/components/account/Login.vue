@@ -56,7 +56,9 @@ export default {
               if (!doc.exists) {
                 console.log("no such document");
               } else {
-                console.log("document data: " + doc.data());
+                let data = doc.data();
+                this.$store.commit("SET_USER_PREMIUM_STATUS", data.premium);
+                this.$store.commit("SET_USER_ADMIN_STATUS", data.admin);
               }
             })
             .catch((err) => {
