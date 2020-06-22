@@ -117,6 +117,13 @@
                         >
                           <v-icon>fa-upload</v-icon>
                         </v-btn>
+                        <v-btn
+                          @click="toggleViewImageDialog(index)"
+                          v-else
+                          icon
+                        >
+                          <v-icon>fa-image</v-icon>
+                        </v-btn>
                         <v-scroll-x-transition>
                           <v-btn
                             icon
@@ -200,6 +207,7 @@
     <UploadImage />
     <InfoPanel />
     <AccountPanel />
+    <ViewImage />
   </v-app>
 </template>
 
@@ -212,6 +220,7 @@ export default {
   components: {
     Footer: () => import("@/components/core/Footer"),
     UploadImage: () => import("@/components/account/dialogs/UploadImage"),
+    ViewImage: () => import("@/components/account/dialogs/ViewImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
     InfoPanel: () => import("@/components/InfoPanel"),
     AccountPanel: () => import("@/components/AccountPanel"),
@@ -249,8 +258,12 @@ export default {
       this.$store.commit("toggleNameEdit");
     },
     toggleUploadDialog(i) {
-      this.$store.commit("toggleUploadDialog");
       this.$store.commit("setListIndex", i);
+      this.$store.commit("toggleUploadDialog");
+    },
+    toggleViewImageDialog(i) {
+      this.$store.commit("setListIndex", i);
+      this.$store.commit("toggleViewImageDialog");
     },
     toggleColorPicker() {
       this.$store.commit("toggleColorPicker");

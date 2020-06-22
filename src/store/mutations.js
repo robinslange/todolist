@@ -1,5 +1,6 @@
 import db from "@/firebase/init";
 import router from "../router";
+import firebase from "firebase";
 
 export default {
   addItem(state) {
@@ -90,6 +91,9 @@ export default {
   toggleUploadDialog(state) {
     state.uploadDialog = !state.uploadDialog;
   },
+  toggleViewImageDialog(state) {
+    state.viewImg = !state.viewImg;
+  },
   checkIfFirstTime(state) {
     var token = localStorage.getItem("firstTimeToken");
     if (token == "You've been here before") {
@@ -136,5 +140,20 @@ export default {
     console.log(state.todo);
     console.log(url);
     state.todo[state.listIndex].img = url;
+  },
+  deleteImg(state) {
+    let imagePath = state.todo[state.listIndex].img;
+    try {
+      let name = imagePath.substr(
+        imagePath.indexOf("%2F") + 3,
+        imagePath.indexOf("?") - (imagePath.indexOf("%2F") + 3)
+      );
+      name = name.replace("%20", " ");
+      let storagePath = firebase.storage().ref();
+      storagePath.child(`images/${name}`).delete();
+      state.todo[state.listIndex].img = "";
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
