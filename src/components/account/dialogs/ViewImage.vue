@@ -34,9 +34,11 @@ export default {
   methods: {
     close() {
       this.$store.commit("toggleViewImageDialog");
+      this.imgSrc = null;
     },
     deleteImg() {
       this.$store.dispatch("deleteImg");
+      this.$store.state.imagesUploaded--;
       this.$store.commit("toggleViewImageDialog");
     },
   },

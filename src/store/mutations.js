@@ -16,7 +16,34 @@ export default {
     state.newItem = "";
   },
   removeItem(state, index) {
-    state.todo.splice(index, 1);
+    let url = state.todo[index].img;
+    try {
+      //removes everything but the file name from URL
+      //found here: https://stackoverflow.com/questions/511761/js-function-to-get-filename-from-url
+      let name = url
+        ? url
+            .split("/")
+            .pop()
+            .split("#")
+            .shift()
+            .split("?")
+            .shift()
+        : null;
+
+      let storagePath = firebase.storage().ref();
+      storagePath
+        .child(`${name}`)
+        .delete()
+        .then()
+        .catch((error) => {
+          state.imgError = error.message;
+        });
+      state.todo.splice(index, 1);
+      state.todo[index].img = null;
+      state.imgError = "";
+    } catch (error) {
+      state.imgError = error.message;
+    }
   },
   makeid(state, length) {
     var result = "";
