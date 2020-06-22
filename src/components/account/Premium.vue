@@ -53,11 +53,9 @@
 </template>
 
 <script>
-import PaymentDialog from "@/components/account/premium/PaymentDialog";
-
 export default {
   components: {
-    PaymentDialog,
+    PaymentDialog: () => import("@/components/account/premium/PaymentDialog"),
   },
   name: "Premium",
   data: () => ({}),

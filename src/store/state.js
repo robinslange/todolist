@@ -14,6 +14,9 @@ export default {
   titleColor: "#313639",
   newTitleColor: "",
   currentTime: "",
+  stripePublishableKey:
+    "pk_test_51Gw3yyJAWBzvz0Sm9UqBdwWxVp7N9n8STEAUzw9aXVcBqzEdcSltbqSTm2IrrQkwk6Yyb1f6JHqrT63pyumQUmnW00uHwrcUrk",
+  stripeCheck: false,
   editDialog: false,
   uploadImage: false,
   existingList: false,

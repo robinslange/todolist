@@ -59,6 +59,7 @@ export default {
                 let data = doc.data();
                 this.$store.commit("SET_USER_PREMIUM_STATUS", data.premium);
                 this.$store.commit("SET_USER_ADMIN_STATUS", data.admin);
+                //firebase.analytics().logEvent("login");
               }
             })
             .catch((err) => {

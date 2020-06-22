@@ -86,7 +86,9 @@ export default {
               admin: false,
               savedLists: "",
             })
-            .then(() => {})
+            .then(() => {
+              //firebase.analytics().logEvent("register");
+            })
             .catch((err) => {
               console.log(err);
               this.error = err.message;

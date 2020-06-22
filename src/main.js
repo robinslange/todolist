@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
+import "@stripe/stripe-js";
 //import db from "./firebase/init";
 import * as firebase from "firebase";
 import "@fortawesome/fontawesome-free/css/all.css"; // Ensure you are using css-loader

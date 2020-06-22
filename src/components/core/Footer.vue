@@ -52,6 +52,8 @@
 </template>
 
 <script>
+//import firebase from "firebase/analytics";
+
 export default {
   name: "Footer",
   components: {},
@@ -69,6 +71,7 @@ export default {
       this.$copyText(item).then(
         function(e) {
           this.copied = true;
+          //firebase.analytics().logEvent("copiedLink", item);
           console.log("copied");
           console.log(e);
         },

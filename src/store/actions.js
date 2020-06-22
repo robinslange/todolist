@@ -1,8 +1,12 @@
 import state from "./state";
+//import firebase from "firebase";
 
 export default {
   saveList(context) {
-    if (!state.existingList) context.commit("makeid", 6);
+    if (!state.existingList) {
+      //firebase.analytics().logEvent("created_list");
+      context.commit("makeid", 6);
+    }
     context.commit("saveList");
   },
   changeTitleColor(context, newColor) {
