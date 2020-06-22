@@ -1,32 +1,38 @@
 <template>
   <v-dialog v-model="this.$store.state.uploadDialog" width="300" persistent>
     <v-card>
-      <v-card-title>
-        Attach Image
+      <v-toolbar>
+        <v-toolbar-title>
+          Attach Image
+        </v-toolbar-title>
+        <v-progress-linear
+          :color="this.$store.state.titleColor"
+          :value="uploadValue"
+          absolute
+          bottom
+        ></v-progress-linear>
         <v-spacer></v-spacer>
         <v-btn @click="close" icon>
           <v-icon>fa-times</v-icon>
         </v-btn>
-        <v-progress-linear
-          v-if="this.img"
-          :value="uploadValue"
-        ></v-progress-linear>
-      </v-card-title>
+      </v-toolbar>
       <v-list-item two-line>
         <v-file-input
           accept="image/*"
           width="200"
           v-model="img"
+          class="py-2 my-2"
           :error-messages="this.$store.state.imgError"
           clearable
         >
         </v-file-input>
       </v-list-item>
+
       <v-card-subtitle>Supports file sizes up to 2MB</v-card-subtitle>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn @click="uploadImage" :loading="uploading" text
+        <v-btn @click="uploadImage" :loading="uploading" :disabled="!img" text
           >Attach Image</v-btn
         >
       </v-card-actions>
@@ -50,6 +56,7 @@ export default {
       //TODO: add premium check
       if (this.$store.state.imagesUploaded < 5) {
         if (this.img.size < 2e6) {
+          this.uploading = true;
           console.log(this.img);
           console.log(this.img.name);
           var file = this.img;
@@ -65,7 +72,8 @@ export default {
                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             },
             (error) => {
-              console.log(error.message);
+              this.uploading = false;
+              this.$store.state.imgError = error.message;
             },
             () => {
               this.uploadValue = 100;
@@ -73,11 +81,12 @@ export default {
                 this.$store.dispatch("uploadImg", url);
                 this.$store.commit("toggleUploadDialog");
                 this.img = null;
+                this.$store.state.imgError = "";
+                this.uploading = false;
               });
             }
           );
         } else {
-          console.log("too large");
           this.$store.state.imgError = "Maximum file size is 2MB";
         }
       } else {
@@ -86,6 +95,7 @@ export default {
       }
     },
     close() {
+      this.$store.state.imgError = "";
       this.$store.commit("toggleUploadDialog");
     },
   },
