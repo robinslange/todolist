@@ -263,6 +263,7 @@ export default {
     },
     toggleViewImageDialog(i) {
       this.$store.commit("setListIndex", i);
+      this.$store.state.imgError = "";
       this.$store.commit("toggleViewImageDialog");
     },
     toggleColorPicker() {

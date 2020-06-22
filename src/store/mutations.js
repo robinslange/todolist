@@ -38,9 +38,9 @@ export default {
         .catch((error) => {
           state.imgError = error.message;
         });
-      state.todo.splice(index, 1);
       state.todo[index].img = null;
       state.imgError = "";
+      state.todo.splice(index, 1);
     } catch (error) {
       state.imgError = error.message;
     }
