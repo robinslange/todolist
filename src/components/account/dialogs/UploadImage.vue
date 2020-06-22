@@ -8,6 +8,7 @@
         <v-progress-linear
           :color="this.$store.state.titleColor"
           :value="uploadValue"
+          v-if="img"
           absolute
           bottom
         ></v-progress-linear>
@@ -57,8 +58,7 @@ export default {
       if (this.$store.state.imagesUploaded < 5) {
         if (this.img.size < 2e6) {
           this.uploading = true;
-          console.log(this.img);
-          console.log(this.img.name);
+
           var file = this.img;
 
           const storageRef = firebase

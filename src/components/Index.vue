@@ -302,8 +302,6 @@ export default {
                   snapshot.forEach((doc) => {
                     let data = doc.data();
                     let list = JSON.parse(data.todo);
-                    console.log(list);
-                    console.log(data);
 
                     for (let i = 0; i < snapshot.size; i++) {
                       this.$store.state.todo = list;

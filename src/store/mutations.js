@@ -137,8 +137,6 @@ export default {
     localStorage.setItem("savedLinks", dataPack);
   },
   attachImage(state, url) {
-    console.log(state.todo);
-    console.log(url);
     state.todo[state.listIndex].img = url;
   },
   deleteImg(state) {
@@ -162,13 +160,11 @@ export default {
         .delete()
         .then()
         .catch((error) => {
-          console.log(error);
           state.imgError = error.message;
         });
-      console.log(storagePath);
       state.todo[state.listIndex].img = null;
     } catch (error) {
-      console.log(error);
+      state.imgError = error.message;
     }
   },
 };
