@@ -110,7 +110,13 @@
                             Date Added: {{ item.dateAdded }}
                           </v-list-item-subtitle>
                         </v-list-item-content>
-
+                        <v-btn
+                          @click="toggleUploadDialog(index)"
+                          v-if="!item.img"
+                          icon
+                        >
+                          <v-icon>fa-upload</v-icon>
+                        </v-btn>
                         <v-scroll-x-transition>
                           <v-btn
                             icon
@@ -191,11 +197,7 @@
     </v-content>
 
     <Footer />
-    <UploadImage
-      :uploadImage="uploadImage"
-      @close="toggleUploadDialog"
-      @upload="uploadImage"
-    />
+    <UploadImage />
     <InfoPanel />
     <AccountPanel />
   </v-app>
@@ -209,7 +211,7 @@ export default {
   name: "Index",
   components: {
     Footer: () => import("@/components/core/Footer"),
-    UploadImage: () => import("@/components/UploadImage"),
+    UploadImage: () => import("@/components/account/dialogs/UploadImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
     InfoPanel: () => import("@/components/InfoPanel"),
     AccountPanel: () => import("@/components/AccountPanel"),
@@ -246,8 +248,9 @@ export default {
     toggleEditName() {
       this.$store.commit("toggleNameEdit");
     },
-    toggleUploadDialog() {
-      this.uploadImage = !this.uploadImage;
+    toggleUploadDialog(i) {
+      this.$store.commit("toggleUploadDialog");
+      this.$store.commit("setListIndex", i);
     },
     toggleColorPicker() {
       this.$store.commit("toggleColorPicker");
@@ -286,6 +289,9 @@ export default {
                   snapshot.forEach((doc) => {
                     let data = doc.data();
                     let list = JSON.parse(data.todo);
+                    console.log(list);
+                    console.log(data);
+
                     for (let i = 0; i < snapshot.size; i++) {
                       this.$store.state.todo = list;
                       this.$store.state.todoName = data.name;

@@ -1,6 +1,8 @@
+import state from "./state";
+
 export default {
   saveList(context) {
-    if (!this.$store.state.existingList) context.commit("makeid", 6);
+    if (!state.existingList) context.commit("makeid", 6);
     context.commit("saveList");
   },
   changeTitleColor(context, newColor) {
@@ -10,5 +12,9 @@ export default {
   addToList(context) {
     context.commit("getNow");
     context.commit("addItem");
+  },
+  uploadImg(context, url) {
+    context.commit("attachImage", url);
+    context.commit("saveList");
   },
 };

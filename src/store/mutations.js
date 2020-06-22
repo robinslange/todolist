@@ -10,6 +10,7 @@ export default {
       text: state.newItem,
       done: false,
       dateAdded: state.currentTime,
+      img: "",
     });
     state.newItem = "";
   },
@@ -86,6 +87,9 @@ export default {
   toggleInfoPanel(state) {
     state.infoPanel = !state.infoPanel;
   },
+  toggleUploadDialog(state) {
+    state.uploadDialog = !state.uploadDialog;
+  },
   checkIfFirstTime(state) {
     var token = localStorage.getItem("firstTimeToken");
     if (token == "You've been here before") {
@@ -94,6 +98,9 @@ export default {
       state.infoPanel = true;
       localStorage.setItem("firstTimeToken", "You've been here before");
     }
+  },
+  setListIndex(state, i) {
+    state.listIndex = i;
   },
   getNow(state) {
     const today = new Date();
@@ -124,5 +131,10 @@ export default {
     state.savedLinks.splice(i, 1);
     let dataPack = JSON.stringify(state.savedLinks);
     localStorage.setItem("savedLinks", dataPack);
+  },
+  attachImage(state, url) {
+    console.log(state.todo);
+    console.log(url);
+    state.todo[state.listIndex].img = url;
   },
 };
