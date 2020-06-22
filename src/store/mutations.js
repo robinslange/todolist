@@ -142,16 +142,31 @@ export default {
     state.todo[state.listIndex].img = url;
   },
   deleteImg(state) {
-    let imagePath = state.todo[state.listIndex].img;
+    let url = state.todo[state.listIndex].img;
     try {
-      let name = imagePath.substr(
-        imagePath.indexOf("%2F") + 3,
-        imagePath.indexOf("?") - (imagePath.indexOf("%2F") + 3)
-      );
-      name = name.replace("%20", " ");
+      //removes everything but the file name from URL
+      //found here: https://stackoverflow.com/questions/511761/js-function-to-get-filename-from-url
+      let name = url
+        ? url
+            .split("/")
+            .pop()
+            .split("#")
+            .shift()
+            .split("?")
+            .shift()
+        : null;
+
       let storagePath = firebase.storage().ref();
-      storagePath.child(`images/${name}`).delete();
-      state.todo[state.listIndex].img = "";
+      storagePath
+        .child(`${name}`)
+        .delete()
+        .then()
+        .catch((error) => {
+          console.log(error);
+          state.imgError = error.message;
+        });
+      console.log(storagePath);
+      state.todo[state.listIndex].img = null;
     } catch (error) {
       console.log(error);
     }

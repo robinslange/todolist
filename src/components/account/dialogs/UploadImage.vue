@@ -17,8 +17,7 @@
           accept="image/*"
           width="200"
           v-model="img"
-          :rules="rules"
-          :error-messages="error"
+          :error-messages="this.$store.state.imgError"
           clearable
         >
         </v-file-input>
@@ -45,56 +44,52 @@ export default {
     uploading: false,
     uploadValue: 0,
     error: "",
-    rules: [
-      (files) =>
-        !files ||
-        !files.some((file) => file.size > 2e6) ||
-        "Avatar size should be less than 2 MB!",
-    ],
   }),
   methods: {
     uploadImage() {
-      if (this.$store.state.imagesUploaded < 5 && this.premiumStatus == false) {
-        console.log(this.img);
-        console.log(this.img.name);
-        var file = this.img;
+      //TODO: add premium check
+      if (this.$store.state.imagesUploaded < 5) {
+        if (this.img.size < 2e6) {
+          console.log(this.img);
+          console.log(this.img.name);
+          var file = this.img;
 
-        const storageRef = firebase
-          .storage()
-          .ref(`${this.img.name}`)
-          .put(file);
-        storageRef.on(
-          "state_changed",
-          (snapshot) => {
-            this.uploadValue =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          },
-          (error) => {
-            console.log(error.message);
-          },
-          () => {
-            this.uploadValue = 100;
-            storageRef.snapshot.ref.getDownloadURL().then((url) => {
-              this.$store.dispatch("uploadImg", url);
-              this.$store.commit("toggleUploadDialog");
-              this.img = null;
-            });
-          }
-        );
+          const storageRef = firebase
+            .storage()
+            .ref(`${this.img.name}`)
+            .put(file);
+          storageRef.on(
+            "state_changed",
+            (snapshot) => {
+              this.uploadValue =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            },
+            (error) => {
+              console.log(error.message);
+            },
+            () => {
+              this.uploadValue = 100;
+              storageRef.snapshot.ref.getDownloadURL().then((url) => {
+                this.$store.dispatch("uploadImg", url);
+                this.$store.commit("toggleUploadDialog");
+                this.img = null;
+              });
+            }
+          );
+        } else {
+          console.log("too large");
+          this.$store.state.imgError = "Maximum file size is 2MB";
+        }
       } else {
-        this.error = "You can only attach up to 5 images on a free account!";
+        this.$store.state.imgError =
+          "You can only attach up to 5 images per list!";
       }
     },
     close() {
       this.$store.commit("toggleUploadDialog");
     },
   },
-  computed: {
-    premiumStatus() {
-      return false;
-      //TODO: set premium status and return
-    },
-  },
+  computed: {},
 };
 </script>
 

@@ -17,4 +17,8 @@ export default {
     context.commit("attachImage", url);
     context.commit("saveList");
   },
+  deleteImg(context) {
+    context.commit("deleteImg");
+    context.commit("saveList");
+  },
 };

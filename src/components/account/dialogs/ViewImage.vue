@@ -36,7 +36,7 @@ export default {
       this.$store.commit("toggleViewImageDialog");
     },
     deleteImg() {
-      this.$store.commit("deleteImg");
+      this.$store.dispatch("deleteImg");
       this.$store.commit("toggleViewImageDialog");
     },
   },

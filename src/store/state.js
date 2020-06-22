@@ -8,6 +8,7 @@ export default {
   titleColor: "#313639",
   newTitleColor: "",
   currentTime: "",
+  imgError: "",
   listIndex: 0,
   imagesUploaded: 0,
   uploadDialog: false,
