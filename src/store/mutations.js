@@ -1,5 +1,6 @@
 import db from "@/firebase/init";
 import router from "../router";
+import firebase from "firebase";
 
 export default {
   addItem(state) {
@@ -10,12 +11,39 @@ export default {
       text: state.newItem,
       done: false,
       dateAdded: state.currentTime,
+      img: "",
     });
     state.newItem = "";
-    console.log(state.todo);
   },
   removeItem(state, index) {
-    state.todo.splice(index, 1);
+    let url = state.todo[index].img;
+    try {
+      //removes everything but the file name from URL
+      //found here: https://stackoverflow.com/questions/511761/js-function-to-get-filename-from-url
+      let name = url
+        ? url
+            .split("/")
+            .pop()
+            .split("#")
+            .shift()
+            .split("?")
+            .shift()
+        : null;
+
+      let storagePath = firebase.storage().ref();
+      storagePath
+        .child(`${name}`)
+        .delete()
+        .then()
+        .catch((error) => {
+          state.imgError = error.message;
+        });
+      state.todo[index].img = null;
+      state.imgError = "";
+      state.todo.splice(index, 1);
+    } catch (error) {
+      state.imgError = error.message;
+    }
   },
   makeid(state, length) {
     var result = "";
@@ -87,6 +115,12 @@ export default {
   toggleInfoPanel(state) {
     state.infoPanel = !state.infoPanel;
   },
+  toggleUploadDialog(state) {
+    state.uploadDialog = !state.uploadDialog;
+  },
+  toggleViewImageDialog(state) {
+    state.viewImg = !state.viewImg;
+  },
   checkIfFirstTime(state) {
     var token = localStorage.getItem("firstTimeToken");
     if (token == "You've been here before") {
@@ -95,6 +129,9 @@ export default {
       state.infoPanel = true;
       localStorage.setItem("firstTimeToken", "You've been here before");
     }
+  },
+  setListIndex(state, i) {
+    state.listIndex = i;
   },
   getNow(state) {
     const today = new Date();
@@ -117,9 +154,7 @@ export default {
     //ensures array exists before saving
     state.savedLinks = state.savedLinks || [];
     let link = "https:/" + "/todol.ink/" + state.todoListID;
-    console.log(link);
     state.savedLinks.push(link);
-    console.log(state.savedLinks);
     let dataPack = JSON.stringify(state.savedLinks);
     localStorage.setItem("savedLinks", dataPack);
   },
@@ -127,5 +162,36 @@ export default {
     state.savedLinks.splice(i, 1);
     let dataPack = JSON.stringify(state.savedLinks);
     localStorage.setItem("savedLinks", dataPack);
+  },
+  attachImage(state, url) {
+    state.todo[state.listIndex].img = url;
+  },
+  deleteImg(state) {
+    let url = state.todo[state.listIndex].img;
+    try {
+      //removes everything but the file name from URL
+      //found here: https://stackoverflow.com/questions/511761/js-function-to-get-filename-from-url
+      let name = url
+        ? url
+            .split("/")
+            .pop()
+            .split("#")
+            .shift()
+            .split("?")
+            .shift()
+        : null;
+
+      let storagePath = firebase.storage().ref();
+      storagePath
+        .child(`${name}`)
+        .delete()
+        .then()
+        .catch((error) => {
+          state.imgError = error.message;
+        });
+      state.todo[state.listIndex].img = null;
+    } catch (error) {
+      state.imgError = error.message;
+    }
   },
 };

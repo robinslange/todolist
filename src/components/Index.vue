@@ -110,7 +110,20 @@
                             Date Added: {{ item.dateAdded }}
                           </v-list-item-subtitle>
                         </v-list-item-content>
-
+                        <v-btn
+                          @click="toggleUploadDialog(index)"
+                          v-if="!item.img"
+                          icon
+                        >
+                          <v-icon>fa-upload</v-icon>
+                        </v-btn>
+                        <v-btn
+                          @click="toggleViewImageDialog(index)"
+                          v-else
+                          icon
+                        >
+                          <v-icon>fa-image</v-icon>
+                        </v-btn>
                         <v-scroll-x-transition>
                           <v-btn
                             icon
@@ -191,13 +204,10 @@
     </v-content>
 
     <Footer />
-    <UploadImage
-      :uploadImage="uploadImage"
-      @close="toggleUploadDialog"
-      @upload="uploadImage"
-    />
+    <UploadImage />
     <InfoPanel />
     <AccountPanel />
+    <ViewImage />
   </v-app>
 </template>
 
@@ -209,7 +219,8 @@ export default {
   name: "Index",
   components: {
     Footer: () => import("@/components/core/Footer"),
-    UploadImage: () => import("@/components/UploadImage"),
+    UploadImage: () => import("@/components/account/dialogs/UploadImage"),
+    ViewImage: () => import("@/components/account/dialogs/ViewImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
     InfoPanel: () => import("@/components/InfoPanel"),
     AccountPanel: () => import("@/components/AccountPanel"),
@@ -246,8 +257,14 @@ export default {
     toggleEditName() {
       this.$store.commit("toggleNameEdit");
     },
-    toggleUploadDialog() {
-      this.uploadImage = !this.uploadImage;
+    toggleUploadDialog(i) {
+      this.$store.commit("setListIndex", i);
+      this.$store.commit("toggleUploadDialog");
+    },
+    toggleViewImageDialog(i) {
+      this.$store.commit("setListIndex", i);
+      this.$store.state.imgError = "";
+      this.$store.commit("toggleViewImageDialog");
     },
     toggleColorPicker() {
       this.$store.commit("toggleColorPicker");
@@ -286,6 +303,7 @@ export default {
                   snapshot.forEach((doc) => {
                     let data = doc.data();
                     let list = JSON.parse(data.todo);
+
                     for (let i = 0; i < snapshot.size; i++) {
                       this.$store.state.todo = list;
                       this.$store.state.todoName = data.name;

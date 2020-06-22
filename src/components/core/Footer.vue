@@ -4,7 +4,7 @@
       <v-card-text class="text-center">
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title>Your shareable link: </v-list-item-title>
+            <v-list-item-title>Your Todolink: </v-list-item-title>
             <v-list-item-subtitle>
               <span class="fullSelect">
                 https://todol.ink/{{ this.$store.state.todoListID }}
