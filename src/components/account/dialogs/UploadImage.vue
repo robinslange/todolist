@@ -80,6 +80,7 @@ export default {
               storageRef.snapshot.ref.getDownloadURL().then((url) => {
                 this.$store.dispatch("uploadImg", url);
                 this.$store.commit("toggleUploadDialog");
+                this.$store.state.imagesUploaded++;
                 this.img = null;
                 this.$store.state.imgError = "";
                 this.uploading = false;
