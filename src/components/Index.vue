@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <v-container fill-height>
         <v-btn
           class="mx-5 my-12"
@@ -100,6 +100,7 @@
                           <v-checkbox
                             v-model="item.done"
                             :color="themeColor"
+                            @change="saveListItems"
                           ></v-checkbox>
                         </v-list-item-avatar>
                         <v-list-item-content>
@@ -201,7 +202,7 @@
         <ColorPicker />
       </v-menu>
       <v-divider></v-divider>
-    </v-content>
+    </v-main>
 
     <Footer />
     <UploadImage />
@@ -241,22 +242,32 @@ export default {
     addItem() {
       this.$store.state.newItem = this.newItem;
       this.$store.dispatch("addToList");
+<<<<<<< HEAD
       if (this.$store.state.existingList) {
         this.$store.dispatch("saveList");
       } else {
         this.$store.commit("saveListItems");
       }
+=======
+      if (this.$store.state.existingList) this.$store.dispatch("saveList");
+      if (!this.$store.state.existingList) this.$store.commit("saveListItems");
+>>>>>>> d017e5943f332ab293e7bec2b5efb27b0dbecf4f
       this.newItem = "";
     },
     removeTodo(index) {
       this.$store.commit("removeItem", index);
-      this.$store.dispatch("saveList");
+      if (this.$store.state.existingList) this.$store.dispatch("saveList");
+      if (!this.$store.state.existingList) this.$store.commit("saveListItems");
+    },
+    saveListItems() {
+      this.$store.commit("saveListItems");
     },
     saveList() {
       this.$store.dispatch("saveList");
     },
     saveName() {
       this.$store.commit("saveNewName", this.newTodoName);
+      if (this.$store.state.existingList) this.$store.commit("saveTitle");
     },
     toggleEditName() {
       this.$store.commit("toggleNameEdit");
@@ -294,6 +305,7 @@ export default {
       return new Promise(() => {
         setTimeout(() => {
           if (this.$route.params.id != null) {
+<<<<<<< HEAD
             let queryRef = db
               .collection("todos")
               .where("ID", "==", this.$route.params.id);
@@ -320,16 +332,38 @@ export default {
                   //if router params doesn't exist
                 } else {
                   //send to default route
+=======
+            db.collection("todos")
+              .doc(this.$route.params.id)
+              .onSnapshot(doc => {
+                let data = doc.data();
+                if (!data) {
+>>>>>>> d017e5943f332ab293e7bec2b5efb27b0dbecf4f
                   this.$router.push("/");
-                  //stop loading
                   this.$store.state.loading = false;
+                  return;
                 }
+<<<<<<< HEAD
               })
               .catch(err => {
                 console.log(err);
+=======
+                let list = JSON.parse(data.todo);
+                for (let i = 0; i < list.length; i++) {
+                  if (list[i].img != "") this.$store.state.imagesUploaded++;
+                }
+                this.$store.state.todo = list;
+                this.$store.state.todoName = data.name;
+                this.newTodoName = data.name;
+                this.$store.state.todoListID = data.ID;
+                this.$store.state.titleColor = data.titleColor;
+                this.$store.state.loading = false;
+                this.$store.state.existingList = true;
+>>>>>>> d017e5943f332ab293e7bec2b5efb27b0dbecf4f
               });
           } else {
             this.$store.state.loading = false;
+            return;
           }
         });
       });
@@ -360,6 +394,12 @@ export default {
     },
     themeColor() {
       return this.$store.state.titleColor;
+<<<<<<< HEAD
+=======
+    },
+    todoDone() {
+      return this.$store.state.todo.done;
+>>>>>>> d017e5943f332ab293e7bec2b5efb27b0dbecf4f
     }
   },
   created() {

@@ -5,6 +5,7 @@ export default {
   },
   changeTitleColor(context, newColor) {
     context.commit("changeTitleColor", newColor);
+    if (state.existingList) context.commit("saveThemeColor");
     context.commit("toggleColorPicker");
   },
   addToList(context) {
@@ -13,10 +14,10 @@ export default {
   },
   uploadImg(context, url) {
     context.commit("attachImage", url);
-    context.commit("saveList");
+    context.commit("saveListItems");
   },
   deleteImg(context) {
     context.commit("deleteImg");
-    context.commit("saveList");
-  },
+    context.commit("saveListItems");
+  }
 };

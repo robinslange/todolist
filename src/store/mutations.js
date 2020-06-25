@@ -11,7 +11,7 @@ export default {
       text: state.newItem,
       done: false,
       dateAdded: state.currentTime,
-      img: "",
+      img: ""
     });
     state.newItem = "";
   },
@@ -35,7 +35,7 @@ export default {
         .child(`${name}`)
         .delete()
         .then()
-        .catch((error) => {
+        .catch(error => {
           state.imgError = error.message;
         });
       state.todo[index].img = null;
@@ -55,6 +55,57 @@ export default {
     }
     state.tempID = result;
   },
+  saveTitle(state) {
+    if (state.existingList) {
+      let ref = db.collection("todos");
+      state.saving = true;
+      ref
+        .doc(state.todoListID)
+        .update({
+          name: state.todoName
+        })
+        .then(() => {
+          state.saving = false;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      return;
+    }
+  },
+  saveListItems(state) {
+    state.saving = true;
+    let ref = db.collection("todos");
+    ref
+      .doc(state.todoListID)
+      .update({
+        todo: JSON.stringify(state.todo)
+      })
+      .then(() => {
+        state.saving = false;
+      })
+      .catch(err => {
+        console.log(err);
+        state.saving = false;
+      });
+  },
+  saveThemeColor(state) {
+    state.saving = true;
+    let ref = db.collection("todos");
+    ref
+      .doc(state.todoListID)
+      .update({
+        titleColor: state.titleColor
+      })
+      .then(() => {
+        state.saving = false;
+      })
+      .catch(err => {
+        console.log(err);
+        state.saving = false;
+      });
+  },
   saveList(state) {
     let ref = db.collection("todos");
     let listID = state.tempID;
@@ -65,13 +116,14 @@ export default {
         .update({
           name: state.todoName,
           todo: JSON.stringify(state.todo),
-          titleColor: state.titleColor,
+          titleColor: state.titleColor
         })
         .then(() => {
           state.saving = false;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
+          state.saving = false;
         });
     } else {
       ref
@@ -80,7 +132,7 @@ export default {
           ID: listID,
           name: state.todoName,
           todo: JSON.stringify(state.todo),
-          titleColor: state.titleColor,
+          titleColor: state.titleColor
         })
         .then(() => {
           state.saving = false;
@@ -123,11 +175,11 @@ export default {
   },
   checkIfFirstTime(state) {
     var token = localStorage.getItem("firstTimeToken");
-    if (token == "You've been here before") {
+    if (token == "Not your first time eh?") {
       state.infoPanel = false;
     } else {
       state.infoPanel = true;
-      localStorage.setItem("firstTimeToken", "You've been here before");
+      localStorage.setItem("firstTimeToken", "Not your first time eh?");
     }
   },
   setListIndex(state, i) {
@@ -142,9 +194,6 @@ export default {
       (today.getMonth() + 1) +
       "-" +
       today.getFullYear();
-    //const time =
-    //today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    //const dateTime = date + " " + time;
     state.currentTime = date;
   },
   toggleAccountPanel(state) {
@@ -186,12 +235,12 @@ export default {
         .child(`${name}`)
         .delete()
         .then()
-        .catch((error) => {
+        .catch(error => {
           state.imgError = error.message;
         });
       state.todo[state.listIndex].img = null;
     } catch (error) {
       state.imgError = error.message;
     }
-  },
+  }
 };
