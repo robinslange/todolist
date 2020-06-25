@@ -50,7 +50,7 @@ export default {
     img: null,
     uploading: false,
     uploadValue: 0,
-    error: "",
+    error: ""
   }),
   methods: {
     uploadImage() {
@@ -67,19 +67,20 @@ export default {
             .put(file);
           storageRef.on(
             "state_changed",
-            (snapshot) => {
+            snapshot => {
               this.uploadValue =
                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             },
-            (error) => {
+            error => {
               this.uploading = false;
               this.$store.state.imgError = error.message;
             },
             () => {
               this.uploadValue = 100;
-              storageRef.snapshot.ref.getDownloadURL().then((url) => {
+              storageRef.snapshot.ref.getDownloadURL().then(url => {
                 this.$store.dispatch("uploadImg", url);
                 this.$store.commit("toggleUploadDialog");
+                this.$store.commit("saveListItems");
                 this.$store.state.imagesUploaded++;
                 this.img = null;
                 this.$store.state.imgError = "";
@@ -98,9 +99,9 @@ export default {
     close() {
       this.$store.state.imgError = "";
       this.$store.commit("toggleUploadDialog");
-    },
+    }
   },
-  computed: {},
+  computed: {}
 };
 </script>
 

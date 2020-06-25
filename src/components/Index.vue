@@ -223,7 +223,7 @@ export default {
     ViewImage: () => import("@/components/account/dialogs/ViewImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
     InfoPanel: () => import("@/components/InfoPanel"),
-    AccountPanel: () => import("@/components/AccountPanel"),
+    AccountPanel: () => import("@/components/AccountPanel")
   },
   data() {
     return {
@@ -234,25 +234,31 @@ export default {
       options: false,
       valid: false,
       autoSave: false,
-      darkMode: true,
+      darkMode: true
     };
   },
   methods: {
     addItem() {
       this.$store.state.newItem = this.newItem;
       this.$store.dispatch("addToList");
-      this.$store.dispatch("saveList");
+      if (this.$store.state.existingList) this.$store.dispatch("saveList");
+      if (!this.$store.state.existingList) this.$store.commit("saveListItems");
       this.newItem = "";
     },
     removeTodo(index) {
       this.$store.commit("removeItem", index);
-      this.$store.dispatch("saveList");
+      if (this.$store.state.existingList) this.$store.dispatch("saveList");
+      if (!this.$store.state.existingList) this.$store.commit("saveListItems");
+    },
+    saveButton() {
+      this.$store.commit("saveListItems");
     },
     saveList() {
       this.$store.dispatch("saveList");
     },
     saveName() {
       this.$store.commit("saveNewName", this.newTodoName);
+      if (this.$store.state.existingList) this.$store.commit("saveTitle");
     },
     toggleEditName() {
       this.$store.commit("toggleNameEdit");
@@ -290,43 +296,40 @@ export default {
       return new Promise(() => {
         setTimeout(() => {
           if (this.$route.params.id != null) {
-             db
-              .collection("todos")
+            db.collection("todos")
               .doc(this.$route.params.id)
-              .onSnapshot((doc) => {
-                  let data = doc.data();
-                  if(!data) {
-                    this.$router.push("/");
-                    this.$store.state.loading = false;
-                    return;
-                  }
-                  let list = JSON.parse(data.todo);
-                  this.$store.state.todo = list;
-                  this.$store.state.todoName = data.name;
-                  this.newTodoName = data.name;
-                  this.$store.state.todoListID = data.ID;
-                  this.$store.state.titleColor = data.titleColor;
+              .onSnapshot(doc => {
+                let data = doc.data();
+                if (!data) {
+                  this.$router.push("/");
                   this.$store.state.loading = false;
-                  this.$store.state.existingList = true;
-
-                })
-            
+                  return;
+                }
+                let list = JSON.parse(data.todo);
+                this.$store.state.todo = list;
+                this.$store.state.todoName = data.name;
+                this.newTodoName = data.name;
+                this.$store.state.todoListID = data.ID;
+                this.$store.state.titleColor = data.titleColor;
+                this.$store.state.loading = false;
+                this.$store.state.existingList = true;
+              });
           } else {
             this.$store.state.loading = false;
           }
         });
       });
-    },
+    }
   },
   computed: {
     completedTasks() {
-      return this.$store.state.todo.filter((todo) => todo.done).length;
+      return this.$store.state.todo.filter(todo => todo.done).length;
     },
     completedList() {
-      return this.$store.state.todo.filter((todo) => todo.done);
+      return this.$store.state.todo.filter(todo => todo.done);
     },
     incompleteList() {
-      return this.$store.state.todo.filter((todo) => !todo.done);
+      return this.$store.state.todo.filter(todo => !todo.done);
     },
     reverseList() {
       let list = this.$store.state.todo;
@@ -344,6 +347,9 @@ export default {
     themeColor() {
       return this.$store.state.titleColor;
     },
+    todoDone() {
+      return this.$store.state.todo.done;
+    }
   },
   created() {
     this.$store.commit("checkIfFirstTime");
@@ -352,10 +358,10 @@ export default {
     this.$store.state.loading = true;
     this.pullDataAsync()
       .then()
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
-  },
+  }
 };
 </script>
 

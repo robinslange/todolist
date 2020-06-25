@@ -7,6 +7,7 @@ export default {
   },
   changeTitleColor(context, newColor) {
     context.commit("changeTitleColor", newColor);
+    if (state.existingList) context.commit("saveThemeColor");
     context.commit("toggleColorPicker");
   },
   addToList(context) {

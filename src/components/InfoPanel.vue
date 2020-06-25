@@ -13,11 +13,13 @@
           </li>
         </ol>
         <br />
-        <h3 style="color:green;font-style:bold;display:inline;">NEW: </h3>Whenever you save
-        a change, anyone else viewing the list will have their list updated automatically!
+        <h3 style="color:green;font-style:bold;display:inline;">NEW:</h3>
+        Whenever you save a change, anyone else viewing the list will have their
+        list updated automatically!
         <br />
         <br />
-        If you have trouble with anything get in touch via one of the links in the footer :)
+        If you have trouble with anything get in touch via one of the links in
+        the footer :)
         <br />
         <br />
         Ready to go? Press the button below to get started!
@@ -38,8 +40,8 @@ export default {
   methods: {
     close() {
       this.$store.commit("toggleInfoPanel");
-    },
-  },
+    }
+  }
 };
 </script>
 

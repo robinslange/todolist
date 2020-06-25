@@ -13,11 +13,11 @@ export default {
   name: "App",
 
   components: {
-    Index,
+    Index
   },
 
   data: () => ({
     //
-  }),
+  })
 };
 </script>
