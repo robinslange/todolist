@@ -290,40 +290,27 @@ export default {
       return new Promise(() => {
         setTimeout(() => {
           if (this.$route.params.id != null) {
-            let queryRef = db
+             db
               .collection("todos")
-              .where("ID", "==", this.$route.params.id);
-            queryRef
-              .get()
-              .then((snapshot) => {
-                // found solution to forever loading if non-existtant query here under (readonly) query :Query:
-                // https://googleapis.dev/nodejs/firestore/latest/QuerySnapshot.html
-                if (!snapshot.empty) {
-                  this.$store.state.existingList = true;
-                  snapshot.forEach((doc) => {
-                    let data = doc.data();
-                    let list = JSON.parse(data.todo);
-
-                    for (let i = 0; i < snapshot.size; i++) {
-                      this.$store.state.todo = list;
-                      this.$store.state.todoName = data.name;
-                      this.newTodoName = data.name;
-                      this.$store.state.todoListID = data.ID;
-                      this.$store.state.titleColor = data.titleColor;
-                      this.$store.state.loading = false;
-                    }
-                  });
-                  //if router params doesn't exist
-                } else {
-                  //send to default route
-                  this.$router.push("/");
-                  //stop loading
+              .doc(this.$route.params.id)
+              .onSnapshot((doc) => {
+                  let data = doc.data();
+                  if(!data) {
+                    this.$router.push("/");
+                    this.$store.state.loading = false;
+                    return;
+                  }
+                  let list = JSON.parse(data.todo);
+                  this.$store.state.todo = list;
+                  this.$store.state.todoName = data.name;
+                  this.newTodoName = data.name;
+                  this.$store.state.todoListID = data.ID;
+                  this.$store.state.titleColor = data.titleColor;
                   this.$store.state.loading = false;
-                }
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+                  this.$store.state.existingList = true;
+
+                })
+            
           } else {
             this.$store.state.loading = false;
           }
