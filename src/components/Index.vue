@@ -242,22 +242,19 @@ export default {
     addItem() {
       this.$store.state.newItem = this.newItem;
       this.$store.dispatch("addToList");
-<<<<<<< HEAD
-      if (this.$store.state.existingList) {
+      if (!this.$store.state.existingList) {
         this.$store.dispatch("saveList");
-      } else {
-        this.$store.commit("saveListItems");
+        this.newItem = "";
       }
-=======
-      if (this.$store.state.existingList) this.$store.dispatch("saveList");
-      if (!this.$store.state.existingList) this.$store.commit("saveListItems");
->>>>>>> d017e5943f332ab293e7bec2b5efb27b0dbecf4f
-      this.newItem = "";
+      if (this.$store.state.existingList) {
+        this.$store.commit("saveListItems");
+        this.newItem = "";
+      }
     },
     removeTodo(index) {
       this.$store.commit("removeItem", index);
-      if (this.$store.state.existingList) this.$store.dispatch("saveList");
-      if (!this.$store.state.existingList) this.$store.commit("saveListItems");
+      if (!this.$store.state.existingList) this.$store.dispatch("saveList");
+      if (this.$store.state.existingList) this.$store.commit("saveListItems");
     },
     saveListItems() {
       this.$store.commit("saveListItems");
@@ -305,49 +302,15 @@ export default {
       return new Promise(() => {
         setTimeout(() => {
           if (this.$route.params.id != null) {
-<<<<<<< HEAD
-            let queryRef = db
-              .collection("todos")
-              .where("ID", "==", this.$route.params.id);
-            queryRef
-              .get()
-              .then(snapshot => {
-                // found solution to forever loading if non-existtant query here under (readonly) query :Query:
-                // https://googleapis.dev/nodejs/firestore/latest/QuerySnapshot.html
-                if (!snapshot.empty) {
-                  this.$store.state.existingList = true;
-                  snapshot.forEach(doc => {
-                    let data = doc.data();
-                    let list = JSON.parse(data.todo);
-
-                    for (let i = 0; i < snapshot.size; i++) {
-                      this.$store.state.todo = list;
-                      this.$store.state.todoName = data.name;
-                      this.newTodoName = data.name;
-                      this.$store.state.todoListID = data.ID;
-                      this.$store.state.titleColor = data.titleColor;
-                      this.$store.state.loading = false;
-                    }
-                  });
-                  //if router params doesn't exist
-                } else {
-                  //send to default route
-=======
             db.collection("todos")
               .doc(this.$route.params.id)
               .onSnapshot(doc => {
                 let data = doc.data();
                 if (!data) {
->>>>>>> d017e5943f332ab293e7bec2b5efb27b0dbecf4f
                   this.$router.push("/");
                   this.$store.state.loading = false;
                   return;
                 }
-<<<<<<< HEAD
-              })
-              .catch(err => {
-                console.log(err);
-=======
                 let list = JSON.parse(data.todo);
                 for (let i = 0; i < list.length; i++) {
                   if (list[i].img != "") this.$store.state.imagesUploaded++;
@@ -359,7 +322,6 @@ export default {
                 this.$store.state.titleColor = data.titleColor;
                 this.$store.state.loading = false;
                 this.$store.state.existingList = true;
->>>>>>> d017e5943f332ab293e7bec2b5efb27b0dbecf4f
               });
           } else {
             this.$store.state.loading = false;
@@ -394,12 +356,9 @@ export default {
     },
     themeColor() {
       return this.$store.state.titleColor;
-<<<<<<< HEAD
-=======
     },
     todoDone() {
       return this.$store.state.todo.done;
->>>>>>> d017e5943f332ab293e7bec2b5efb27b0dbecf4f
     }
   },
   created() {

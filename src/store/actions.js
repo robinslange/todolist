@@ -1,3 +1,5 @@
+import state from "./state";
+
 export default {
   saveList(context) {
     context.commit("makeid", 6);
