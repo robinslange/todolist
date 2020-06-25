@@ -16,10 +16,10 @@ export default {
   },
   uploadImg(context, url) {
     context.commit("attachImage", url);
-    context.commit("saveList");
+    context.commit("saveListItems");
   },
   deleteImg(context) {
     context.commit("deleteImg");
-    context.commit("saveList");
-  },
+    context.commit("saveListItems");
+  }
 };
