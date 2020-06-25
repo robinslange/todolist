@@ -306,6 +306,9 @@ export default {
                   return;
                 }
                 let list = JSON.parse(data.todo);
+                for (let i = 0; i < list.length; i++) {
+                  if (list[i].img != "") this.$store.state.imagesUploaded++;
+                }
                 this.$store.state.todo = list;
                 this.$store.state.todoName = data.name;
                 this.newTodoName = data.name;
@@ -316,6 +319,7 @@ export default {
               });
           } else {
             this.$store.state.loading = false;
+            return;
           }
         });
       });
