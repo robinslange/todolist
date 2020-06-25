@@ -13,13 +13,11 @@
           </li>
         </ol>
         <br />
-        <span style="color: green; font-style: oblique;">NEW:</span> The list
-        will now save after every entry, so you don't need to toggle auto-save
-        anymore :)
+        <h3 style="color:green;font-style:bold;display:inline;">NEW: </h3>Whenever you save
+        a change, anyone else viewing the list will have their list updated automatically!
         <br />
         <br />
-        Just remember that changes will save from whoever saves to the list last
-        (In future it will auto-sync new changes between users)
+        If you have trouble with anything get in touch via one of the links in the footer :)
         <br />
         <br />
         Ready to go? Press the button below to get started!

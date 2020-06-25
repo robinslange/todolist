@@ -123,11 +123,11 @@ export default {
   },
   checkIfFirstTime(state) {
     var token = localStorage.getItem("firstTimeToken");
-    if (token == "You've been here before") {
+    if (token == "Not your first time eh?") {
       state.infoPanel = false;
     } else {
       state.infoPanel = true;
-      localStorage.setItem("firstTimeToken", "You've been here before");
+      localStorage.setItem("firstTimeToken", "Not your first time eh?");
     }
   },
   setListIndex(state, i) {
@@ -142,9 +142,6 @@ export default {
       (today.getMonth() + 1) +
       "-" +
       today.getFullYear();
-    //const time =
-    //today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    //const dateTime = date + " " + time;
     state.currentTime = date;
   },
   toggleAccountPanel(state) {
