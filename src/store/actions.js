@@ -1,8 +1,6 @@
-import state from "./state";
-
 export default {
   saveList(context) {
-    if (!state.existingList) context.commit("makeid", 6);
+    context.commit("makeid", 6);
     context.commit("saveList");
   },
   changeTitleColor(context, newColor) {
