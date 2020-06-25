@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <v-container fill-height>
         <v-btn
           class="mx-5 my-12"
@@ -201,7 +201,7 @@
         <ColorPicker />
       </v-menu>
       <v-divider></v-divider>
-    </v-content>
+    </v-main>
 
     <Footer />
     <UploadImage />
