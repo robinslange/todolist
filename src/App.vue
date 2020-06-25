@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <Index />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -13,11 +13,11 @@ export default {
   name: "App",
 
   components: {
-    Index,
+    Index
   },
 
   data: () => ({
     //
-  }),
+  })
 };
 </script>

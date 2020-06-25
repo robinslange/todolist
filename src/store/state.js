@@ -1,4 +1,6 @@
 export default {
+  savedLinks: [],
+  syncLinks: [],
   newItem: "",
   todo: [],
   todoName: "Todo List",
@@ -21,12 +23,11 @@ export default {
   infoPanel: true,
   editItem: false,
   accountPanel: false,
-  savedLinks: [],
   rules: {
-    required: (value) => !!value || "Required.",
-    counterMin3: (value) =>
+    required: value => !!value || "Required.",
+    counterMin3: value =>
       value.length >= 3 || "Your list name has to have at least 3 characters",
-    counterMax25: (value) =>
-      value.length <= 25 || "Your list name can only be up to 25 characters",
-  },
+    counterMax25: value =>
+      value.length <= 25 || "Your list name can only be up to 25 characters"
+  }
 };
