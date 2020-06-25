@@ -100,6 +100,7 @@
                           <v-checkbox
                             v-model="item.done"
                             :color="themeColor"
+                            @change="saveListItems"
                           ></v-checkbox>
                         </v-list-item-avatar>
                         <v-list-item-content>
@@ -250,7 +251,7 @@ export default {
       if (this.$store.state.existingList) this.$store.dispatch("saveList");
       if (!this.$store.state.existingList) this.$store.commit("saveListItems");
     },
-    saveButton() {
+    saveListItems() {
       this.$store.commit("saveListItems");
     },
     saveList() {
