@@ -75,6 +75,9 @@
                 <v-btn @click="addToSyncedLists" v-if="loggedIn" icon>
                   <v-icon>fa-cloud-upload-alt</v-icon>
                 </v-btn>
+                <v-btn @click="removeFromSyncedLists" v-if="syncedList" icon>
+                  <v-icon>fa-cloud-download-alt</v-icon>
+                </v-btn>
               </v-list-item-action>
             </v-list-item>
           </v-list>
