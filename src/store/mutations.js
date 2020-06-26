@@ -11,9 +11,18 @@ export default {
       text: state.newItem,
       done: false,
       dateAdded: state.currentTime,
+      dateCompleted: "",
       img: ""
     });
     state.newItem = "";
+  },
+  addCompletionDate(state, index) {
+    if (state.todo[index].done) {
+      state.todo[index].dateCompleted = state.currentTime;
+    } else {
+      state.todo[index].dateCompleted = "";
+    }
+    console.log(state.todo[index].dateCompleted);
   },
   removeItem(state, index) {
     let url = state.todo[index].img;
