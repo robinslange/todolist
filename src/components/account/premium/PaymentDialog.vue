@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="paymentDialog" width="400" persistent>
+  <v-dialog v-model="this.$store.state.paymentDialog" width="400" persistent>
     <v-card>
       <v-card-title>
         Buy Premium
@@ -13,19 +13,23 @@
 </template>
 
 <script>
+
 export default {
   name: "PaymentDialog",
-  data: () => ({}),
+  components: {},
+  data: () => ({
+    publishableKey: this.$store.state.publishableKey
+  }),
   methods: {
     close() {
       this.$store.commit("togglePaymentDialog");
-    },
+    }
   },
   computed: {
     paymentDialog() {
       return this.$store.state.paymentDialog;
-    },
-  },
+    }
+  }
 };
 </script>
 

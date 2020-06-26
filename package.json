@@ -11,10 +11,12 @@
     "core-js": "^3.6.4",
     "fastjson": "^1.0.2",
     "firebase": "^7.14.4",
+    "stripe": "^8.67.0",
     "vue": "^2.6.11",
     "vue-clipboard2": "^0.3.1",
     "vue-router": "^3.1.6",
     "vue-social-sharing": "^3.0.0-beta.11",
+    "vue-stripe-checkout": "^3.3.2",
     "vuetify": "^2.2.29",
     "vuex": "^3.4.0"
   },
