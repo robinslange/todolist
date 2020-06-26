@@ -68,7 +68,7 @@
               <v-list-item-title>
                 <span class="fullSelect">{{ item }}</span>
               </v-list-item-title>
-              <v-list-item-action>
+              <v-list-item-action class="d-inline-flex">
                 <v-btn @click="deleteSavedLink(i)" icon>
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
