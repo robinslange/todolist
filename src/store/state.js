@@ -2,6 +2,9 @@ export default {
   user: {
     loggedIn: false,
     data: null,
+    premium: false,
+    admin: false,
+    uid: ""
   },
   newItem: "",
   todo: [],
@@ -12,7 +15,6 @@ export default {
   titleColor: "#313639",
   newTitleColor: "",
   currentTime: "",
-  publishableKey: "pk_test_51Gw3yyJAWBzvz0Sm9UqBdwWxVp7N9n8STEAUzw9aXVcBqzEdcSltbqSTm2IrrQkwk6Yyb1f6JHqrT63pyumQUmnW00uHwrcUrk",
   editDialog: false,
   uploadImage: false,
   existingList: false,

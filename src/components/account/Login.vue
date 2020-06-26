@@ -33,14 +33,14 @@ import db from "@/firebase/init";
 export default {
   components: {
     ForgotDialog: () => import("@/components/account/dialogs/ResetPassword"),
-    SentDialog: () => import("@/components/account/dialogs/SentDialog"),
+    SentDialog: () => import("@/components/account/dialogs/SentDialog")
   },
   name: "Login",
   data: () => ({
     show: false,
     email: "",
     password: "",
-    loggingIn: false,
+    loggingIn: false
   }),
   methods: {
     login() {
@@ -48,36 +48,40 @@ export default {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
-        .then((data) => {
+        .then(data => {
+          this.$store.commit("SET_USER", data.user);
+          this.$store.state.user.uid = data.user.uid;
           let userRef = db.collection("users").doc(data.user.uid);
           userRef
             .get()
-            .then((doc) => {
+            .then(doc => {
               if (!doc.exists) {
                 console.log("no such document");
               } else {
-                console.log("document data: " + doc.data());
+                let data = doc.data();
+                this.$store.state.user.premium = data.premium;
+                this.$store.state.user.admin = data.admin;
               }
             })
-            .catch((err) => {
+            .catch(err => {
               this.error = err.message;
             });
           this.loggingIn = false;
         })
-        .catch((err) => {
+        .catch(err => {
           this.loggingIn = false;
           this.error = err.message;
         });
     },
     toggleResetDialog() {
       this.$store.commit("toggleForgotPassword");
-    },
+    }
   },
   computed: {
     userCurrent() {
       return this.$store.state.user.data;
-    },
-  },
+    }
+  }
 };
 </script>
 
