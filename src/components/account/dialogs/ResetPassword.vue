@@ -40,7 +40,7 @@ export default {
   data: () => ({
     email: "",
     sending: false,
-    errMsg: "",
+    errMsg: ""
   }),
   methods: {
     sendReset() {
@@ -55,7 +55,7 @@ export default {
           this.$store.commit("toggleForgotPassword");
           this.$store.commit("toggleSentDialog");
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.errMsg = err.message;
           this.sending = false;
@@ -63,7 +63,7 @@ export default {
     },
     close() {
       this.$store.commit("toggleForgotPassword");
-    },
+    }
   },
   computed: {
     enteredAnAddress() {
@@ -75,8 +75,8 @@ export default {
     },
     forgot() {
       return this.$store.state.forgotDialog;
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -8,6 +8,9 @@ export default {
   SET_USER(state, data) {
     state.user.data = data;
   },
+  SET_USER_PREMIUM(state, data) {
+    state.user.premium = data;
+  },
   addItem(state) {
     if (!state.newItem) {
       return;

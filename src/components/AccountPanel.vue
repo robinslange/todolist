@@ -48,7 +48,9 @@
         <v-card-title>
           Your Saved Lists
           <v-spacer></v-spacer>
-          <v-btn @click="saveListLink">Save current list</v-btn>
+          <v-btn @click="saveListLink" :disabled="onAList"
+            >Save current list</v-btn
+          >
         </v-card-title>
 
         <v-card max-height="150px" class="scroll" flat>
@@ -70,6 +72,9 @@
                 <v-btn @click="deleteSavedLink(i)" icon>
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
+                <v-btn @click="addToSyncedLists" v-if="loggedIn" icon>
+                  <v-icon>fa-cloud-upload-alt</v-icon>
+                </v-btn>
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -89,10 +94,10 @@ export default {
     Register: () => import("@/components/account/Register"),
     Overview: () => import("@/components/account/Overview"),
     Settings: () => import("@/components/account/Settings"),
-    Premium: () => import("@/components/account/Premium"),
+    Premium: () => import("@/components/account/Premium")
   },
   data: () => ({
-    autoSave: false,
+    autoSave: false
   }),
   methods: {
     toggleAutoSave() {
@@ -114,13 +119,20 @@ export default {
         .then(() => {
           console.log("logged out");
         });
-    },
+    }
   },
   computed: {
     loggedIn() {
       return this.$store.state.user.loggedIn;
     },
-  },
+    onAList() {
+      if (this.$store.state.todoListID) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
 };
 </script>
 

@@ -209,10 +209,9 @@ export default {
   name: "Index",
   components: {
     Footer: () => import("@/components/core/Footer"),
-    UploadImage: () => import("@/components/UploadImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
     InfoPanel: () => import("@/components/InfoPanel"),
-    AccountPanel: () => import("@/components/AccountPanel"),
+    AccountPanel: () => import("@/components/AccountPanel")
   },
   data() {
     return {
@@ -223,7 +222,7 @@ export default {
       options: false,
       valid: false,
       autoSave: false,
-      darkMode: true,
+      darkMode: true
     };
   },
   methods: {
@@ -278,12 +277,12 @@ export default {
               .where("ID", "==", this.$route.params.id);
             queryRef
               .get()
-              .then((snapshot) => {
+              .then(snapshot => {
                 // found solution to forever loading if non-existtant query here under (readonly) query :Query:
                 // https://googleapis.dev/nodejs/firestore/latest/QuerySnapshot.html
                 if (!snapshot.empty) {
                   this.$store.state.existingList = true;
-                  snapshot.forEach((doc) => {
+                  snapshot.forEach(doc => {
                     let data = doc.data();
                     let list = JSON.parse(data.todo);
                     for (let i = 0; i < snapshot.size; i++) {
@@ -303,7 +302,7 @@ export default {
                   this.$store.state.loading = false;
                 }
               })
-              .catch((err) => {
+              .catch(err => {
                 console.log(err);
               });
           } else {
@@ -311,17 +310,17 @@ export default {
           }
         });
       });
-    },
+    }
   },
   computed: {
     completedTasks() {
-      return this.$store.state.todo.filter((todo) => todo.done).length;
+      return this.$store.state.todo.filter(todo => todo.done).length;
     },
     completedList() {
-      return this.$store.state.todo.filter((todo) => todo.done);
+      return this.$store.state.todo.filter(todo => todo.done);
     },
     incompleteList() {
-      return this.$store.state.todo.filter((todo) => !todo.done);
+      return this.$store.state.todo.filter(todo => !todo.done);
     },
     reverseList() {
       let list = this.$store.state.todo;
@@ -338,7 +337,7 @@ export default {
     },
     themeColor() {
       return this.$store.state.titleColor;
-    },
+    }
   },
   created() {
     this.$store.commit("checkIfFirstTime");
@@ -347,10 +346,10 @@ export default {
     this.$store.state.loading = true;
     this.pullDataAsync()
       .then()
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
-  },
+  }
 };
 </script>
 

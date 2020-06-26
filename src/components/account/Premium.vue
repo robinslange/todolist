@@ -42,9 +42,9 @@
     </v-list-item>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <div v-if="!this.$store.state.premium">
+      <div v-if="!this.$store.state.user.premium">
         <PayPal
-          amount="10.99"
+          amount="6.99"
           currency="USD"
           :client="credentials"
           :credentials="credentials"
@@ -52,11 +52,10 @@
           @payment-completed="updatePremiumStatus"
         />
       </div>
-      <v-btn v-if="this.$store.state.premium" tile outline color="success">
-        <v-icon>fa-coins</v-icon>Already Premium!
-      </v-btn>
+      <h3 style="color:green;font-style:strong;">
+        Thank you for purchasing premium!
+      </h3>
       <v-spacer></v-spacer>
-      <v-btn @click="log" text>Log</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -85,18 +84,19 @@ export default {
       this.$store.commit("togglePaymentDialog");
     },
     updatePremiumStatus() {
-      let userRef = db.collection("users").doc(this.$store.state.user.data.uid);
+      let uid = this.$store.state.user.uid;
+      this.$store.commit("SET_USER_PREMIUM", true);
+      let userRef = db.collection("users").doc(uid);
       userRef
         .update({
           premium: true
         })
         .then(() => {
-          this.$store.state.user.premium = true;
+          console.log("transaction complete");
         })
         .catch(err => {
           console.error(err);
         });
-      console.log("payment complete");
     },
     log() {
       console.log(this.$store.state.user);

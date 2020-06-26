@@ -49,18 +49,18 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(data => {
-          this.$store.commit("SET_USER", data.user);
           this.$store.state.user.uid = data.user.uid;
           let userRef = db.collection("users").doc(data.user.uid);
           userRef
             .get()
             .then(doc => {
               if (!doc.exists) {
-                console.log("no such document");
+                this.error = "A record for this user does not exist, please contact the developer!"
               } else {
                 let data = doc.data();
                 this.$store.state.user.premium = data.premium;
                 this.$store.state.user.admin = data.admin;
+                this.$store.state.syncedLists = data.syncedLists;
               }
             })
             .catch(err => {
