@@ -21,5 +21,9 @@ export default {
   deleteImg(context) {
     context.commit("deleteImg");
     context.commit("saveListItems");
+  },
+  addCompletionDate(context) {
+    context.commit("getNow");
+    context.commit("addCompletionDate");
   }
 };

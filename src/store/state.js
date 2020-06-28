@@ -23,6 +23,7 @@ export default {
   infoPanel: true,
   editItem: false,
   accountPanel: false,
+  dueDateDialog: false,
   rules: {
     required: value => !!value || "Required.",
     counterMin3: value =>
