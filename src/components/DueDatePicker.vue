@@ -4,7 +4,7 @@
       <v-card>
         <v-date-picker
           v-model="dueDate"
-          min="today"
+          :min="today"
           :color="this.$store.state.titleColor"
           @click:date="setDueDate"
         ></v-date-picker>
