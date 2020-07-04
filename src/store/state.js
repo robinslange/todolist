@@ -45,7 +45,4 @@ export default {
       return pattern.test(value) || "Please enter a valid email address";
     },
   },
-    counterMax25: value =>
-      value.length <= 25 || "Your list name can only be up to 25 characters"
-  }
 };
