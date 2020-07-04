@@ -44,10 +44,14 @@ export default {
   },
   computed: {
     imgSrc() {
+      if (!this.existingList) return null;
       return this.$store.state.todo[this.selectedIndex].img;
     },
     selectedIndex() {
       return this.$store.state.listIndex;
+    },
+    existingList() {
+      return this.$store.state.existingList;
     },
   },
 };
