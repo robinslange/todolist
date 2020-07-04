@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <v-container fill-height>
         <v-btn
           class="mx-5 my-12"
@@ -100,6 +100,7 @@
                           <v-checkbox
                             v-model="item.done"
                             :color="themeColor"
+                            @change="saveListItems"
                           ></v-checkbox>
                         </v-list-item-avatar>
                         <v-list-item-content>
@@ -110,7 +111,20 @@
                             Date Added: {{ item.dateAdded }}
                           </v-list-item-subtitle>
                         </v-list-item-content>
-
+                        <v-btn
+                          @click="toggleUploadDialog(index)"
+                          v-if="!item.img"
+                          icon
+                        >
+                          <v-icon>fa-upload</v-icon>
+                        </v-btn>
+                        <v-btn
+                          @click="toggleViewImageDialog(index)"
+                          v-else
+                          icon
+                        >
+                          <v-icon>fa-image</v-icon>
+                        </v-btn>
                         <v-scroll-x-transition>
                           <v-btn
                             icon
@@ -188,16 +202,13 @@
         <ColorPicker />
       </v-menu>
       <v-divider></v-divider>
-    </v-content>
+    </v-main>
 
     <Footer />
-    <UploadImage
-      :uploadImage="uploadImage"
-      @close="toggleUploadDialog"
-      @upload="uploadImage"
-    />
+    <UploadImage />
     <InfoPanel />
     <AccountPanel />
+    <ViewImage />
   </v-app>
 </template>
 
@@ -209,9 +220,11 @@ export default {
   name: "Index",
   components: {
     Footer: () => import("@/components/core/Footer"),
+    UploadImage: () => import("@/components/account/dialogs/UploadImage"),
+    ViewImage: () => import("@/components/account/dialogs/ViewImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
     InfoPanel: () => import("@/components/InfoPanel"),
-    AccountPanel: () => import("@/components/AccountPanel"),
+    AccountPanel: () => import("@/components/AccountPanel")
   },
   data() {
     return {
@@ -222,31 +235,48 @@ export default {
       options: false,
       valid: false,
       autoSave: false,
-      darkMode: true,
+      darkMode: true
     };
   },
   methods: {
     addItem() {
       this.$store.state.newItem = this.newItem;
       this.$store.dispatch("addToList");
-      this.$store.dispatch("saveList");
-      this.newItem = "";
+      if (!this.$store.state.existingList) {
+        this.$store.dispatch("saveList");
+        this.newItem = "";
+      }
+      if (this.$store.state.existingList) {
+        this.$store.commit("saveListItems");
+        this.newItem = "";
+      }
     },
     removeTodo(index) {
       this.$store.commit("removeItem", index);
-      this.$store.dispatch("saveList");
+      if (!this.$store.state.existingList) this.$store.dispatch("saveList");
+      if (this.$store.state.existingList) this.$store.commit("saveListItems");
+    },
+    saveListItems() {
+      this.$store.commit("saveListItems");
     },
     saveList() {
       this.$store.dispatch("saveList");
     },
     saveName() {
       this.$store.commit("saveNewName", this.newTodoName);
+      if (this.$store.state.existingList) this.$store.commit("saveTitle");
     },
     toggleEditName() {
       this.$store.commit("toggleNameEdit");
     },
-    toggleUploadDialog() {
-      this.uploadImage = !this.uploadImage;
+    toggleUploadDialog(i) {
+      this.$store.commit("setListIndex", i);
+      this.$store.commit("toggleUploadDialog");
+    },
+    toggleViewImageDialog(i) {
+      this.$store.commit("setListIndex", i);
+      this.$store.state.imgError = "";
+      this.$store.commit("toggleViewImageDialog");
     },
     toggleColorPicker() {
       this.$store.commit("toggleColorPicker");
@@ -272,54 +302,45 @@ export default {
       return new Promise(() => {
         setTimeout(() => {
           if (this.$route.params.id != null) {
-            let queryRef = db
-              .collection("todos")
-              .where("ID", "==", this.$route.params.id);
-            queryRef
-              .get()
-              .then((snapshot) => {
-                // found solution to forever loading if non-existtant query here under (readonly) query :Query:
-                // https://googleapis.dev/nodejs/firestore/latest/QuerySnapshot.html
-                if (!snapshot.empty) {
-                  this.$store.state.existingList = true;
-                  snapshot.forEach((doc) => {
-                    let data = doc.data();
-                    let list = JSON.parse(data.todo);
-                    for (let i = 0; i < snapshot.size; i++) {
-                      this.$store.state.todo = list;
-                      this.$store.state.todoName = data.name;
-                      this.newTodoName = data.name;
-                      this.$store.state.todoListID = data.ID;
-                      this.$store.state.titleColor = data.titleColor;
-                      this.$store.state.loading = false;
-                    }
-                  });
-                } else {
-                  //send to default route
+
+            db.collection("todos")
+              .doc(this.$route.params.id)
+              .onSnapshot(doc => {
+                let data = doc.data();
+                if (!data) {
                   this.$router.push("/");
-                  //stop loading
                   this.$store.state.loading = false;
+                  return;
                 }
-              })
-              .catch((err) => {
-                console.log(err);
+                let list = JSON.parse(data.todo);
+                for (let i = 0; i < list.length; i++) {
+                  if (list[i].img != "") this.$store.state.imagesUploaded++;
+                }
+                this.$store.state.todo = list;
+                this.$store.state.todoName = data.name;
+                this.newTodoName = data.name;
+                this.$store.state.todoListID = data.ID;
+                this.$store.state.titleColor = data.titleColor;
+                this.$store.state.loading = false;
+                this.$store.state.existingList = true;
               });
           } else {
             this.$store.state.loading = false;
+            return;
           }
         });
       });
-    },
+    }
   },
   computed: {
     completedTasks() {
-      return this.$store.state.todo.filter((todo) => todo.done).length;
+      return this.$store.state.todo.filter(todo => todo.done).length;
     },
     completedList() {
-      return this.$store.state.todo.filter((todo) => todo.done);
+      return this.$store.state.todo.filter(todo => todo.done);
     },
     incompleteList() {
-      return this.$store.state.todo.filter((todo) => !todo.done);
+      return this.$store.state.todo.filter(todo => !todo.done);
     },
     reverseList() {
       let list = this.$store.state.todo;
@@ -340,6 +361,9 @@ export default {
     user() {
       return this.$store.state.user.data;
     },
+    todoDone() {
+      return this.$store.state.todo.done;
+    }
   },
   created() {
     this.$store.commit("checkIfFirstTime");
@@ -352,10 +376,10 @@ export default {
     this.$store.state.loading = true;
     this.pullDataAsync()
       .then()
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
-  },
+  }
 };
 </script>
 
