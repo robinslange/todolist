@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "todolist-2558d"
+    "default": "todolist-2558d",
+    "staging": "todolist-2558d"
   }
 }

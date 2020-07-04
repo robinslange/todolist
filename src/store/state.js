@@ -4,6 +4,7 @@ export default {
     data: null,
     premium: false,
     admin: false,
+    uid: "",
   },
   newItem: "",
   todo: [],

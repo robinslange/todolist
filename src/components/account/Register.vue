@@ -67,7 +67,7 @@ export default {
     loggingIn: false,
     username: "",
     email: "",
-    password: "",
+    password: ""
   }),
   methods: {
     register() {
@@ -75,21 +75,19 @@ export default {
       firebase
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
-        .then((data) => {
+        .then(data => {
           data.user.updateProfile({
-            displayName: this.username.toString(),
+            displayName: this.username.toString()
           });
           db.collection("users")
             .doc(data.user.uid)
             .set({
               premium: false,
               admin: false,
-              savedLists: "",
+              syncedLists: ""
             })
-            .then(() => {
-              //firebase.analytics().logEvent("register");
-            })
-            .catch((err) => {
+            .then(() => {})
+            .catch(err => {
               console.log(err);
               this.error = err.message;
             })
@@ -101,11 +99,11 @@ export default {
               //working from: https://blog.logrocket.com/vue-firebase-authentication/
             });
         })
-        .catch((err) => {
+        .catch(err => {
           this.error = err.message;
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -42,10 +42,19 @@
     </v-list-item>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="togglePaymentDialog" tile outlined color="success">
-        <v-icon left>fa-coins</v-icon>
-        Get Premium
-      </v-btn>
+      <div v-if="!this.$store.state.user.premium">
+        <PayPal
+          amount="6.99"
+          currency="USD"
+          :client="credentials"
+          :credentials="credentials"
+          env="sandbox"
+          @payment-completed="updatePremiumStatus"
+        />
+      </div>
+      <h3 style="color:green;font-style:strong;">
+        Thank you for purchasing premium!
+      </h3>
       <v-spacer></v-spacer>
       <PaymentDialog />
     </v-card-actions>
@@ -53,19 +62,47 @@
 </template>
 
 <script>
+import PayPal from "vue-paypal-checkout";
+import db from "@/firebase/init";
+
 export default {
   components: {
-    PaymentDialog: () => import("@/components/account/premium/PaymentDialog"),
+    PayPal
   },
   name: "Premium",
-  data: () => ({}),
+  data: () => ({
+    credentials: {
+      sandbox:
+        "AfaoiGDGMKvy59qBUZ4DaHJACUtPclUTjiiWPcruGrqPNle2r0nmPpgPm2A2-RUOdcqIwaqAuFHfabDE",
+      production:
+        "AVmAIMcZDeK6ogH98yTnql6RAcJnT15gUjyxukCE9JwFWwq7WD05LV-Gcy12_ozutKFxJ3r9czAvLpqZ"
+    }
+  }),
   methods: {
     //TODO: implement payments
     //https://softauthor.com/stripe-payments-with-custom-stripe-elements-vue-cloud-functions/
     togglePaymentDialog() {
       this.$store.commit("togglePaymentDialog");
     },
-  },
+    updatePremiumStatus() {
+      let uid = this.$store.state.user.uid;
+      this.$store.commit("SET_USER_PREMIUM", true);
+      let userRef = db.collection("users").doc(uid);
+      userRef
+        .update({
+          premium: true
+        })
+        .then(() => {
+          console.log("transaction complete");
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    },
+    log() {
+      console.log(this.$store.state.user);
+    }
+  }
 };
 </script>
 
