@@ -42,7 +42,9 @@
     </v-list-item>
     <v-card-actions>
       <v-spacer></v-spacer>
+
       <div v-if="!this.$store.state.user.premium">
+        <v-card-subtitle>Purchase Premium for US$6.99 below:</v-card-subtitle>
         <PayPal
           amount="6.99"
           currency="USD"
@@ -52,7 +54,10 @@
           @payment-completed="updatePremiumStatus"
         />
       </div>
-      <h3 style="color:green;font-style:strong;">
+      <h3
+        v-if="this.$store.state.user.premium"
+        style="color:green;font-style:strong;"
+      >
         Thank you for purchasing premium!
       </h3>
       <v-spacer></v-spacer>
@@ -67,7 +72,7 @@ import db from "@/firebase/init";
 
 export default {
   components: {
-    PayPal
+    PayPal,
   },
   name: "Premium",
   data: () => ({
@@ -75,8 +80,8 @@ export default {
       sandbox:
         "AfaoiGDGMKvy59qBUZ4DaHJACUtPclUTjiiWPcruGrqPNle2r0nmPpgPm2A2-RUOdcqIwaqAuFHfabDE",
       production:
-        "AVmAIMcZDeK6ogH98yTnql6RAcJnT15gUjyxukCE9JwFWwq7WD05LV-Gcy12_ozutKFxJ3r9czAvLpqZ"
-    }
+        "AVmAIMcZDeK6ogH98yTnql6RAcJnT15gUjyxukCE9JwFWwq7WD05LV-Gcy12_ozutKFxJ3r9czAvLpqZ",
+    },
   }),
   methods: {
     //TODO: implement payments
@@ -90,19 +95,19 @@ export default {
       let userRef = db.collection("users").doc(uid);
       userRef
         .update({
-          premium: true
+          premium: true,
         })
         .then(() => {
           console.log("transaction complete");
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
         });
     },
     log() {
       console.log(this.$store.state.user);
-    }
-  }
+    },
+  },
 };
 </script>
 

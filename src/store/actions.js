@@ -17,6 +17,14 @@ export default {
     context.commit("getNow");
     context.commit("addItem");
   },
+  addToSyncedLists(context, index) {
+    context.commit("addToSyncedLists", index);
+    context.commit("saveSyncedLists");
+  },
+  deleteFromSyncedLists(context, index) {
+    context.commit("deleteFromSyncedLists", index);
+    context.commit("saveSyncedLists");
+  },
   fetchUser({ commit }, user) {
     commit("SET_LOGGED_IN", user !== null);
     if (user) {

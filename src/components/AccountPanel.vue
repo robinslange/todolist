@@ -44,45 +44,7 @@
       </v-tabs>
 
       <v-divider></v-divider>
-      <v-card flat>
-        <v-card-title>
-          Your Saved Lists
-          <v-spacer></v-spacer>
-          <v-btn @click="saveListLink" :disabled="onAList"
-            >Save current list</v-btn
-          >
-        </v-card-title>
-
-        <v-card max-height="150px" class="scroll" flat>
-          <v-list>
-            <v-list-item
-              v-for="(item, i) in this.$store.state.savedLinks"
-              :key="i"
-              style="align-items: center;"
-            >
-              <a :href="item">
-                <v-btn icon>
-                  <v-icon size="16">fa-external-link-alt</v-icon>
-                </v-btn>
-              </a>
-              <v-list-item-title>
-                <span class="fullSelect">{{ item }}</span>
-              </v-list-item-title>
-              <v-list-item-action class="d-inline-flex">
-                <v-btn @click="deleteSavedLink(i)" icon>
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-                <v-btn @click="addToSyncedLists" v-if="loggedIn" icon>
-                  <v-icon>fa-cloud-upload-alt</v-icon>
-                </v-btn>
-                <v-btn @click="removeFromSyncedLists" v-if="syncedList" icon>
-                  <v-icon>fa-cloud-download-alt</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-card>
+      <SavedLists />
     </v-card>
   </v-dialog>
 </template>
@@ -97,10 +59,11 @@ export default {
     Register: () => import("@/components/account/Register"),
     Overview: () => import("@/components/account/Overview"),
     Settings: () => import("@/components/account/Settings"),
-    Premium: () => import("@/components/account/Premium")
+    Premium: () => import("@/components/account/Premium"),
+    SavedLists: () => import("@/components/account/SavedLists"),
   },
   data: () => ({
-    autoSave: false
+    autoSave: false,
   }),
   methods: {
     toggleAutoSave() {
@@ -121,8 +84,9 @@ export default {
         .signOut()
         .then(() => {
           console.log("logged out");
+          sessionStorage.clear();
         });
-    }
+    },
   },
   computed: {
     loggedIn() {
@@ -134,8 +98,8 @@ export default {
       } else {
         return true;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

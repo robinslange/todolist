@@ -33,14 +33,14 @@ import db from "@/firebase/init";
 export default {
   components: {
     ForgotDialog: () => import("@/components/account/dialogs/ResetPassword"),
-    SentDialog: () => import("@/components/account/dialogs/SentDialog")
+    SentDialog: () => import("@/components/account/dialogs/SentDialog"),
   },
   name: "Login",
   data: () => ({
     show: false,
     email: "",
     password: "",
-    loggingIn: false
+    loggingIn: false,
   }),
   methods: {
     login() {
@@ -48,14 +48,15 @@ export default {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
-        .then(data => {
+        .then((data) => {
           this.$store.state.user.uid = data.user.uid;
           let userRef = db.collection("users").doc(data.user.uid);
           userRef
             .get()
-            .then(doc => {
+            .then((doc) => {
               if (!doc.exists) {
-                this.error = "A record for this user does not exist, please contact the developer!"
+                this.error =
+                  "A record for this user does not exist, please contact the developer!";
               } else {
                 let data = doc.data();
                 this.$store.commit("SET_USER_PREMIUM_STATUS", data.premium);
@@ -63,28 +64,29 @@ export default {
                 //firebase.analytics().logEvent("login");
                 this.$store.state.user.premium = data.premium;
                 this.$store.state.user.admin = data.admin;
-                this.$store.state.syncedLists = data.syncedLists;
+                let syncedListsTemp = JSON.parse(data.syncedLists);
+                this.$store.state.user.syncedLists = syncedListsTemp;
               }
             })
-            .catch(err => {
+            .catch((err) => {
               this.error = err.message;
             });
           this.loggingIn = false;
         })
-        .catch(err => {
+        .catch((err) => {
           this.loggingIn = false;
           this.error = err.message;
         });
     },
     toggleResetDialog() {
       this.$store.commit("toggleForgotPassword");
-    }
+    },
   },
   computed: {
     userCurrent() {
       return this.$store.state.user.data;
-    }
-  }
+    },
+  },
 };
 </script>
 

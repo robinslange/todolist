@@ -75,6 +75,31 @@ export default {
       state.saving = false;
     }
   },
+  addToSyncedLists(state, index) {
+    if (state.user.syncedLists.length > 5 && !state.user.premium) return;
+
+    let link = state.savedLinks[index];
+    state.user.syncedLists = state.user.syncedLists || [];
+    state.user.syncedLists.push(link);
+  },
+  deleteFromSyncedLists(state, index) {
+    state.user.syncedLists.splice(index, 1);
+  },
+  saveSyncedLists(state) {
+    let uid = state.user.uid;
+    let lists = JSON.stringify(state.user.syncedLists);
+    let userRef = db.collection("users").doc(uid);
+    userRef
+      .update({
+        syncedLists: lists,
+      })
+      .then(() => {
+        console.log("sync complete");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
   toggleEditDialog(state) {
     state.editDialog = !state.editDialog;
   },
