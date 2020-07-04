@@ -190,6 +190,7 @@ export default {
         state.user.syncedLists.push(data[i]);
       }
     }
+    state.reloadVariable++;
     state.syncedListsLoading = false;
   },
   toggleEditDialog(state) {

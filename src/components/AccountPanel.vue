@@ -44,7 +44,7 @@
       </v-tabs>
 
       <v-divider></v-divider>
-      <SavedLists />
+      <SavedLists :key="reloadVariable" />
     </v-card>
   </v-dialog>
 </template>
@@ -87,6 +87,8 @@ export default {
         .signOut()
         .then(() => {
           console.log("logged out");
+          this.$store.state.reloadVariable--;
+          this.$store.state.user.syncedLists = [];
         });
     },
   },
@@ -100,6 +102,9 @@ export default {
       } else {
         return true;
       }
+    },
+    reloadVariable() {
+      return this.$store.state.reloadVariable;
     },
   },
 };

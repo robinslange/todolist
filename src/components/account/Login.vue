@@ -75,6 +75,7 @@ export default {
                 firebase.analytics().logEvent("login");
                 let syncedListsTemp = JSON.parse(data.syncedLists);
                 this.$store.commit("retrieveSyncedLists", syncedListsTemp);
+                this.$store.state.reloadVariable++;
               }
             })
             .catch((err) => {

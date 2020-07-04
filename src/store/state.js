@@ -20,6 +20,7 @@ export default {
   imgError: "",
   listIndex: 0,
   imagesUploaded: 0,
+  reloadVariable: 0,
   uploadDialog: false,
   viewImg: false,
   existingList: false,
@@ -35,8 +36,8 @@ export default {
   paymentDialog: false,
   syncedListsLoading: false,
   rules: {
-    required: value => !!value || "Required.",
-    counterMin3: value =>
+    required: (value) => !!value || "Required.",
+    counterMin3: (value) =>
       value.length >= 3 || "Your list name has to have at least 3 characters",
     counterMax25: (value) =>
       value.length <= 25 || "Your list name can only be up to 25 characters",
