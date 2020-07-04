@@ -60,8 +60,6 @@
       >
         Thank you for purchasing premium!
       </h3>
-      <v-spacer></v-spacer>
-      <PaymentDialog />
     </v-card-actions>
   </v-card>
 </template>

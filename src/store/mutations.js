@@ -23,7 +23,7 @@ export default {
       text: state.newItem,
       done: false,
       dateAdded: state.currentTime,
-      img: ""
+      img: "",
     });
     state.newItem = "";
   },
@@ -47,7 +47,7 @@ export default {
         .child(`${name}`)
         .delete()
         .then()
-        .catch(error => {
+        .catch((error) => {
           state.imgError = error.message;
         });
       state.todo[index].img = null;
@@ -74,12 +74,12 @@ export default {
       ref
         .doc(state.todoListID)
         .update({
-          name: state.todoName
+          name: state.todoName,
         })
         .then(() => {
           state.saving = false;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     } else {
@@ -92,12 +92,12 @@ export default {
     ref
       .doc(state.todoListID)
       .update({
-        todo: JSON.stringify(state.todo)
+        todo: JSON.stringify(state.todo),
       })
       .then(() => {
         state.saving = false;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         state.saving = false;
       });
@@ -108,12 +108,12 @@ export default {
     ref
       .doc(state.todoListID)
       .update({
-        titleColor: state.titleColor
+        titleColor: state.titleColor,
       })
       .then(() => {
         state.saving = false;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         state.saving = false;
       });
@@ -128,12 +128,12 @@ export default {
         .update({
           name: state.todoName,
           todo: JSON.stringify(state.todo),
-          titleColor: state.titleColor
+          titleColor: state.titleColor,
         })
         .then(() => {
           state.saving = false;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           state.saving = false;
         });
@@ -144,7 +144,7 @@ export default {
           ID: listID,
           name: state.todoName,
           todo: JSON.stringify(state.todo),
-          titleColor: state.titleColor
+          titleColor: state.titleColor,
         })
         .then(() => {
           state.saving = false;
@@ -188,6 +188,7 @@ export default {
       if (state.savedLinks != null) {
         if (state.savedLinks.includes(data[i])) continue;
         state.savedLinks.push(data[i]);
+        state.user.syncedLists.push(data[i]);
       }
     }
     state.syncedListsLoading = false;
@@ -296,12 +297,12 @@ export default {
         .child(`${name}`)
         .delete()
         .then()
-        .catch(error => {
+        .catch((error) => {
           state.imgError = error.message;
         });
       state.todo[state.listIndex].img = null;
     } catch (error) {
       state.imgError = error.message;
     }
-  }
+  },
 };
