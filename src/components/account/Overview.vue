@@ -7,11 +7,11 @@
     <v-divider></v-divider>
     <v-col>
       <v-list-item two-line>
-        <v-list-item-title>Username:</v-list-item-title>
+        <v-list-item-title>Username: </v-list-item-title>
         <v-list-item-subtitle>{{ user.displayName }}</v-list-item-subtitle>
       </v-list-item>
       <v-list-item two-line>
-        <v-list-item-title>Email:</v-list-item-title>
+        <v-list-item-title>Email: </v-list-item-title>
         <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
       </v-list-item>
     </v-col>
