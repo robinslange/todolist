@@ -29,6 +29,7 @@ export default {
   forgotDialog: false,
   sentDialog: false,
   paymentDialog: false,
+  syncedListsLoading: false,
   savedLinks: [],
   rules: {
     required: (value) => !!value || "Required.",
@@ -36,5 +37,9 @@ export default {
       value.length >= 3 || "Your list name has to have at least 3 characters",
     counterMax25: (value) =>
       value.length <= 25 || "Your list name can only be up to 25 characters",
+    email: (value) => {
+      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return pattern.test(value) || "Please enter a valid email address";
+    },
   },
 };

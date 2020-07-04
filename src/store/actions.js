@@ -1,10 +1,10 @@
 import state from "./state";
-//import firebase from "firebase";
+import firebase from "firebase";
 
 export default {
   saveList(context) {
     if (!state.existingList) {
-      //firebase.analytics().logEvent("created_list");
+      firebase.analytics().logEvent("created_list");
       context.commit("makeid", 6);
     }
     context.commit("saveList");

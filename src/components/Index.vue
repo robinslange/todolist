@@ -294,7 +294,6 @@ export default {
                       this.$store.state.loading = false;
                     }
                   });
-                  //if router params doesn't exist
                 } else {
                   //send to default route
                   this.$router.push("/");
@@ -345,7 +344,11 @@ export default {
   created() {
     this.$store.commit("checkIfFirstTime");
     let savedLinks = JSON.parse(localStorage.getItem("savedLinks"));
-    this.$store.state.savedLinks = savedLinks;
+    if (savedLinks) {
+      this.$store.state.savedLinks = savedLinks;
+    } else {
+      this.$store.state.savedLinks = [];
+    }
     this.$store.state.loading = true;
     this.pullDataAsync()
       .then()

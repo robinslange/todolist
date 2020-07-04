@@ -1,10 +1,14 @@
 <template>
   <v-card class="px-5 py-5" flat>
-    <v-form>
+    <v-form ref="login">
       <v-text-field
         v-model="email"
         label="Email"
         prepend-icon="mdi-email-outline"
+        :rules="[
+          this.$store.state.rules.required,
+          this.$store.state.rules.email,
+        ]"
       ></v-text-field>
       <v-text-field
         v-model="password"
@@ -13,6 +17,7 @@
         :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
         :type="show ? 'text' : 'password'"
         @click:append="show = !show"
+        :rules="[this.$store.state.rules.required]"
       ></v-text-field>
     </v-form>
 
@@ -41,9 +46,15 @@ export default {
     email: "",
     password: "",
     loggingIn: false,
+    valid: false,
   }),
   methods: {
+    validate() {
+      this.valid = this.$refs.login.validate();
+    },
     login() {
+      this.validate();1
+      if (!this.valid) return;
       this.loggingIn = true;
       firebase
         .auth()
@@ -62,10 +73,9 @@ export default {
                 this.$store.commit("SET_USER_PREMIUM_STATUS", data.premium);
                 this.$store.commit("SET_USER_ADMIN_STATUS", data.admin);
                 //firebase.analytics().logEvent("login");
-                this.$store.state.user.premium = data.premium;
-                this.$store.state.user.admin = data.admin;
                 let syncedListsTemp = JSON.parse(data.syncedLists);
-                this.$store.state.user.syncedLists = syncedListsTemp;
+
+                this.$store.commit("retrieveSyncedLists", syncedListsTemp);
               }
             })
             .catch((err) => {

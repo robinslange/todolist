@@ -100,6 +100,17 @@ export default {
         console.error(err);
       });
   },
+  retrieveSyncedLists(state, data) {
+    state.syncedListsLoading = true;
+    state.user.syncedLists = data;
+    for (let i = 0; i < data.length; i++) {
+      if (state.savedLinks != null) {
+        if (state.savedLinks.includes(data[i])) continue;
+        state.savedLinks.push(data[i]);
+      }
+    }
+    state.syncedListsLoading = false;
+  },
   toggleEditDialog(state) {
     state.editDialog = !state.editDialog;
   },

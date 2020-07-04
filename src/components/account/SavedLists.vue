@@ -3,10 +3,12 @@
     <v-card-title>
       Your Saved Lists
       <v-spacer></v-spacer>
-      <v-btn @click="saveListLink" :disabled="onAList">Save current list</v-btn>
+      <v-btn @click="saveListLink" :disabled="!onAList"
+        >Save current list</v-btn
+      >
     </v-card-title>
-
-    <v-card max-height="150px" class="scroll" flat>
+    <v-progress-linear v-if="loading" indeterminate></v-progress-linear>
+    <v-card max-height="150px" class="scroll" v-if="!loading" flat>
       <v-list>
         <v-list-item
           v-for="(item, i) in this.$store.state.savedLinks"
@@ -28,18 +30,18 @@
           </v-list-item-action>
           <v-list-item-action>
             <v-btn
-              @click="addToSyncedLists(i)"
-              v-if="loggedIn && !syncedLists.includes(item)"
-              icon
-            >
-              <v-icon>mdi-cloud-outline</v-icon>
-            </v-btn>
-            <v-btn
               @click="removeFromSyncedLists(i)"
-              v-if="syncedLists.includes(item)"
+              v-if="loggedIn && syncedLists.includes(item)"
               icon
             >
               <v-icon>mdi-cloud-off-outline</v-icon>
+            </v-btn>
+            <v-btn
+              @click="addToSyncedLists(i)"
+              v-if="!syncedLists.includes(item)"
+              icon
+            >
+              <v-icon>mdi-cloud-outline</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -49,12 +51,18 @@
 </template>
 
 <script>
-//import db from "@/firebase/init";
-
 export default {
   name: "SavedLists",
   data: () => ({}),
   methods: {
+    inArray(needle) {
+      let haystack = this.syncedLists;
+      let length = haystack.length;
+      for (let i = 0; i < length; i++) {
+        if (haystack[i] == needle) return true;
+      }
+      return false;
+    },
     saveListLink() {
       this.$store.commit("saveListLink");
     },
@@ -67,7 +75,6 @@ export default {
     removeFromSyncedLists(i) {
       this.$store.dispatch("deleteFromSyncedLists", i);
     },
-    saveToAccount() {},
   },
 
   computed: {
@@ -76,13 +83,16 @@ export default {
     },
     onAList() {
       if (this.$store.state.todoListID) {
-        return false;
-      } else {
         return true;
+      } else {
+        return false;
       }
     },
     syncedLists() {
       return this.$store.state.user.syncedLists;
+    },
+    loading() {
+      return this.$store.state.syncedListsLoading;
     },
   },
 };

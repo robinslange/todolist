@@ -35,16 +35,12 @@ new Vue({
             let data = doc.data();
             this.$store.commit("SET_USER_PREMIUM_STATUS", data.premium);
             this.$store.commit("SET_USER_ADMIN_STATUS", data.admin);
-            this.$store.state.user.premium = data.premium;
-            this.$store.state.user.admin = data.admin;
             let syncedListsTemp = JSON.parse(data.syncedLists);
-            this.$store.state.user.syncedLists = syncedListsTemp;
+            this.$store.commit("retrieveSyncedLists", syncedListsTemp);
           })
           .catch((err) => {
             console.log(err);
           });
-      } else {
-        console.log("user not logged in");
       }
     });
   },

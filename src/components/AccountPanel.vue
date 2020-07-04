@@ -51,16 +51,17 @@
 
 <script>
 import firebase from "firebase";
+import SavedLists from "@/components/account/SavedLists";
 
 export default {
   name: "AccountPanel",
   components: {
+    SavedLists,
     Login: () => import("@/components/account/Login"),
     Register: () => import("@/components/account/Register"),
     Overview: () => import("@/components/account/Overview"),
     Settings: () => import("@/components/account/Settings"),
     Premium: () => import("@/components/account/Premium"),
-    SavedLists: () => import("@/components/account/SavedLists"),
   },
   data: () => ({
     autoSave: false,
@@ -79,12 +80,13 @@ export default {
       this.$store.commit("toggleAccountPanel");
     },
     logOut() {
+      let savedLinks = JSON.parse(localStorage.getItem("savedLinks"));
+      this.$store.state.savedLinks = savedLinks;
       firebase
         .auth()
         .signOut()
         .then(() => {
           console.log("logged out");
-          sessionStorage.clear();
         });
     },
   },
