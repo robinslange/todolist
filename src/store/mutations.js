@@ -183,6 +183,7 @@ export default {
   },
   retrieveSyncedLists(state, data) {
     state.syncedListsLoading = true;
+    state.user.syncedLists = state.user.syncedLists || [];
     for (let i = 0; i < data.length; i++) {
       if (state.savedLinks != null) {
         if (state.savedLinks.includes(data[i])) continue;
