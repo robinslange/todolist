@@ -53,7 +53,7 @@ export default {
       this.valid = this.$refs.login.validate();
     },
     login() {
-      this.validate();1
+      this.validate();
       if (!this.valid) return;
       this.loggingIn = true;
       firebase
@@ -72,9 +72,8 @@ export default {
                 let data = doc.data();
                 this.$store.commit("SET_USER_PREMIUM_STATUS", data.premium);
                 this.$store.commit("SET_USER_ADMIN_STATUS", data.admin);
-                //firebase.analytics().logEvent("login");
+                firebase.analytics().logEvent("login");
                 let syncedListsTemp = JSON.parse(data.syncedLists);
-
                 this.$store.commit("retrieveSyncedLists", syncedListsTemp);
               }
             })
