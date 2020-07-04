@@ -7,6 +7,7 @@ export default {
     uid: "",
     syncedLists: [],
   },
+  savedLinks: [],
   newItem: "",
   todo: [],
   todoName: "Todo List",
@@ -16,8 +17,11 @@ export default {
   titleColor: "#313639",
   newTitleColor: "",
   currentTime: "",
-  editDialog: false,
-  uploadImage: false,
+  imgError: "",
+  listIndex: 0,
+  imagesUploaded: 0,
+  uploadDialog: false,
+  viewImg: false,
   existingList: false,
   loading: false,
   saving: false,
@@ -30,10 +34,9 @@ export default {
   sentDialog: false,
   paymentDialog: false,
   syncedListsLoading: false,
-  savedLinks: [],
   rules: {
-    required: (value) => !!value || "Required.",
-    counterMin3: (value) =>
+    required: value => !!value || "Required.",
+    counterMin3: value =>
       value.length >= 3 || "Your list name has to have at least 3 characters",
     counterMax25: (value) =>
       value.length <= 25 || "Your list name can only be up to 25 characters",
@@ -42,4 +45,7 @@ export default {
       return pattern.test(value) || "Please enter a valid email address";
     },
   },
+    counterMax25: value =>
+      value.length <= 25 || "Your list name can only be up to 25 characters"
+  }
 };

@@ -24,6 +24,10 @@
         Lists will automatically sync changes made by anyone viewing it.
         <br />
         <br />
+        If you have trouble with anything get in touch via one of the links in
+        the footer :)
+        <br />
+        <br />
         Ready to go? Press the button below to get started!
       </v-card-text>
       <v-card-actions>
@@ -42,6 +46,7 @@ export default {
   methods: {
     close() {
       this.$store.commit("toggleInfoPanel");
+
     },
     viewAccount() {
       this.$store.commit("toggleInfoPanel");

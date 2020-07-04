@@ -1,5 +1,6 @@
 import db from "@/firebase/init";
 import router from "../router";
+import firebase from "firebase";
 
 export default {
   SET_LOGGED_IN(state, value) {
@@ -22,11 +23,39 @@ export default {
       text: state.newItem,
       done: false,
       dateAdded: state.currentTime,
+      img: ""
     });
     state.newItem = "";
   },
   removeItem(state, index) {
-    state.todo.splice(index, 1);
+    let url = state.todo[index].img;
+    try {
+      //removes everything but the file name from URL
+      //found here: https://stackoverflow.com/questions/511761/js-function-to-get-filename-from-url
+      let name = url
+        ? url
+            .split("/")
+            .pop()
+            .split("#")
+            .shift()
+            .split("?")
+            .shift()
+        : null;
+
+      let storagePath = firebase.storage().ref();
+      storagePath
+        .child(`${name}`)
+        .delete()
+        .then()
+        .catch(error => {
+          state.imgError = error.message;
+        });
+      state.todo[index].img = null;
+      state.imgError = "";
+      state.todo.splice(index, 1);
+    } catch (error) {
+      state.imgError = error.message;
+    }
   },
   makeid(state, length) {
     var result = "";
@@ -38,6 +67,57 @@ export default {
     }
     state.tempID = result;
   },
+  saveTitle(state) {
+    if (state.existingList) {
+      let ref = db.collection("todos");
+      state.saving = true;
+      ref
+        .doc(state.todoListID)
+        .update({
+          name: state.todoName
+        })
+        .then(() => {
+          state.saving = false;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      return;
+    }
+  },
+  saveListItems(state) {
+    state.saving = true;
+    let ref = db.collection("todos");
+    ref
+      .doc(state.todoListID)
+      .update({
+        todo: JSON.stringify(state.todo)
+      })
+      .then(() => {
+        state.saving = false;
+      })
+      .catch(err => {
+        console.log(err);
+        state.saving = false;
+      });
+  },
+  saveThemeColor(state) {
+    state.saving = true;
+    let ref = db.collection("todos");
+    ref
+      .doc(state.todoListID)
+      .update({
+        titleColor: state.titleColor
+      })
+      .then(() => {
+        state.saving = false;
+      })
+      .catch(err => {
+        console.log(err);
+        state.saving = false;
+      });
+  },
   saveList(state) {
     let ref = db.collection("todos");
     let listID = state.tempID;
@@ -48,13 +128,14 @@ export default {
         .update({
           name: state.todoName,
           todo: JSON.stringify(state.todo),
-          titleColor: state.titleColor,
+          titleColor: state.titleColor
         })
         .then(() => {
           state.saving = false;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
+          state.saving = false;
         });
     } else {
       ref
@@ -63,7 +144,7 @@ export default {
           ID: listID,
           name: state.todoName,
           todo: JSON.stringify(state.todo),
-          titleColor: state.titleColor,
+          titleColor: state.titleColor
         })
         .then(() => {
           state.saving = false;
@@ -146,15 +227,24 @@ export default {
   },
   togglePaymentDialog(state) {
     state.paymentDialog = !state.paymentDialog;
+
+  toggleUploadDialog(state) {
+    state.uploadDialog = !state.uploadDialog;
+  },
+  toggleViewImageDialog(state) {
+    state.viewImg = !state.viewImg;
   },
   checkIfFirstTime(state) {
     var token = localStorage.getItem("firstTimeToken");
-    if (token == "You've been here before") {
+    if (token == "Not your first time eh?") {
       state.infoPanel = false;
     } else {
       state.infoPanel = true;
-      localStorage.setItem("firstTimeToken", "You've been here before");
+      localStorage.setItem("firstTimeToken", "Not your first time eh?");
     }
+  },
+  setListIndex(state, i) {
+    state.listIndex = i;
   },
   getNow(state) {
     const today = new Date();
@@ -165,9 +255,6 @@ export default {
       (today.getMonth() + 1) +
       "-" +
       today.getFullYear();
-    //const time =
-    //today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    //const dateTime = date + " " + time;
     state.currentTime = date;
   },
   toggleAccountPanel(state) {
@@ -186,4 +273,35 @@ export default {
     let dataPack = JSON.stringify(state.savedLinks);
     localStorage.setItem("savedLinks", dataPack);
   },
+  attachImage(state, url) {
+    state.todo[state.listIndex].img = url;
+  },
+  deleteImg(state) {
+    let url = state.todo[state.listIndex].img;
+    try {
+      //removes everything but the file name from URL
+      //found here: https://stackoverflow.com/questions/511761/js-function-to-get-filename-from-url
+      let name = url
+        ? url
+            .split("/")
+            .pop()
+            .split("#")
+            .shift()
+            .split("?")
+            .shift()
+        : null;
+
+      let storagePath = firebase.storage().ref();
+      storagePath
+        .child(`${name}`)
+        .delete()
+        .then()
+        .catch(error => {
+          state.imgError = error.message;
+        });
+      state.todo[state.listIndex].img = null;
+    } catch (error) {
+      state.imgError = error.message;
+    }
+  }
 };

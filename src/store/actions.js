@@ -7,10 +7,15 @@ export default {
       firebase.analytics().logEvent("created_list");
       context.commit("makeid", 6);
     }
+
+export default {
+  saveList(context) {
+    context.commit("makeid", 6);
     context.commit("saveList");
   },
   changeTitleColor(context, newColor) {
     context.commit("changeTitleColor", newColor);
+    if (state.existingList) context.commit("saveThemeColor");
     context.commit("toggleColorPicker");
   },
   addToList(context) {
@@ -36,4 +41,12 @@ export default {
       commit("SET_USER", null);
     }
   },
+  uploadImg(context, url) {
+    context.commit("attachImage", url);
+    context.commit("saveListItems");
+  },
+  deleteImg(context) {
+    context.commit("deleteImg");
+    context.commit("saveListItems");
+  }
 };
