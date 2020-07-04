@@ -13,13 +13,15 @@
           </li>
         </ol>
         <br />
-        <span style="color: green; font-style: oblique;">NEW:</span> The list
-        will now save after every entry, so you don't need to toggle auto-save
-        anymore :)
+        <span style="color: green; font-style: oblique;">NEW:</span> Accounts!
+        Check out the whole new accounts panel with this button
+        <v-btn @click="viewAccount" icon>
+          <v-icon>fa-user</v-icon>
+        </v-btn>
+        or you can find it in the top left at any time :)
         <br />
         <br />
-        Just remember that changes will save from whoever saves to the list last
-        (In future it will auto-sync new changes between users)
+        Lists will automatically sync changes made by anyone viewing it.
         <br />
         <br />
         Ready to go? Press the button below to get started!
@@ -40,6 +42,10 @@ export default {
   methods: {
     close() {
       this.$store.commit("toggleInfoPanel");
+    },
+    viewAccount() {
+      this.$store.commit("toggleInfoPanel");
+      this.$store.commit("toggleAccountPanel");
     },
   },
 };

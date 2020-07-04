@@ -36,6 +36,7 @@
             :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
             :type="show ? 'text' : 'password'"
             @click:append="show = !show"
+            :rules="[this.$store.state.rules.required]"
           ></v-text-field>
         </v-list-item-subtitle>
       </v-list-item>

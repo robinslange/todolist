@@ -7,7 +7,12 @@
         >Save current list</v-btn
       >
     </v-card-title>
-    <v-progress-linear v-if="loading" indeterminate></v-progress-linear>
+    <v-card-subtitle v-if="loggedIn"
+      >Synced Lists: {{ syncedListCount }}<span v-if="!premium">/5</span>
+      <span v-else
+        >/<v-icon size="16">fa-infinity</v-icon></span
+      ></v-card-subtitle
+    >
     <v-card max-height="150px" class="scroll" v-if="!loading" flat>
       <v-list>
         <v-list-item
@@ -15,7 +20,7 @@
           :key="i"
           style="align-items: center;"
         >
-          <a :href="item">
+          <a :href="item" target="_blank">
             <v-btn icon>
               <v-icon size="16">fa-external-link-alt</v-icon>
             </v-btn>
@@ -93,6 +98,12 @@ export default {
     },
     loading() {
       return this.$store.state.syncedListsLoading;
+    },
+    syncedListCount() {
+      return this.$store.state.user.syncedLists.length;
+    },
+    premium() {
+      return this.$store.state.user.premium;
     },
   },
 };

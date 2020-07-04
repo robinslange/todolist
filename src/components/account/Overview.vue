@@ -15,6 +15,10 @@
         <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
       </v-list-item>
     </v-col>
+    <v-card-subtitle
+      >If you've just made changes to your account you'll need to refresh the
+      page to see these here</v-card-subtitle
+    >
   </v-card>
 </template>
 
