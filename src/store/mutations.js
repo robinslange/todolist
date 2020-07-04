@@ -227,7 +227,7 @@ export default {
   },
   togglePaymentDialog(state) {
     state.paymentDialog = !state.paymentDialog;
-
+  },
   toggleUploadDialog(state) {
     state.uploadDialog = !state.uploadDialog;
   },
