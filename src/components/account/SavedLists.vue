@@ -51,6 +51,11 @@
           </v-list-item-action>
         </v-list-item>
       </v-list>
+      <v-card-subtitle class="text-center">
+        <v-spacer></v-spacer>
+        If you can't see your synced lists, try refreshing the page.
+        <v-spacer></v-spacer>
+      </v-card-subtitle>
     </v-card>
   </v-card>
 </template>

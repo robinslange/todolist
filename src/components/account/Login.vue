@@ -28,7 +28,7 @@
       <v-spacer></v-spacer>
       <v-btn @click="login" :loading="loggingIn" text>Login</v-btn>
     </v-card-actions>
-    <v-card-subtitle v-if="error">
+    <v-card-subtitle v-if="error" class="red--text">
       {{ error }}
     </v-card-subtitle>
   </v-card>
@@ -50,6 +50,7 @@ export default {
     password: "",
     loggingIn: false,
     valid: false,
+    error: "",
   }),
   methods: {
     validate() {
@@ -72,6 +73,7 @@ export default {
                 this.error =
                   "A record for this user does not exist, please contact the developer!";
               } else {
+                this.error = "";
                 let data = doc.data();
                 this.$store.commit("SET_USER_PREMIUM_STATUS", data.premium);
                 this.$store.commit("SET_USER_ADMIN_STATUS", data.admin);
