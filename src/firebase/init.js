@@ -15,8 +15,11 @@ var config = {
   measurementId: "G-6DVRE46G75",
 };
 
+//firebase.analytics();
+
 // Initialize Firebase
 // eslint-disable-next-line
 const firestore = firebase.initializeApp(config);
 const db = firebase.firestore();
+
 export default db;

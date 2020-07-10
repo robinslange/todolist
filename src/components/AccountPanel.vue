@@ -3,56 +3,66 @@
     v-model="this.$store.state.accountPanel"
     max-width="450"
     max-height="350"
+    persistent
   >
     <v-card>
       <v-card-title>
         Account
         <v-spacer></v-spacer>
+        <v-card-actions v-if="loggedIn">
+          <v-spacer></v-spacer>
+          <v-btn @click="logOut" text>Log Out</v-btn>
+        </v-card-actions>
         <v-btn @click="close" icon>
           <v-icon>fa-times</v-icon>
         </v-btn>
       </v-card-title>
-      <v-card-subtitle class="px-6 py-4">Coming Soon!</v-card-subtitle>
+
+      <v-tabs v-if="!loggedIn">
+        <v-tab>Login</v-tab>
+        <v-tab-item>
+          <Login />
+        </v-tab-item>
+        <v-tab>Register</v-tab>
+        <v-tab-item>
+          <Register />
+        </v-tab-item>
+      </v-tabs>
+      <v-tabs v-if="loggedIn">
+        <v-tab>Overview</v-tab>
+        <v-tab-item>
+          <Overview />
+        </v-tab-item>
+        <v-tab>Settings</v-tab>
+        <v-tab-item>
+          <Settings />
+        </v-tab-item>
+        <v-tab>Premium</v-tab>
+        <v-tab-item>
+          <Premium />
+        </v-tab-item>
+      </v-tabs>
 
       <v-divider></v-divider>
-      <v-card flat>
-        <v-card-title>
-          Your Saved Lists
-          <v-spacer></v-spacer>
-          <v-btn @click="saveListLink">Save current list</v-btn>
-        </v-card-title>
-        <v-card-actions> </v-card-actions>
-        <v-card max-height="150px" class="scroll" flat>
-          <v-list>
-            <v-list-item
-              v-for="(item, i) in this.$store.state.savedLinks"
-              :key="i"
-              style="align-items: center;"
-            >
-              <a :href="item">
-                <v-btn icon>
-                  <v-icon size="16">fa-external-link-alt</v-icon>
-                </v-btn>
-              </a>
-              <v-list-item-title>
-                <span class="fullSelect">{{ item }}</span>
-              </v-list-item-title>
-              <v-list-item-action>
-                <v-btn @click="deleteSavedLink(i)" icon>
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-card>
+      <SavedLists :key="reloadVariable" />
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import firebase from "firebase";
+import SavedLists from "@/components/account/SavedLists";
+
 export default {
   name: "AccountPanel",
+  components: {
+    SavedLists,
+    Login: () => import("@/components/account/Login"),
+    Register: () => import("@/components/account/Register"),
+    Overview: () => import("@/components/account/Overview"),
+    Settings: () => import("@/components/account/Settings"),
+    Premium: () => import("@/components/account/Premium"),
+  },
   data: () => ({
     autoSave: false,
   }),
@@ -69,8 +79,34 @@ export default {
     close() {
       this.$store.commit("toggleAccountPanel");
     },
+    logOut() {
+      let savedLinks = JSON.parse(localStorage.getItem("savedLinks"));
+      this.$store.state.savedLinks = savedLinks;
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          console.log("logged out");
+          this.$store.state.reloadVariable--;
+          this.$store.state.user.syncedLists = [];
+        });
+    },
   },
-  computed: {},
+  computed: {
+    loggedIn() {
+      return this.$store.state.user.loggedIn;
+    },
+    onAList() {
+      if (this.$store.state.todoListID) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    reloadVariable() {
+      return this.$store.state.reloadVariable;
+    },
+  },
 };
 </script>
 

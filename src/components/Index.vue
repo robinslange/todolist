@@ -302,6 +302,7 @@ export default {
       return new Promise(() => {
         setTimeout(() => {
           if (this.$route.params.id != null) {
+
             db.collection("todos")
               .doc(this.$route.params.id)
               .onSnapshot(doc => {
@@ -357,6 +358,9 @@ export default {
     themeColor() {
       return this.$store.state.titleColor;
     },
+    user() {
+      return this.$store.state.user.data;
+    },
     todoDone() {
       return this.$store.state.todo.done;
     }
@@ -364,7 +368,11 @@ export default {
   created() {
     this.$store.commit("checkIfFirstTime");
     let savedLinks = JSON.parse(localStorage.getItem("savedLinks"));
-    this.$store.state.savedLinks = savedLinks;
+    if (savedLinks) {
+      this.$store.state.savedLinks = savedLinks;
+    } else {
+      this.$store.state.savedLinks = [];
+    }
     this.$store.state.loading = true;
     this.pullDataAsync()
       .then()

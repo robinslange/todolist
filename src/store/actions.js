@@ -1,9 +1,12 @@
 import state from "./state";
+import firebase from "firebase";
 
 export default {
   saveList(context) {
-    context.commit("makeid", 6);
-    context.commit("saveList");
+    if (!state.existingList) {
+      firebase.analytics().logEvent("created_list");
+      context.commit("makeid", 6);
+    }
   },
   changeTitleColor(context, newColor) {
     context.commit("changeTitleColor", newColor);
@@ -14,6 +17,25 @@ export default {
     context.commit("getNow");
     context.commit("addItem");
   },
+  addToSyncedLists(context, index) {
+    context.commit("addToSyncedLists", index);
+    context.commit("saveSyncedLists");
+  },
+  deleteFromSyncedLists(context, index) {
+    context.commit("deleteFromSyncedLists", index);
+    context.commit("saveSyncedLists");
+  },
+  fetchUser({ commit }, user) {
+    commit("SET_LOGGED_IN", user !== null);
+    if (user) {
+      commit("SET_USER", {
+        displayName: user.displayName,
+        email: user.email,
+      });
+    } else {
+      commit("SET_USER", null);
+    }
+  },
   uploadImg(context, url) {
     context.commit("attachImage", url);
     context.commit("saveListItems");
@@ -21,5 +43,5 @@ export default {
   deleteImg(context) {
     context.commit("deleteImg");
     context.commit("saveListItems");
-  }
+  },
 };

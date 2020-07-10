@@ -1,4 +1,5 @@
 <template>
+
   <v-dialog v-model="this.$store.state.uploadDialog" width="300" persistent>
     <v-card>
       <v-toolbar>

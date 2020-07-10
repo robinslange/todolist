@@ -13,9 +13,15 @@
           </li>
         </ol>
         <br />
-        <h3 style="color:green;font-style:bold;display:inline;">NEW:</h3>
-        Whenever you save a change, anyone else viewing the list will have their
-        list updated automatically!
+        <span style="color: green; font-style: oblique;">NEW:</span> Accounts!
+        Check out the whole new accounts panel with this button
+        <v-btn @click="viewAccount" icon>
+          <v-icon>fa-user</v-icon>
+        </v-btn>
+        or you can find it in the top left at any time :)
+        <br />
+        <br />
+        Lists will automatically sync changes made by anyone viewing it.
         <br />
         <br />
         If you have trouble with anything get in touch via one of the links in
@@ -40,8 +46,13 @@ export default {
   methods: {
     close() {
       this.$store.commit("toggleInfoPanel");
-    }
-  }
+
+    },
+    viewAccount() {
+      this.$store.commit("toggleInfoPanel");
+      this.$store.commit("toggleAccountPanel");
+    },
+  },
 };
 </script>
 

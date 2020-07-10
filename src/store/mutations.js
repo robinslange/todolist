@@ -3,6 +3,18 @@ import router from "../router";
 import firebase from "firebase";
 
 export default {
+  SET_LOGGED_IN(state, value) {
+    state.user.loggedIn = value;
+  },
+  SET_USER(state, data) {
+    state.user.data = data;
+  },
+  SET_USER_PREMIUM_STATUS(state, value) {
+    state.user.premium = value;
+  },
+  SET_USER_ADMIN_STATUS(state, value) {
+    state.user.admin = value;
+  },
   addItem(state) {
     if (!state.newItem) {
       return;
@@ -11,7 +23,7 @@ export default {
       text: state.newItem,
       done: false,
       dateAdded: state.currentTime,
-      img: ""
+      img: "",
     });
     state.newItem = "";
   },
@@ -35,7 +47,7 @@ export default {
         .child(`${name}`)
         .delete()
         .then()
-        .catch(error => {
+        .catch((error) => {
           state.imgError = error.message;
         });
       state.todo[index].img = null;
@@ -62,12 +74,12 @@ export default {
       ref
         .doc(state.todoListID)
         .update({
-          name: state.todoName
+          name: state.todoName,
         })
         .then(() => {
           state.saving = false;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     } else {
@@ -80,12 +92,12 @@ export default {
     ref
       .doc(state.todoListID)
       .update({
-        todo: JSON.stringify(state.todo)
+        todo: JSON.stringify(state.todo),
       })
       .then(() => {
         state.saving = false;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         state.saving = false;
       });
@@ -96,12 +108,12 @@ export default {
     ref
       .doc(state.todoListID)
       .update({
-        titleColor: state.titleColor
+        titleColor: state.titleColor,
       })
       .then(() => {
         state.saving = false;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         state.saving = false;
       });
@@ -116,12 +128,12 @@ export default {
         .update({
           name: state.todoName,
           todo: JSON.stringify(state.todo),
-          titleColor: state.titleColor
+          titleColor: state.titleColor,
         })
         .then(() => {
           state.saving = false;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           state.saving = false;
         });
@@ -132,7 +144,7 @@ export default {
           ID: listID,
           name: state.todoName,
           todo: JSON.stringify(state.todo),
-          titleColor: state.titleColor
+          titleColor: state.titleColor,
         })
         .then(() => {
           state.saving = false;
@@ -143,6 +155,44 @@ export default {
 
       state.saving = false;
     }
+  },
+  addToSyncedLists(state, index) {
+    if (state.user.syncedLists.length > 5 && !state.user.premium) return;
+
+    let link = state.savedLinks[index];
+    state.user.syncedLists = state.user.syncedLists || [];
+    state.user.syncedLists.push(link);
+  },
+  deleteFromSyncedLists(state, index) {
+    state.user.syncedLists.splice(index, 1);
+  },
+  saveSyncedLists(state) {
+    let uid = state.user.uid;
+    let lists = JSON.stringify(state.user.syncedLists);
+    let userRef = db.collection("users").doc(uid);
+    userRef
+      .update({
+        syncedLists: lists,
+      })
+      .then(() => {
+        console.log("sync complete");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  retrieveSyncedLists(state, data) {
+    state.syncedListsLoading = true;
+    state.user.syncedLists = state.user.syncedLists || [];
+    for (let i = 0; i < data.length; i++) {
+      if (state.savedLinks != null) {
+        if (state.savedLinks.includes(data[i])) continue;
+        state.savedLinks.push(data[i]);
+        state.user.syncedLists.push(data[i]);
+      }
+    }
+    state.reloadVariable++;
+    state.syncedListsLoading = false;
   },
   toggleEditDialog(state) {
     state.editDialog = !state.editDialog;
@@ -166,6 +216,19 @@ export default {
   },
   toggleInfoPanel(state) {
     state.infoPanel = !state.infoPanel;
+  },
+  toggleForgotPassword(state) {
+    if (state.forgotDialog) {
+      state.forgotDialog = false;
+    } else {
+      state.forgotDialog = true;
+    }
+  },
+  toggleSentDialog(state) {
+    state.sentDialog = !state.sentDialog;
+  },
+  togglePaymentDialog(state) {
+    state.paymentDialog = !state.paymentDialog;
   },
   toggleUploadDialog(state) {
     state.uploadDialog = !state.uploadDialog;
@@ -235,12 +298,12 @@ export default {
         .child(`${name}`)
         .delete()
         .then()
-        .catch(error => {
+        .catch((error) => {
           state.imgError = error.message;
         });
       state.todo[state.listIndex].img = null;
     } catch (error) {
       state.imgError = error.message;
     }
-  }
+  },
 };
