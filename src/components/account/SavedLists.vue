@@ -80,6 +80,9 @@ export default {
     removeFromSyncedLists(i) {
       this.$store.dispatch("deleteFromSyncedLists", i);
     },
+    forceUpdate() {
+      this.$forceUpdate();
+    },
   },
 
   computed: {
@@ -105,6 +108,9 @@ export default {
     premium() {
       return this.$store.state.user.premium;
     },
+  },
+  mounted() {
+    this.forceUpdate();
   },
 };
 </script>

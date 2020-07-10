@@ -28,6 +28,9 @@
       <v-spacer></v-spacer>
       <v-btn @click="login" :loading="loggingIn" text>Login</v-btn>
     </v-card-actions>
+    <v-card-subtitle v-if="error">
+      {{ error }}
+    </v-card-subtitle>
   </v-card>
 </template>
 

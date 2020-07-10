@@ -42,7 +42,6 @@
     </v-list-item>
     <v-card-actions>
       <v-spacer></v-spacer>
-
       <div v-if="!this.$store.state.user.premium">
         <v-card-subtitle>Purchase Premium for US$6.99 below:</v-card-subtitle>
         <PayPal
@@ -60,6 +59,7 @@
       >
         Thank you for purchasing premium!
       </h3>
+      <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
 </template>
