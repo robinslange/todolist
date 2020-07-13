@@ -49,7 +49,7 @@
           currency="USD"
           :client="credentials"
           :credentials="credentials"
-          env="sandbox"
+          env="production"
           @payment-completed="updatePremiumStatus"
         />
       </div>
