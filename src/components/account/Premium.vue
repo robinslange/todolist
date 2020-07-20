@@ -82,8 +82,6 @@ export default {
     },
   }),
   methods: {
-    //TODO: implement payments
-    //https://softauthor.com/stripe-payments-with-custom-stripe-elements-vue-cloud-functions/
     togglePaymentDialog() {
       this.$store.commit("togglePaymentDialog");
     },

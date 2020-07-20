@@ -91,54 +91,80 @@
                 <v-card flat class="scroll" max-height="200">
                   <v-col>
                     <v-list v-if="this.$store.state.todo">
-                      <v-list-item
-                        two-line
-                        v-for="(item, index) in this.$store.state.todo"
-                        :key="index"
+                      <draggable
+                        @start="drag = true"
+                        @end="drag = false"
+                        v-bind="dragOptions"
+                        :list="this.$store.state.todo"
+                        handle=".handle"
                       >
-                        <v-list-item-avatar>
-                          <v-checkbox
-                            v-model="item.done"
-                            :color="themeColor"
-                            @change="saveListItems"
-                          ></v-checkbox>
-                        </v-list-item-avatar>
-                        <v-list-item-content>
-                          <v-list-item-title class="wrap-text">
-                            {{ item.text }}
-                          </v-list-item-title>
-                          <v-list-item-subtitle>
-                            Date Added: {{ item.dateAdded }}
-                          </v-list-item-subtitle>
-                        </v-list-item-content>
-                        <v-btn
-                          @click="toggleUploadDialog(index)"
-                          v-if="!item.img"
-                          icon
+                        <transition-group
+                          type="transition"
+                          :name="!drag ? 'flip-list' : null"
                         >
-                          <v-icon>fa-upload</v-icon>
-                        </v-btn>
-                        <v-btn
-                          @click="toggleViewImageDialog(index)"
-                          v-else
-                          icon
-                        >
-                          <v-icon>fa-image</v-icon>
-                        </v-btn>
-                        <v-scroll-x-transition>
-                          <v-btn
-                            icon
-                            ripple
-                            color="red"
-                            v-if="item.done"
-                            @click="removeTodo(index)"
+                          <v-list-item
+                            two-line
+                            v-for="(item, index) in this.$store.state.todo"
+                            :key="index"
                           >
-                            <v-icon class="red--text">mdi-close</v-icon>
-                          </v-btn>
-                        </v-scroll-x-transition>
-                      </v-list-item>
+                            <v-list-item-avatar class="handle" v-if="sorting">
+                              <v-icon>fa-grip-lines</v-icon>
+                            </v-list-item-avatar>
+                            <v-list-item-avatar>
+                              <v-checkbox
+                                v-model="item.done"
+                                :color="themeColor"
+                                @change="saveListItems"
+                              ></v-checkbox>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                              <v-list-item-title class="wrap-text">
+                                {{ item.text }}
+                              </v-list-item-title>
+                              <v-list-item-subtitle>
+                                Date Added: {{ item.dateAdded }}
+                              </v-list-item-subtitle>
+                            </v-list-item-content>
+                            <v-btn
+                              @click="toggleUploadDialog(index)"
+                              v-if="!item.img"
+                              icon
+                            >
+                              <v-icon>fa-upload</v-icon>
+                            </v-btn>
+                            <v-btn
+                              @click="toggleViewImageDialog(index)"
+                              v-else
+                              icon
+                            >
+                              <v-icon>fa-image</v-icon>
+                            </v-btn>
+                            <v-scroll-x-transition>
+                              <v-btn
+                                icon
+                                ripple
+                                color="red"
+                                v-if="item.done"
+                                @click="removeTodo(index)"
+                              >
+                                <v-icon class="red--text">mdi-close</v-icon>
+                              </v-btn>
+                            </v-scroll-x-transition>
+                          </v-list-item>
+                        </transition-group>
+                      </draggable>
                     </v-list>
                   </v-col>
+                </v-card>
+                <v-card flat>
+                  <v-row>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="toggleSort" v-if="!sorting" text
+                      >Toggle Sort</v-btn
+                    >
+                    <v-btn @click="saveOrder" v-else>Save Order</v-btn>
+                    <v-spacer></v-spacer>
+                  </v-row>
                 </v-card>
               </v-card>
             </div>
@@ -214,6 +240,7 @@
 
 <script>
 import db from "@/firebase/init";
+import draggable from "vuedraggable";
 
 export default {
   title: "",
@@ -224,7 +251,8 @@ export default {
     ViewImage: () => import("@/components/account/dialogs/ViewImage"),
     ColorPicker: () => import("@/components/ColorPicker"),
     InfoPanel: () => import("@/components/InfoPanel"),
-    AccountPanel: () => import("@/components/AccountPanel")
+    AccountPanel: () => import("@/components/AccountPanel"),
+    draggable,
   },
   data() {
     return {
@@ -235,7 +263,9 @@ export default {
       options: false,
       valid: false,
       autoSave: false,
-      darkMode: true
+      darkMode: true,
+      drag: false,
+      sorting: false,
     };
   },
   methods: {
@@ -265,6 +295,10 @@ export default {
     saveName() {
       this.$store.commit("saveNewName", this.newTodoName);
       if (this.$store.state.existingList) this.$store.commit("saveTitle");
+    },
+    toggleSort() {
+      //TODO: make saving of new list order only possible every minute or so to stop DB write spam
+      this.sorting = true;
     },
     toggleEditName() {
       this.$store.commit("toggleNameEdit");
@@ -302,10 +336,9 @@ export default {
       return new Promise(() => {
         setTimeout(() => {
           if (this.$route.params.id != null) {
-
             db.collection("todos")
               .doc(this.$route.params.id)
-              .onSnapshot(doc => {
+              .onSnapshot((doc) => {
                 let data = doc.data();
                 if (!data) {
                   this.$router.push("/");
@@ -330,17 +363,25 @@ export default {
           }
         });
       });
-    }
+    },
   },
   computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "description",
+        disabled: false,
+        ghostClass: "ghost",
+      };
+    },
     completedTasks() {
-      return this.$store.state.todo.filter(todo => todo.done).length;
+      return this.$store.state.todo.filter((todo) => todo.done).length;
     },
     completedList() {
-      return this.$store.state.todo.filter(todo => todo.done);
+      return this.$store.state.todo.filter((todo) => todo.done);
     },
     incompleteList() {
-      return this.$store.state.todo.filter(todo => !todo.done);
+      return this.$store.state.todo.filter((todo) => !todo.done);
     },
     reverseList() {
       let list = this.$store.state.todo;
@@ -363,7 +404,7 @@ export default {
     },
     todoDone() {
       return this.$store.state.todo.done;
-    }
+    },
   },
   created() {
     this.$store.commit("checkIfFirstTime");
@@ -376,10 +417,10 @@ export default {
     this.$store.state.loading = true;
     this.pullDataAsync()
       .then()
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
-  }
+  },
 };
 </script>
 
@@ -397,5 +438,15 @@ html {
 .wrap-text {
   -webkit-line-clamp: unset !important;
   white-space: normal;
+}
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
 }
 </style>

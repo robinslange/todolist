@@ -6,6 +6,9 @@ export default {
     if (!state.existingList) {
       firebase.analytics().logEvent("created_list");
       context.commit("makeid", 6);
+      context.commit("saveList");
+    } else {
+      context.commit("saveList");
     }
   },
   changeTitleColor(context, newColor) {
