@@ -28,7 +28,7 @@
           <v-icon>fa-question</v-icon>
         </v-btn>
         <v-row align="center" justify="center">
-          <v-col cols="12" sm="8" md="5">
+          <v-col cols="12" sm="7" md="6">
             <v-layout v-if="this.$store.state.loading" justify-center>
               <v-progress-linear
                 color="primary"
@@ -93,7 +93,7 @@
                     <v-list v-if="this.$store.state.todo">
                       <draggable
                         @start="drag = true"
-                        @end="drag = false"
+                        @end="onDrop"
                         v-bind="dragOptions"
                         :list="this.$store.state.todo"
                         handle=".handle"
@@ -159,10 +159,7 @@
                 <v-card flat>
                   <v-row>
                     <v-spacer></v-spacer>
-                    <v-btn @click="toggleSort" v-if="!sorting" text
-                      >Toggle Sort</v-btn
-                    >
-                    <v-btn @click="saveOrder" v-else>Save Order</v-btn>
+                    <v-btn @click="toggleSort" text>Toggle Sort</v-btn>
                     <v-spacer></v-spacer>
                   </v-row>
                 </v-card>
@@ -298,7 +295,11 @@ export default {
     },
     toggleSort() {
       //TODO: make saving of new list order only possible every minute or so to stop DB write spam
-      this.sorting = true;
+      this.sorting = !this.sorting;
+    },
+    onDrop() {
+      this.drag = false;
+      this.$store.commit("saveListItems");
     },
     toggleEditName() {
       this.$store.commit("toggleNameEdit");
